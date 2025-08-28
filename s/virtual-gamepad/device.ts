@@ -1,15 +1,11 @@
 
-// // TODO omg we need to liberate the Stick device and stuff
-// import {Stick} from "@benev/toolbox/x/tact/nubs/stick/device.js"
-const Stick: any = {}
-
+import {Stick} from "../nubs/stick/stick.js"
 import {GamepadDevice} from "../devices/gamepad-device.js"
-import {breakupStickInputs} from "./utils/breakup-stick-inputs.js"
 import {GamepadInputs, gamepadInputs} from "./utils/gamepad-inputs.js"
 
 export class VirtualGamepadDevice extends GamepadDevice {
-	stickLeft = new Stick("stickLeft")
-	stickRight = new Stick("stickRight")
+	stickLeft = new Stick()
+	stickRight = new Stick()
 
 	realInputs: GamepadInputs = gamepadInputs()
 	virtualInputs: GamepadInputs = gamepadInputs()
@@ -37,15 +33,13 @@ export class VirtualGamepadDevice extends GamepadDevice {
 	#updateStickInputs() {
 		const {virtualInputs: inputs} = this
 
-		const [leftX, leftY] = this.stickLeft.vector
-		const left = breakupStickInputs(leftX, leftY)
+		const left = this.stickLeft.breakdown()
 		inputs["g.stick.left.up"] = left.up
 		inputs["g.stick.left.down"] = left.down
 		inputs["g.stick.left.left"] = left.left
 		inputs["g.stick.left.right"] = left.right
 
-		const [rightX, rightY] = this.stickRight.vector
-		const right = breakupStickInputs(rightX, rightY)
+		const right = this.stickRight.breakdown()
 		inputs["g.stick.right.up"] = right.up
 		inputs["g.stick.right.down"] = right.down
 		inputs["g.stick.right.left"] = right.left

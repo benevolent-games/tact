@@ -36,7 +36,7 @@ export default ssg.page(import.meta.url, async orb => ({
 			</div>
 		</header>
 
-		<tact-app></tact-app>
+		<tact-demo></tact-demo>
 	`,
 }))
 
