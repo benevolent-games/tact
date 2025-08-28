@@ -2,7 +2,7 @@
 import {deep, ev, MapG, ob} from "@e280/stz"
 
 import {Cause} from "./parts/cause.js"
-import {GripDevice} from "./devices/device.js"
+import {Device} from "./devices/device.js"
 import {CauseFork} from "./parts/cause-fork.js"
 import {CauseSpoon} from "./parts/cause-spoon.js"
 import {asBindings, ForkBind, GripBindings, GripState} from "./parts/types.js"
@@ -18,7 +18,7 @@ export class Grip<B extends GripBindings> {
 	#causes = new MapG<string, Cause>()
 	#forksByMode = new MapG<keyof B, Set<CauseFork>>()
 
-	#devices = new MapG<GripDevice, () => void>()
+	#devices = new MapG<Device, () => void>()
 	#unattachBlur = ev(window, {blur: () => this.unstickAll()})
 
 	constructor(bindings: B) {
@@ -99,7 +99,7 @@ export class Grip<B extends GripBindings> {
 		return this.#causes.guarantee(code, () => new Cause())
 	}
 
-	attachDevice(device: GripDevice) {
+	attachDevice(device: Device) {
 		this.#devices.set(
 			device,
 			device.onInput(
@@ -111,7 +111,7 @@ export class Grip<B extends GripBindings> {
 		return this
 	}
 
-	unattachDevice(device: GripDevice) {
+	unattachDevice(device: Device) {
 		const dispose = this.#devices.get(device) ?? (() => {})
 		dispose()
 		this.#devices.delete(device)

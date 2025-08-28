@@ -1,12 +1,12 @@
 
-import {GripDevice} from "./device.js"
+import {Device} from "./device.js"
 import {Cause} from "../parts/cause.js"
 import {isPressed} from "../utils/is-pressed.js"
 import {splitAxis} from "../utils/split-axis.js"
 import {applyDeadzone} from "../utils/apply-deadzone.js"
 import {GamepadTracker} from "../utils/gamepad-tracker.js"
 
-export class GamepadDevice extends GripDevice {
+export class GamepadDevice extends Device {
 	deadzone = 0.2
 	tracker = new GamepadTracker()
 	anyButton = new Cause()

@@ -1,10 +1,10 @@
 
 import {ev} from "@e280/stz"
-import {GripDevice} from "./device.js"
+import {Device} from "./device.js"
 import {modprefix} from "../utils/modprefix.js"
 import {splitAxis} from "../utils/split-axis.js"
 
-export class PointerDevice extends GripDevice {
+export class PointerDevice extends Device {
 	dispose: () => void
 
 	clientX = 0

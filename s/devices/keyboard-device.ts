@@ -1,9 +1,9 @@
 
 import {ev} from "@e280/stz"
-import {GripDevice} from "./device.js"
+import {Device} from "./device.js"
 import {modprefix} from "../utils/modprefix.js"
 
-export class KeyboardDevice extends GripDevice {
+export class KeyboardDevice extends Device {
 	dispose: () => void
 
 	constructor(target: EventTarget, fn = (_event: KeyboardEvent) => {}) {
