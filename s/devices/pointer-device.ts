@@ -29,7 +29,8 @@ export class PointerDevice extends Device {
 				event.deltaX > 0 ? "WheelRight" : "WheelLeft",
 				event.deltaX,
 			])
-		else if (event.deltaY)
+
+		if (event.deltaY)
 			movements.push([
 				event.deltaY > 0 ? "WheelDown" : "WheelUp",
 				event.deltaY,
