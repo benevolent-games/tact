@@ -1,0 +1,57 @@
+
+@layer vars, core, basics, page;
+
+@layer vars {
+	:root {
+		color-scheme: dark;
+		--link: cyan;
+		--bg: #181818;
+		--prime: #aaa;
+	}
+}
+
+@layer core {
+	* {
+		padding: 0;
+		margin: 0;
+		box-sizing: border-box;
+	}
+
+	::-webkit-scrollbar { width: 4px; }
+	::-webkit-scrollbar-track { background: transparent; }
+	::-webkit-scrollbar-thumb { background: #333; border-radius: 1em; }
+	::-webkit-scrollbar-thumb:hover { background: #444; }
+
+	a {
+		color: var(--link);
+		text-decoration: none;
+
+		&:visited {
+			color: color-mix(in srgb, var(--link), purple 30%);
+		}
+
+		&:hover {
+			color: color-mix(in srgb, var(--link), white 10%);
+			text-decoration: underline;
+		}
+
+		&:active {
+			color: color-mix(in srgb, var(--link), white 50%);
+		}
+	}
+}
+
+@layer basics {
+	html { height: 100%; }
+	body { min-height: 100%; }
+
+	html, body {
+		font-size: 21px;
+		color: var(--prime);
+		background: var(--bg);
+	}
+}
+
+@layer page {
+}
+
