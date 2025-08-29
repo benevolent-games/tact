@@ -14,6 +14,10 @@ export function tmax(values: number[]) {
 		: 0
 }
 
+export function isPressed(value: number) {
+	return value > 0
+}
+
 export function applyDeadzone(value: number, deadzone: number) {
 	if (value < deadzone)
 		return 0
@@ -28,16 +32,14 @@ export function applyDeadzone(value: number, deadzone: number) {
 	)
 }
 
-export type Valuable = {value: number}
-
-export class Cause implements Valuable {
+export class Cause {
 	value = 0
 }
 
 export type Timing = (
-	| [style: "eager"]
-	| [style: "tap", holdMs?: number]
-	| [style: "hold", holdMs?: number]
+	| {style: "direct"}
+	| {style: "tap", time?: number}
+	| {style: "hold", time?: number}
 )
 
 export type LensSettings = {
@@ -47,25 +49,62 @@ export type LensSettings = {
 	timing: Timing
 }
 
-export class Lens implements Valuable {
+export class Lens {
 	settings: LensSettings
+	#timingMachine: TimingMachine
 
-	constructor(public target: Valuable, settings: Partial<LensSettings> = {}) {
+	constructor(public cause: Cause, settings: Partial<LensSettings> = {}) {
 		this.settings = {
 			scale: 1,
 			invert: false,
 			deadzone: 0.1,
-			timing: ["eager"],
+			timing: {style: "direct"},
 			...settings,
 		}
+		this.#timingMachine = new TimingMachine(this.settings.timing)
 	}
 
-	get value() {
+	poll(now: number) {
 		const {settings} = this
-		let {value} = this.target
+		let {value} = this.cause
 		value = applyDeadzone(value, settings.deadzone)
 		if (settings.invert) value = value * -1
-		return value * settings.scale
+		value *= settings.scale
+		return this.#timingMachine.update(value, now)
+	}
+}
+
+export class TimingMachine {
+	#lastValue = 0
+	#holdStartTime = 0
+	constructor(public timing: Timing) {}
+
+	update(value: number, now: number) {
+		const threshold = (
+			this.timing.style === "direct"
+				? undefined
+				: this.timing.time
+		) ?? 50
+		const isFreshlyPressed = !isPressed(this.#lastValue) && isPressed(value)
+		const isFreshlyReleased = isPressed(this.#lastValue) && !isPressed(value)
+		const isHolding = (now - this.#holdStartTime) >= threshold
+		if (isFreshlyPressed) this.#holdStartTime = now
+		this.#lastValue = value
+
+		switch (this.timing.style) {
+			case "direct":
+				return value
+
+			case "tap":
+				return (isFreshlyReleased && !isHolding)
+					? 1
+					: 0
+
+			case "hold":
+				return (isFreshlyPressed && isHolding)
+					? value
+					: 0
+		}
 	}
 }
 
@@ -76,25 +115,23 @@ export class Report {
 	) {}
 }
 
-export abstract class Group implements Valuable {
-	constructor(public members: Valuable[]) {}
+export class Spoon {
+	constructor(public lenses: Lens[]) {}
 
-	abstract combine(values: number[]): number
-
-	get value() {
-		const values = this.members.map(c => c.value)
-		return this.combine(values)
+	poll(now: number) {
+		const values = this.lenses.map(c => c.poll(now))
+		const unanimous = values.every(v => v > 0)
+		return unanimous
+			? tmax(values)
+			: 0
 	}
 }
 
-export class Spoon extends Group {
-	combine(values: number[]) {
-		return tmin(values)
-	}
-}
+export class Fork {
+	constructor(public spoons: Spoon[]) {}
 
-export class Fork extends Group {
-	combine(values: number[]) {
+	poll(now: number) {
+		const values = this.spoons.map(c => c.poll(now))
 		return tmax(values)
 	}
 }
@@ -104,15 +141,15 @@ export class Action {
 	previous = 0
 	on = sub<[Action]>()
 
-	constructor(public fork: Group) {}
+	constructor(public fork: Fork) {}
 
 	get isChanged() {
 		return this.value !== this.previous
 	}
 
-	update() {
+	poll(now: number) {
 		this.previous = this.value
-		this.value = this.fork.value
+		this.value = this.fork.poll(now)
 		if (this.isChanged)
 			this.on.pub(this)
 	}
@@ -140,10 +177,10 @@ export class Inputs<B extends Binds> {
 		this.actions = this.#build_actions(binds)
 	}
 
-	poll() {
+	poll(now: number) {
 		this.#reset_causes_to_zero()
 		this.#update_causes_with_reports_from_devices()
-		this.#update_actions()
+		this.#update_actions(now)
 	}
 
 	#build_actions(binds: B) {
@@ -187,9 +224,9 @@ export class Inputs<B extends Binds> {
 		}
 	}
 
-	#update_actions() {
+	#update_actions(now: number) {
 		for (const action of this.#actions)
-			action.update()
+			action.poll(now)
 	}
 }
 
