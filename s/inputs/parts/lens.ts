@@ -4,12 +4,12 @@ import {LensSettings} from "../types.js"
 import {isPressed} from "../utils/is-pressed.js"
 import {applyDeadzone} from "../utils/apply-deadzone.js"
 
-export const defaultTimingThreshold = 250
+export const defaultHoldTime = 250
 
 export class Lens {
 	settings: LensSettings
 	#lastValue = 0
-	#holdStartTime = 0
+	#holdStart = 0
 
 	constructor(public cause: Cause, settings: Partial<LensSettings> = {}) {
 		this.settings = {
@@ -33,18 +33,18 @@ export class Lens {
 	#timingConsiderations(value: number, now: number) {
 		const {timing} = this.settings
 
-		const threshold = (
+		const holdTime = (
 			timing.style === "direct"
 				? undefined
-				: timing.threshold
-		) ?? defaultTimingThreshold
+				: timing.holdTime
+		) ?? defaultHoldTime
 
 		const isFreshlyPressed = !isPressed(this.#lastValue) && isPressed(value)
 		const isFreshlyReleased = isPressed(this.#lastValue) && !isPressed(value)
-		const isHolding = (now - this.#holdStartTime) >= threshold
+		const isHolding = (now - this.#holdStart) >= holdTime
 
 		if (isFreshlyPressed)
-			this.#holdStartTime = now
+			this.#holdStart = now
 
 		this.#lastValue = value
 

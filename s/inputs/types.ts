@@ -8,8 +8,8 @@ export type Timing = (
 )
 
 export type DirectTiming = {style: "direct"}
-export type TapTiming = {style: "tap", threshold?: number}
-export type HoldTiming = {style: "hold", threshold?: number}
+export type TapTiming = {style: "tap", holdTime?: number}
+export type HoldTiming = {style: "hold", holdTime?: number}
 
 export type LensSettings = {
 	scale: number
