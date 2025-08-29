@@ -9,6 +9,7 @@ export class Action {
 	value = 0
 	previous = 0
 	on = sub<[Action]>()
+	onDown = sub<[Action]>()
 
 	constructor(public fork: Fork) {}
 
@@ -20,11 +21,19 @@ export class Action {
 		return isPressed(this.value)
 	}
 
+	get down() {
+		return !isPressed(this.previous) && isPressed(this.value)
+	}
+
+	get up() {
+		return isPressed(this.previous) && !isPressed(this.value)
+	}
+
 	[_poll](now: number) {
 		this.previous = this.value
 		this.value = this.fork.poll(now)
-		if (this.changed)
-			this.on.pub(this)
+		if (this.changed) this.on.pub(this)
+		if (this.down) this.onDown.pub(this)
 	}
 }
 

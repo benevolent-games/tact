@@ -19,6 +19,18 @@ export class Inputs<B extends Bindings> {
 		this.actions = this.#buildActions(bindings)
 	}
 
+	attach(...devices: Device[]) {
+		for (const device of devices)
+			this.devices.add(device)
+		return this
+	}
+
+	detach(...devices: Device[]) {
+		for (const device of devices)
+			this.devices.delete(device)
+		return this
+	}
+
 	poll(now: number) {
 		this.#repo.sampleDevices(this.devices)
 

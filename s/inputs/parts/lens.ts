@@ -5,6 +5,7 @@ import {isPressed} from "../utils/is-pressed.js"
 import {applyDeadzone} from "../utils/apply-deadzone.js"
 
 export const defaultHoldTime = 250
+export const defaultDeadzone = 0.2
 
 export class Lens {
 	settings: LensSettings
@@ -15,7 +16,7 @@ export class Lens {
 		this.settings = {
 			scale: 1,
 			invert: false,
-			deadzone: 0.1,
+			deadzone: defaultDeadzone,
 			timing: {style: "direct"},
 			...settings,
 		}

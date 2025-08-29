@@ -83,7 +83,7 @@ export class PointerDevice extends Device {
 		this.on.pub(code, value)
 	}
 
-	collectMovement() {
+	samples() {
 		const {movementX, movementY} = this
 		const [left, right] = splitAxis(movementX)
 		const [down, up] = splitAxis(movementY)
@@ -103,10 +103,7 @@ export class PointerDevice extends Device {
 
 		this.movementX = 0
 		this.movementY = 0
-	}
 
-	samples() {
-		this.collectMovement()
 		return this.#sampler.samples()
 	}
 }

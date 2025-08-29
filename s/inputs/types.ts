@@ -37,7 +37,16 @@ export type Bindings = {
 	[mode: string]: BracketBinds
 }
 
+export type AsBindings<B extends Bindings> = B
+
 export function asBindings<B extends Bindings>(bindings: B) {
 	return bindings
 }
+
+export type StandardBindings = AsBindings<{
+	meta: {
+		playerNext: [{lenses: [{code: "RightBracket"}]}],
+		playerPrevious: [{lenses: [{code: "LeftBracket"}]}],
+	}
+}> & Bindings
 
