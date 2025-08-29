@@ -3,15 +3,19 @@ import {loop} from "@e280/stz"
 import {Scalar} from "@benev/math"
 import {Inputs} from "./inputs.js"
 import {Device} from "./parts/device.js"
-import {StandardBindings} from "./types.js"
+import {SeatedBindings} from "./types.js"
 
-export class Seating<B extends StandardBindings> {
-	#ports = new Set<Port<B>>()
+export class Seating<B extends SeatedBindings> {
+	#ports = new Set<Port>()
 
 	constructor(public seats: Inputs<B>[]) {
 		for (const [id, seat] of seats.entries()) {
-			seat.actions.meta.playerNext.onDown(() => this.lookupPort(id)?.shimmy(1))
-			seat.actions.meta.playerPrevious.onDown(() => this.lookupPort(id)?.shimmy(-1))
+			const fn = (delta: 1 | -1) => () => {
+				const port = this.lookupPort(id)
+				if (port) this.shimmy(port, delta)
+			}
+			seat.actions.meta.playerNext.onDown(fn(1))
+			seat.actions.meta.playerPrevious.onDown(fn(-1))
 		}
 	}
 
@@ -36,11 +40,11 @@ export class Seating<B extends StandardBindings> {
 		}
 	}
 
-	hasPort(port: Port<B>) {
+	hasPort(port: Port) {
 		return this.#ports.has(port)
 	}
 
-	assign(port: Port<B>, seatId: number) {
+	assign(port: Port, seatId: number) {
 		this.#unassign(port)
 		const seat = this.requireSeat(seatId)
 		seat.attach(...port.devices)
@@ -48,23 +52,28 @@ export class Seating<B extends StandardBindings> {
 		return seat
 	}
 
-	#unassign(port: Port<B>) {
+	#unassign(port: Port) {
 		if (port.seatId !== null) {
 			const seat = this.requireSeat(port.seatId)
 			seat.detach(...port.devices)
-			port.seatId = null
 		}
+	}
+
+	shimmy(port: Port, delta: 1 | -1) {
+		const lastSeatId = this.seats.length - 1
+		const newSeatId = Scalar.clamp(port.seatId + delta, 0, lastSeatId)
+		this.assign(port, newSeatId)
 	}
 
 	connect(...devices: Device[]) {
 		const seatId = this.chooseSeatId()
-		const port = new Port<B>(this, seatId, devices)
+		const port = new Port(seatId, devices)
 		this.#ports.add(port)
 		this.assign(port, seatId)
 		return port
 	}
 
-	disconnect(port: Port<B>) {
+	disconnect(port: Port) {
 		this.#unassign(port)
 		this.#ports.delete(port)
 	}
@@ -79,32 +88,11 @@ export class Seating<B extends StandardBindings> {
 	}
 }
 
-export class Port<B extends StandardBindings> {
+export class Port {
 	constructor(
-		public seating: Seating<B>,
-		public seatId: number | null,
+		public seatId: number,
 		public devices: Device[],
 	) {}
-
-	get seat() {
-		if (this.seatId === null) throw new Error("not connected")
-		return this.seating.requireSeat(this.seatId)
-	}
-
-	assign(newSeatId: number) {
-		this.seating.assign(this, newSeatId)
-	}
-
-	disconnect() {
-		this.seating.disconnect(this)
-	}
-
-	shimmy(delta: 1 | -1) {
-		if (this.seatId === null) throw new Error("not connected")
-		const lastSeatId = this.seating.seats.length - 1
-		const newSeatId = Scalar.clamp(this.seatId + delta, 0, lastSeatId)
-		this.assign(newSeatId)
-	}
 }
 
 /*
@@ -125,7 +113,7 @@ seating.connect(
 
 // connect and disconnect gamepads as they come and go
 const gamepads = new Gamepads(device => {
-	const player = seating.connect(device)
+	const port = seating.connect(device)
 	return () => port.disconnect()
 })
 

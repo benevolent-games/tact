@@ -43,10 +43,30 @@ export function asBindings<B extends Bindings>(bindings: B) {
 	return bindings
 }
 
-export type StandardBindings = AsBindings<{
+export type AsSeatedBindings<B extends Bindings> = {
 	meta: {
-		playerNext: [{lenses: [{code: "RightBracket"}]}],
-		playerPrevious: [{lenses: [{code: "LeftBracket"}]}],
+		playerNext: SpoonBind[],
+		playerPrevious: SpoonBind[],
 	}
-}> & Bindings
+} & B
+
+export type SeatedBindings = AsSeatedBindings<Bindings>
+
+export function prepareSeatedBindings<B extends Bindings>(b: B): AsSeatedBindings<B> {
+	return {
+		...b,
+		meta: {
+			playerNext: [
+				{lenses: [{code: "RightBracket"}]},
+				{lenses: [{code: "pad.right"}], required: [{code: "pad.gamma"}]},
+				{lenses: [{code: "pad.bumper.right"}], required: [{code: "pad.gamma"}]},
+			],
+			playerPrevious: [
+				{lenses: [{code: "LeftBracket"}]},
+				{lenses: [{code: "pad.left"}], required: [{code: "pad.gamma"}]},
+				{lenses: [{code: "pad.bumper.left"}], required: [{code: "pad.gamma"}]},
+			],
+		},
+	}
+}
 
