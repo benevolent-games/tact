@@ -1,9 +1,11 @@
 
 import {loop} from "@e280/stz"
 import {Scalar} from "@benev/math"
-import {Inputs} from "./inputs.js"
-import {Device} from "./parts/device.js"
-import {SeatedBindings} from "./types.js"
+
+import {Port} from "./port.js"
+import {Inputs} from "../inputs.js"
+import {Device} from "../parts/device.js"
+import {SeatedBindings} from "../types.js"
 
 export class Seating<B extends SeatedBindings> {
 	#ports = new Set<Port>()
@@ -86,13 +88,6 @@ export class Seating<B extends SeatedBindings> {
 		}
 		return this.seats.length - 1
 	}
-}
-
-export class Port {
-	constructor(
-		public seatId: number,
-		public devices: Device[],
-	) {}
 }
 
 /*
