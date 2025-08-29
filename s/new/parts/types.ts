@@ -17,8 +17,14 @@ export type LensBind = {
 	settings?: Partial<LensSettings>
 }
 
+export type SpoonBind = {
+	lenses: LensBind[]
+	required?: LensBind[]
+	forbidden?: LensBind[]
+}
+
 export type ModeBinds = {
-	[action: string]: LensBind[][]
+	[action: string]: SpoonBind[]
 }
 
 export type Bindings = {
