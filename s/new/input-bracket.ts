@@ -15,7 +15,7 @@ export class InputBracket<B extends ModeBinds> {
 			binds: B,
 			public repo = new Repo(),
 		) {
-		this.actions = this.#build_actions(binds)
+		this.actions = this.#buildActions(binds)
 	}
 
 	poll(now: number) {
@@ -23,7 +23,7 @@ export class InputBracket<B extends ModeBinds> {
 			action.poll(now)
 	}
 
-	#build_actions(binds: B) {
+	#buildActions(binds: B) {
 		const actions = {} as {[K in keyof B]: Action}
 		for (const [name, spoonBinds] of Object.entries(binds)) {
 			const spoons = spoonBinds.map(bind => this.#makeSpoon(bind))

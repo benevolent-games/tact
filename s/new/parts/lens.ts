@@ -33,7 +33,7 @@ export class Lens {
 		const threshold = (
 			timing.style === "direct"
 				? undefined
-				: timing.time
+				: timing.threshold
 		) ?? 50
 
 		const isFreshlyPressed = !isPressed(this.#lastValue) && isPressed(value)
