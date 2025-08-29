@@ -51,7 +51,8 @@ export type LensSettings = {
 
 export class Lens {
 	settings: LensSettings
-	#timingMachine: TimingMachine
+	#lastValue = 0
+	#holdStartTime = 0
 
 	constructor(public cause: Cause, settings: Partial<LensSettings> = {}) {
 		this.settings = {
@@ -61,7 +62,6 @@ export class Lens {
 			timing: {style: "direct"},
 			...settings,
 		}
-		this.#timingMachine = new TimingMachine(this.settings.timing)
 	}
 
 	poll(now: number) {
@@ -70,20 +70,15 @@ export class Lens {
 		value = applyDeadzone(value, settings.deadzone)
 		if (settings.invert) value = value * -1
 		value *= settings.scale
-		return this.#timingMachine.update(value, now)
+		return this.#timingConsiderations(value, now)
 	}
-}
 
-export class TimingMachine {
-	#lastValue = 0
-	#holdStartTime = 0
-	constructor(public timing: Timing) {}
-
-	update(value: number, now: number) {
+	#timingConsiderations(value: number, now: number) {
+		const {timing} = this.settings
 		const threshold = (
-			this.timing.style === "direct"
+			timing.style === "direct"
 				? undefined
-				: this.timing.time
+				: timing.time
 		) ?? 50
 		const isFreshlyPressed = !isPressed(this.#lastValue) && isPressed(value)
 		const isFreshlyReleased = isPressed(this.#lastValue) && !isPressed(value)
@@ -91,7 +86,7 @@ export class TimingMachine {
 		if (isFreshlyPressed) this.#holdStartTime = now
 		this.#lastValue = value
 
-		switch (this.timing.style) {
+		switch (timing.style) {
 			case "direct":
 				return value
 
