@@ -1,5 +1,5 @@
 
-import {Cause} from "./cause.js"
+import {Cause} from "../units/cause.js"
 import {LensSettings} from "../types.js"
 import {isPressed} from "../utils/is-pressed.js"
 import {applyDeadzone} from "../utils/apply-deadzone.js"

@@ -1,5 +1,5 @@
 
-import {Lens} from "./lens.js"
+import {Lens} from "../parts/lens.js"
 import {tmax} from "../utils/tmax.js"
 
 export class Spoon {

@@ -1,9 +1,9 @@
 
-import {Fork} from "./parts/fork.js"
+import {Fork} from "./units/fork.js"
 import {Lens} from "./parts/lens.js"
 import {Repo} from "./parts/repo.js"
-import {Spoon} from "./parts/spoon.js"
-import {Action} from "./parts/action.js"
+import {Spoon} from "./units/spoon.js"
+import {_poll, Action} from "./parts/action.js"
 import {LensBind, BracketBinds, SpoonBind} from "./types.js"
 
 /** inputs for a single mode */
@@ -20,7 +20,7 @@ export class InputBracket<B extends BracketBinds> {
 
 	poll(now: number) {
 		for (const action of this.#actions)
-			action.poll(now)
+			action[_poll](now)
 	}
 
 	#buildActions(binds: B) {

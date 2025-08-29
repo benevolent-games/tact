@@ -2,7 +2,7 @@
 import {ev, sub} from "@e280/stz"
 import {Sample} from "../types.js"
 import {Device} from "../parts/device.js"
-import {Sampler} from "../parts/sampler.js"
+import {Sampler} from "../utils/sampler.js"
 import {modprefix} from "../utils/modprefix.js"
 
 export class KeyboardDevice extends Device {
