@@ -4,6 +4,8 @@ import {LensSettings} from "../types.js"
 import {isPressed} from "../utils/is-pressed.js"
 import {applyDeadzone} from "../utils/apply-deadzone.js"
 
+export const defaultTimingThreshold = 250
+
 export class Lens {
 	settings: LensSettings
 	#lastValue = 0
@@ -35,7 +37,7 @@ export class Lens {
 			timing.style === "direct"
 				? undefined
 				: timing.threshold
-		) ?? 50
+		) ?? defaultTimingThreshold
 
 		const isFreshlyPressed = !isPressed(this.#lastValue) && isPressed(value)
 		const isFreshlyReleased = isPressed(this.#lastValue) && !isPressed(value)
