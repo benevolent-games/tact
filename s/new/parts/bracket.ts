@@ -1,20 +1,17 @@
 
-import {Fork} from "./units/fork.js"
-import {Lens} from "./parts/lens.js"
-import {Repo} from "./parts/repo.js"
-import {Spoon} from "./units/spoon.js"
-import {_poll, Action} from "./parts/action.js"
-import {LensBind, BracketBinds, SpoonBind} from "./types.js"
+import {Lens} from "./lens.js"
+import {Repo} from "./repo.js"
+import {Fork} from "../units/fork.js"
+import {Spoon} from "../units/spoon.js"
+import {_poll, Action} from "./action.js"
+import {LensBind, BracketBinds, SpoonBind} from "../types.js"
 
 /** inputs for a single mode */
-export class InputBracket<B extends BracketBinds> {
+export class Bracket<B extends BracketBinds> {
 	actions: {[K in keyof B]: Action}
 	#actions: Action[] = []
 
-	constructor(
-			binds: B,
-			public repo = new Repo(),
-		) {
+	constructor(binds: B, private repo: Repo) {
 		this.actions = this.#buildActions(binds)
 	}
 
