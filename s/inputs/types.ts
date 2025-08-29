@@ -37,3 +37,7 @@ export type Bindings = {
 	[mode: string]: BracketBinds
 }
 
+export function asBindings<B extends Bindings>(bindings: B) {
+	return bindings
+}
+
