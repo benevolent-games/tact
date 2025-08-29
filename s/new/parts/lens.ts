@@ -55,7 +55,7 @@ export class Lens {
 					: 0
 
 			case "hold":
-				return (isFreshlyPressed && isHolding)
+				return (isPressed(value) && isHolding)
 					? value
 					: 0
 		}
