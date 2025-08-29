@@ -1,5 +1,5 @@
 
-import {Sample} from "./types.js"
+import {Sample} from "../types.js"
 
 export class Sampler {
 	#map = new Map<string, number>()

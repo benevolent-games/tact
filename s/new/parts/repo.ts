@@ -1,8 +1,8 @@
 
 import {MapG} from "@e280/stz"
-import {tmax} from "./utils.js"
 import {Cause} from "./cause.js"
 import {Device} from "./device.js"
+import {tmax} from "../utils/tmax.js"
 
 export class Repo {
 	#causes = new MapG<string, Cause>()

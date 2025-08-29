@@ -1,6 +1,6 @@
 
-import {tmax} from "./utils.js"
 import {Spoon} from "./spoon.js"
+import {tmax} from "../utils/tmax.js"
 
 export class Fork {
 	constructor(public spoons: Spoon[]) {}

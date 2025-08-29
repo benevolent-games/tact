@@ -3,7 +3,7 @@ import {MapG} from "@e280/stz"
 import {Repo} from "./parts/repo.js"
 import {Action} from "./parts/action.js"
 import {Device} from "./parts/device.js"
-import {Bindings} from "./parts/types.js"
+import {Bindings} from "./types.js"
 import {InputBracket} from "./input-bracket.js"
 
 /** orchestrate multiple input brackets via modes */

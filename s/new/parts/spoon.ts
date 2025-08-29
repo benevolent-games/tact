@@ -1,6 +1,6 @@
 
 import {Lens} from "./lens.js"
-import {tmax} from "./utils.js"
+import {tmax} from "../utils/tmax.js"
 
 export class Spoon {
 	constructor(

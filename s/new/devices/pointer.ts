@@ -1,9 +1,10 @@
 
 import {ev, sub} from "@e280/stz"
-import {Sample} from "../parts/types.js"
+import {Sample} from "../types.js"
 import {Device} from "../parts/device.js"
 import {Sampler} from "../parts/sampler.js"
-import {modprefix, splitAxis} from "../parts/utils.js"
+import {modprefix} from "../utils/modprefix.js"
+import {splitAxis} from "../utils/split-axis.js"
 
 export class PointerDevice extends Device {
 	on = sub<Sample>()

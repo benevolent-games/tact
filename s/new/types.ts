@@ -29,11 +29,11 @@ export type SpoonBind = {
 	forbidden?: LensBind[]
 }
 
-export type ModeBinds = {
+export type BracketBinds = {
 	[action: string]: SpoonBind[]
 }
 
 export type Bindings = {
-	[mode: string]: ModeBinds
+	[mode: string]: BracketBinds
 }
 

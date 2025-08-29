@@ -4,10 +4,10 @@ import {Lens} from "./parts/lens.js"
 import {Repo} from "./parts/repo.js"
 import {Spoon} from "./parts/spoon.js"
 import {Action} from "./parts/action.js"
-import {LensBind, ModeBinds, SpoonBind} from "./parts/types.js"
+import {LensBind, BracketBinds, SpoonBind} from "./types.js"
 
 /** inputs for a single mode */
-export class InputBracket<B extends ModeBinds> {
+export class InputBracket<B extends BracketBinds> {
 	actions: {[K in keyof B]: Action}
 	#actions: Action[] = []
 

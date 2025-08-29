@@ -1,9 +1,9 @@
 
 import {ev, sub} from "@e280/stz"
-import {Sample} from "../parts/types.js"
+import {Sample} from "../types.js"
 import {Device} from "../parts/device.js"
 import {Sampler} from "../parts/sampler.js"
-import {modprefix} from "../parts/utils.js"
+import {modprefix} from "../utils/modprefix.js"
 
 export class KeyboardDevice extends Device {
 	on = sub<Sample>()
