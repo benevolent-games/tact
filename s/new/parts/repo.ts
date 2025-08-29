@@ -25,9 +25,9 @@ export class Repo {
 	#aggregateDeviceSamples(devices: Set<Device>) {
 		const aggregated = new MapG<string, number[]>()
 		for (const device of devices) {
-			for (const report of device.samples()) {
-				const values = aggregated.guarantee(report.code, () => [])
-				values.push(report.value)
+			for (const [code, value] of device.samples()) {
+				const values = aggregated.guarantee(code, () => [])
+				values.push(value)
 			}
 		}
 		return aggregated

@@ -16,20 +16,18 @@ export class InputManager<B extends Bindings> {
 	#brackets = new MapG<keyof B, InputBracket<any>>()
 
 	constructor(bindings: B) {
-		this.actions = this.#build_actions(bindings)
+		this.actions = this.#buildActions(bindings)
 	}
 
 	poll(now: number) {
 		this.#repo.sampleDevices(this.devices)
 
-		// poll brackets for active modes
-		for (const mode of this.modes) {
-			const bracket = this.#brackets.require(mode)
-			bracket.poll(now)
-		}
+		// poll active mode brackets
+		for (const mode of this.modes)
+			this.#brackets.require(mode).poll(now)
 	}
 
-	#build_actions(bindings: B) {
+	#buildActions(bindings: B) {
 		const actions = {} as any
 		for (const [mode, binds] of Object.entries(bindings)) {
 			const bracket = new InputBracket(binds, this.#repo)

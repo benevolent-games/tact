@@ -1,4 +1,6 @@
 
+export type Sample = [code: string, value: number]
+
 export type Timing = (
 	| DirectTiming
 	| TapTiming
