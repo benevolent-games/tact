@@ -1,4 +1,5 @@
 
+import {sub} from "@e280/stz"
 import {Sample} from "../types.js"
 import {SetG} from "../../utils/set-g.js"
 
@@ -20,10 +21,12 @@ export class DeviceGroup extends Device {
 }
 
 export class SamplerDevice extends Device {
+	on = sub<Sample>()
 	#map = new Map<string, number>()
 
 	setSample(code: string, value: number) {
 		this.#map.set(code, value)
+		this.on.pub(code, value)
 		return this
 	}
 

@@ -1,12 +1,10 @@
 
-import {ev, sub} from "@e280/stz"
-import {Sample} from "../types.js"
+import {ev} from "@e280/stz"
 import {modprefix} from "../utils/modprefix.js"
-import {splitAxis} from "../../utils/split-axis.js"
 import {SamplerDevice} from "../parts/device.js"
+import {splitAxis} from "../../utils/split-axis.js"
 
 export class PointerDevice extends SamplerDevice {
-	on = sub<Sample>()
 	clientX = 0
 	clientY = 0
 	movementX = 0
@@ -44,8 +42,8 @@ export class PointerDevice extends SamplerDevice {
 		super()
 
 		const dispatch = (event: PointerEvent | WheelEvent, code: string, value: number) => {
-			this.#publish(code, value)
-			this.#publish(modprefix(event, code), value)
+			this.setSample(code, value)
+			this.setSample(modprefix(event, code), value)
 		}
 
 		this.dispose = ev(target, {
@@ -73,11 +71,6 @@ export class PointerDevice extends SamplerDevice {
 		})
 	}
 
-	#publish(code: string, value: number) {
-		this.setSample(code, value)
-		this.on.pub(code, value)
-	}
-
 	takeSamples() {
 		const {movementX, movementY} = this
 		const [left, right] = splitAxis(movementX)
@@ -85,15 +78,15 @@ export class PointerDevice extends SamplerDevice {
 
 		if (movementX) {
 			if (movementX >= 0)
-				this.#publish(`mouse.move.right`, Math.abs(right))
+				this.setSample(`mouse.move.right`, Math.abs(right))
 			else
-				this.#publish(`mouse.move.left`, Math.abs(left))
+				this.setSample(`mouse.move.left`, Math.abs(left))
 		}
 		if (movementY) {
 			if (movementY >= 0)
-				this.#publish(`mouse.move.up`, Math.abs(up))
+				this.setSample(`mouse.move.up`, Math.abs(up))
 			else
-				this.#publish(`mouse.move.down`, Math.abs(down))
+				this.setSample(`mouse.move.down`, Math.abs(down))
 		}
 
 		this.movementX = 0
