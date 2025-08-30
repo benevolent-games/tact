@@ -8,16 +8,16 @@ export class VirtualGamepadDevice extends SamplerDevice {
 
 	takeSamples() {
 		const left = this.stickLeft.breakdown()
-		this.setSample("g.stick.left.up", left.up)
-		this.setSample("g.stick.left.down", left.down)
-		this.setSample("g.stick.left.left", left.left)
-		this.setSample("g.stick.left.right", left.right)
+		this.setSample("gamepad.stick.left.up", left.up)
+		this.setSample("gamepad.stick.left.down", left.down)
+		this.setSample("gamepad.stick.left.left", left.left)
+		this.setSample("gamepad.stick.left.right", left.right)
 
 		const right = this.stickRight.breakdown()
-		this.setSample("g.stick.right.up", right.up)
-		this.setSample("g.stick.right.down", right.down)
-		this.setSample("g.stick.right.left", right.left)
-		this.setSample("g.stick.right.right", right.right)
+		this.setSample("gamepad.stick.right.up", right.up)
+		this.setSample("gamepad.stick.right.down", right.down)
+		this.setSample("gamepad.stick.right.left", right.left)
+		this.setSample("gamepad.stick.right.right", right.right)
 
 		return super.takeSamples()
 	}
