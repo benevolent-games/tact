@@ -3,38 +3,40 @@ export type GamepadInputs = ReturnType<typeof gamepadInputs>
 
 export function gamepadInputs() {
 	return {
-		"g.stick.left.up": 0,
-		"g.stick.left.down": 0,
-		"g.stick.left.left": 0,
-		"g.stick.left.right": 0,
+		"gamepad.any": 0,
 
-		"g.stick.right.up": 0,
-		"g.stick.right.down": 0,
-		"g.stick.right.left": 0,
-		"g.stick.right.right": 0,
+		"gamepad.stick.left.up": 0,
+		"gamepad.stick.left.down": 0,
+		"gamepad.stick.left.left": 0,
+		"gamepad.stick.left.right": 0,
 
-		"g.stick.left.click": 0,
-		"g.stick.right.click": 0,
+		"gamepad.stick.right.up": 0,
+		"gamepad.stick.right.down": 0,
+		"gamepad.stick.right.left": 0,
+		"gamepad.stick.right.right": 0,
 
-		"g.a": 0,
-		"g.b": 0,
-		"g.x": 0,
-		"g.y": 0,
+		"gamepad.stick.left.click": 0,
+		"gamepad.stick.right.click": 0,
 
-		"g.up": 0,
-		"g.down": 0,
-		"g.left": 0,
-		"g.right": 0,
+		"gamepad.a": 0,
+		"gamepad.b": 0,
+		"gamepad.x": 0,
+		"gamepad.y": 0,
 
-		"g.trigger.left": 0,
-		"g.trigger.right": 0,
+		"gamepad.up": 0,
+		"gamepad.down": 0,
+		"gamepad.left": 0,
+		"gamepad.right": 0,
 
-		"g.bumper.left": 0,
-		"g.bumper.right": 0,
+		"gamepad.trigger.left": 0,
+		"gamepad.trigger.right": 0,
 
-		"g.alpha": 0,
-		"g.beta": 0,
-		"g.gamma": 0,
+		"gamepad.bumper.left": 0,
+		"gamepad.bumper.right": 0,
+
+		"gamepad.alpha": 0,
+		"gamepad.beta": 0,
+		"gamepad.gamma": 0,
 	}
 }
 
