@@ -1,20 +1,19 @@
 
-import {loop} from "@e280/stz"
 import {Scalar} from "@benev/math"
-
-import {Port} from "./port.js"
 import {Inputs} from "../inputs.js"
+import {SetG} from "../../utils/set-g.js"
 import {Device} from "../parts/device.js"
 import {SeatedBindings} from "../types.js"
 
+/** orchestrate multiple player devices onto player seats */
 export class Seating<B extends SeatedBindings> {
-	#ports = new Set<Port>()
+	devices = new SetG<Device>()
 
 	constructor(public seats: Inputs<B>[]) {
-		for (const [id, seat] of seats.entries()) {
+		for (const seat of seats) {
 			const fn = (delta: 1 | -1) => () => {
-				const port = this.lookupPort(id)
-				if (port) this.shimmy(port, delta)
+				const device = this.lookupDevice(seat)
+				if (device) this.shimmy(device, delta)
 			}
 			seat.actions.meta.playerNext.onDown(fn(1))
 			seat.actions.meta.playerPrevious.onDown(fn(-1))
@@ -30,86 +29,60 @@ export class Seating<B extends SeatedBindings> {
 		yield* this.seats.entries()
 	}
 
-	requireSeat(seatId: number) {
+	poll(now: number) {
+		for (const seat of this.seats)
+			seat.poll(now)
+	}
+
+	seatById(seatId: number) {
 		const seat = this.seats.at(seatId)
 		if (!seat) throw new Error(`seat ${seatId} not found`)
 		return seat
 	}
 
-	lookupPort(seatId: number) {
-		for (const port of this.#ports) {
-			if (port.seatId === seatId)
-				return port
+	lookupSeat(device: Device) {
+		for (const seat of this.seats) {
+			if (seat.devices.has(device))
+				return seat
 		}
 	}
 
-	hasPort(port: Port) {
-		return this.#ports.has(port)
+	lookupDevice(seat: Inputs<B>) {
+		for (const device of this.devices) {
+			if (seat.devices.has(device))
+				return device
+		}
 	}
 
-	assign(port: Port, seatId: number) {
-		this.#unassign(port)
-		const seat = this.requireSeat(seatId)
-		seat.addDevices(...port.devices)
-		port.seatId = seatId
-		return seat
+	shimmy(device: Device, delta: 1 | -1) {
+		const oldSeatId = this.seats.findIndex(seat => seat.devices.has(device))
+		const maxSeatId = Math.max(0, this.seats.length - 1)
+		const newSeatId = Scalar.clamp(oldSeatId + delta, 0, maxSeatId)
+		const newSeat = this.seatById(newSeatId)
+		this.seats.forEach(seat => seat.devices.delete(device))
+		newSeat.devices.add(device)
+		return newSeat
 	}
 
-	#unassign(port: Port) {
-		const seat = this.requireSeat(port.seatId)
-		seat.devices.deletes(...port.devices)
+	connect<D extends Device>(device: D, seat: Inputs<B> = this.chooseSeat()) {
+		this.seats.forEach(seat => seat.devices.delete(device))
+		this.devices.add(device)
+		seat.devices.add(device)
+		return device
 	}
 
-	shimmy(port: Port, delta: 1 | -1) {
-		const lastSeatId = this.seats.length - 1
-		const newSeatId = Scalar.clamp(port.seatId + delta, 0, lastSeatId)
-		this.assign(port, newSeatId)
-	}
-
-	connect(...devices: Device[]) {
-		const seatId = this.chooseSeatId()
-		const port = new Port(seatId, devices)
-		this.#ports.add(port)
-		this.assign(port, seatId)
-		return port
-	}
-
-	disconnect(port: Port) {
-		this.#unassign(port)
-		this.#ports.delete(port)
+	disconnect(device: Device) {
+		this.seats.forEach(seat => seat.devices.delete(device))
+		this.devices.delete(device)
 	}
 
 	/** returns the first unassigned seat id, or the last id if they're all assigned */
-	chooseSeatId() {
-		for (const id of loop(this.seats.length)) {
-			const port = [...this.#ports].find(port => port.seatId === id)
-			if (!port) return id
+	chooseSeat() {
+		for (const seat of this.seats) {
+			if (!this.lookupDevice(seat))
+				return seat
 		}
-		return this.seats.length - 1
+		return this.seatById(Math.max(0, this.seats.length - 1))
 	}
 }
-
-/*
-
-// reserving four seats
-const seating = new Seating([
-	new Inputs(bindings),
-	new Inputs(bindings),
-	new Inputs(bindings),
-	new Inputs(bindings),
-])
-
-// connect the keyboard and mouse player
-seating.connect(
-	new KeyboardDevice(),
-	new PointerDevice(),
-)
-
-// connect and disconnect gamepads as they come and go
-const gamepads = new Gamepads(device => {
-	const port = seating.connect(device)
-	return () => port.disconnect()
-})
-
-*/
 
