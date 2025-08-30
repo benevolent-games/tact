@@ -18,6 +18,7 @@ export class Seating<B extends SeatedBindings> {
 			}
 			seat.actions.meta.playerNext.onDown(fn(1))
 			seat.actions.meta.playerPrevious.onDown(fn(-1))
+			seat.modes.add("meta")
 		}
 	}
 

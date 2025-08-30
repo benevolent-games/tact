@@ -8,6 +8,7 @@ export const _poll = Symbol("poll")
 export class Action {
 	value = 0
 	previous = 0
+
 	on = sub<[Action]>()
 	onDown = sub<[Action]>()
 

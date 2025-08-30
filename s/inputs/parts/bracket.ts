@@ -11,7 +11,7 @@ export class Bracket<B extends BracketBinds> {
 	actions: {[K in keyof B]: Action}
 	#actions: Action[] = []
 
-	constructor(binds: B, private repo: Repo) {
+	constructor(binds: B, private repo = new Repo()) {
 		this.actions = this.#buildActions(binds)
 	}
 
