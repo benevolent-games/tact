@@ -1,20 +1,17 @@
 
 import {ev, sub} from "@e280/stz"
 import {Sample} from "../types.js"
-import {Device} from "../parts/device.js"
-import {Sampler} from "../utils/sampler.js"
 import {modprefix} from "../utils/modprefix.js"
 import {splitAxis} from "../utils/split-axis.js"
+import {SamplerDevice} from "../parts/device.js"
 
-export class PointerDevice extends Device {
+export class PointerDevice extends SamplerDevice {
 	on = sub<Sample>()
-	dispose: () => void
-	#sampler = new Sampler()
-
 	clientX = 0
 	clientY = 0
 	movementX = 0
 	movementY = 0
+	dispose: () => void
 
 	static buttonCode(event: PointerEvent) {
 		switch (event.button) {
@@ -79,11 +76,11 @@ export class PointerDevice extends Device {
 	}
 
 	#publish(code: string, value: number) {
-		this.#sampler.set(code, value)
+		this.setSample(code, value)
 		this.on.pub(code, value)
 	}
 
-	samples() {
+	getSamples() {
 		const {movementX, movementY} = this
 		const [left, right] = splitAxis(movementX)
 		const [down, up] = splitAxis(movementY)
@@ -104,7 +101,7 @@ export class PointerDevice extends Device {
 		this.movementX = 0
 		this.movementY = 0
 
-		return this.#sampler.samples()
+		return super.takeSamples()
 	}
 }
 

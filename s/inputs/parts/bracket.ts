@@ -1,8 +1,8 @@
 
 import {Lens} from "./lens.js"
-import {Repo} from "./repo.js"
 import {Fork} from "../units/fork.js"
 import {Spoon} from "../units/spoon.js"
+import {Cause} from "../units/cause.js"
 import {_poll, Action} from "./action.js"
 import {LensBind, BracketBinds, SpoonBind} from "../types.js"
 
@@ -11,7 +11,7 @@ export class Bracket<B extends BracketBinds> {
 	actions: {[K in keyof B]: Action}
 	#actions: Action[] = []
 
-	constructor(binds: B, private repo = new Repo()) {
+	constructor(binds: B, private obtainCause: (code: string) => Cause) {
 		this.actions = this.#buildActions(binds)
 	}
 
@@ -34,7 +34,7 @@ export class Bracket<B extends BracketBinds> {
 
 	#makeSpoon(bind: SpoonBind) {
 		const makeLens = ({code, settings}: LensBind) => {
-			const cause = this.repo.guarantee(code)
+			const cause = this.obtainCause(code)
 			return new Lens(cause, settings)
 		}
 		const lenses = bind.lenses.map(makeLens)

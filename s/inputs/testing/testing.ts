@@ -1,9 +1,8 @@
 
 import {Inputs} from "../inputs.js"
 import {asBindings} from "../types.js"
-import {Device} from "../parts/device.js"
-import {Sampler} from "../utils/sampler.js"
 import {Seating} from "../seats/seating.js"
+import {SamplerDevice} from "../parts/device.js"
 import {seatedBindings} from "../seats/bindings.js"
 
 export function testFrame(f: number) {
@@ -19,15 +18,8 @@ export function testBindings() {
 	})
 }
 
-export class TestDevice extends Device {
-	sampler = new Sampler()
-	samples() {
-		return this.sampler.samples()
-	}
-}
-
 export function testSetupAlpha() {
-	const device = new TestDevice()
+	const device = new SamplerDevice()
 	const inputs = new Inputs(testBindings())
 		.enableModes("basic")
 		.attachDevices(device)

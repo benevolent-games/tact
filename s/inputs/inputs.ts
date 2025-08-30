@@ -1,10 +1,11 @@
 
 import {MapG} from "@e280/stz"
-import {Bindings} from "./types.js"
-import {Repo} from "./parts/repo.js"
+import {Cause} from "./units/cause.js"
 import {Action} from "./parts/action.js"
 import {Device} from "./parts/device.js"
 import {Bracket} from "./parts/bracket.js"
+import {Bindings, Sample} from "./types.js"
+import {normalizeSamples} from "./utils/normalize-samples.js"
 
 /** orchestrate multiple input brackets via modes */
 export class Inputs<B extends Bindings> {
@@ -12,11 +13,18 @@ export class Inputs<B extends Bindings> {
 	devices = new Set<Device>()
 	actions: {[Mode in keyof B]: {[K in keyof B[Mode]]: Action}}
 
-	#repo = new Repo()
+	#causes = new MapG<string, Cause>()
 	#brackets = new MapG<keyof B, Bracket<any>>()
 
 	constructor(bindings: B) {
 		this.actions = this.#buildActions(bindings)
+	}
+
+	poll(now: number) {
+		this.#resetCausesToZero()
+		const samples = this.#takeAllDeviceSamples()
+		this.#assignSamplesToCauses(samples)
+		this.#pollBracketsForActiveModes(now)
 	}
 
 	attachDevices(...devices: Device[]) {
@@ -43,10 +51,30 @@ export class Inputs<B extends Bindings> {
 		return this
 	}
 
-	poll(now: number) {
-		this.#repo.sampleDevices(this.devices)
+	#obtainCause = (code: string) => {
+		return this.#causes.guarantee(code, () => new Cause())
+	}
 
-		// poll active mode brackets
+	#resetCausesToZero() {
+		for (const cause of this.#causes.values())
+			cause.value = 0
+	}
+
+	#takeAllDeviceSamples() {
+		return normalizeSamples(
+			[...this.devices]
+				.flatMap(device => device.takeSamples())
+		)
+	}
+
+	#assignSamplesToCauses(samples: Sample[]) {
+		for (const [code, value] of samples) {
+			const cause = this.#causes.get(code)
+			if (cause) cause.value = value
+		}
+	}
+
+	#pollBracketsForActiveModes(now: number) {
 		for (const mode of this.modes)
 			this.#brackets.require(mode).poll(now)
 	}
@@ -54,7 +82,7 @@ export class Inputs<B extends Bindings> {
 	#buildActions(bindings: B) {
 		const actions = {} as any
 		for (const [mode, binds] of Object.entries(bindings)) {
-			const bracket = new Bracket(binds, this.#repo)
+			const bracket = new Bracket(binds, this.#obtainCause)
 			this.#brackets.set(mode, bracket)
 			actions[mode] = bracket.actions
 		}

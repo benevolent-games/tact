@@ -1,20 +1,18 @@
 
 import {ev, sub} from "@e280/stz"
 import {Sample} from "../types.js"
-import {Device} from "../parts/device.js"
-import {Sampler} from "../utils/sampler.js"
 import {modprefix} from "../utils/modprefix.js"
+import {SamplerDevice} from "../parts/device.js"
 
-export class KeyboardDevice extends Device {
+export class KeyboardDevice extends SamplerDevice {
 	on = sub<Sample>()
 	dispose: () => void
-	#sampler = new Sampler()
 
 	constructor(target: EventTarget) {
 		super()
 
 		const publish = (code: string, value: number) => {
-			this.#sampler.set(code, value)
+			this.setSample(code, value)
 			this.on.pub(code, value)
 		}
 
@@ -28,10 +26,6 @@ export class KeyboardDevice extends Device {
 			keydown: (event: KeyboardEvent) => dispatch(event, 1),
 			keyup: (event: KeyboardEvent) => dispatch(event, 0),
 		})
-	}
-
-	samples() {
-		return this.#sampler.samples()
 	}
 }
 

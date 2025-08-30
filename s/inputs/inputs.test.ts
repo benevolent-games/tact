@@ -1,12 +1,13 @@
 
 import {Science, test, expect} from "@e280/science"
-import {TestDevice, testFrame, testSetupAlpha, testSetupBravo} from "./testing/testing.js"
+import {testFrame, testSetupAlpha, testSetupBravo} from "./testing/testing.js"
+import { SamplerDevice } from "./parts/device.js"
 
 export default Science.suite({
 	"sample to action value": test(async() => {
 		const {inputs, device} = testSetupAlpha()
 		expect(inputs.actions.basic.jump.value).is(0)
-		device.sampler.set("Space", 1)
+		device.setSample("Space", 1)
 		inputs.poll(testFrame(0))
 		expect(inputs.actions.basic.jump.value).is(1)
 	}),
@@ -15,8 +16,8 @@ export default Science.suite({
 		"lolol": test(async() => {
 			const {seating} = testSetupBravo()
 			const [player1, player2, player3, player4] = seating.seats
-			const device1 = new TestDevice()
-			const port1 = seating.connect(new TestDevice())
+			const device1 = new SamplerDevice()
+			const port1 = seating.connect(device1)
 		}),
 	}),
 })
