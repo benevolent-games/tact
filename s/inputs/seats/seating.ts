@@ -50,16 +50,14 @@ export class Seating<B extends SeatedBindings> {
 	assign(port: Port, seatId: number) {
 		this.#unassign(port)
 		const seat = this.requireSeat(seatId)
-		seat.attach(...port.devices)
+		seat.attachDevices(...port.devices)
 		port.seatId = seatId
 		return seat
 	}
 
 	#unassign(port: Port) {
-		if (port.seatId !== null) {
-			const seat = this.requireSeat(port.seatId)
-			seat.detach(...port.devices)
-		}
+		const seat = this.requireSeat(port.seatId)
+		seat.detachDevices(...port.devices)
 	}
 
 	shimmy(port: Port, delta: 1 | -1) {

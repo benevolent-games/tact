@@ -19,15 +19,27 @@ export class Inputs<B extends Bindings> {
 		this.actions = this.#buildActions(bindings)
 	}
 
-	attach(...devices: Device[]) {
+	attachDevices(...devices: Device[]) {
 		for (const device of devices)
 			this.devices.add(device)
 		return this
 	}
 
-	detach(...devices: Device[]) {
+	detachDevices(...devices: Device[]) {
 		for (const device of devices)
 			this.devices.delete(device)
+		return this
+	}
+
+	enableModes(...modes: (keyof B)[]) {
+		for (const mode of modes)
+			this.modes.add(mode)
+		return this
+	}
+
+	disableModes(...modes: (keyof B)[]) {
+		for (const mode of modes)
+			this.modes.add(mode)
 		return this
 	}
 

@@ -1,9 +1,8 @@
 
 import {Science} from "@e280/science"
+import inputs from "./inputs/inputs.test.js"
 
 await Science.run({
-	"the science is settled": Science.test(async() => {
-		Science.expect(2 + 2).is(4)
-	}),
+	inputs,
 })
 

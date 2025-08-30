@@ -5,7 +5,8 @@ export class Sampler {
 	#map = new Map<string, number>()
 
 	set(code: string, value: number) {
-		return this.#map.set(code, value)
+		this.#map.set(code, value)
+		return this
 	}
 
 	samples(): Sample[] {
