@@ -12,7 +12,7 @@ import {makeInputsActions} from "./utils/make-actions-object.js"
 export class Inputs<B extends Bindings> {
 	modes = new SetG<keyof B>()
 	devices = new SetG<Device>()
-	actions: Actions<B>
+	readonly actions: Actions<B>
 	#causes = new MapG<string, Cause>()
 
 	constructor(bindings: B) {

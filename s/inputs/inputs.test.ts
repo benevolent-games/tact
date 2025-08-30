@@ -7,9 +7,16 @@ export default Science.suite({
 	"sample to action value": test(async() => {
 		const {inputs, device, time} = testSetupAlpha()
 		expect(inputs.actions.basic.jump.value).is(0)
+		expect(inputs.actions.basic.shoot.value).is(0)
 		device.setSample("Space", 1)
 		inputs.poll(time.now)
 		expect(inputs.actions.basic.jump.value).is(1)
+		expect(inputs.actions.basic.shoot.value).is(0)
+		device.setSample("Space", 2)
+		device.setSample("mouse.button.left", 3)
+		inputs.poll(time.now)
+		expect(inputs.actions.basic.jump.value).is(2)
+		expect(inputs.actions.basic.shoot.value).is(3)
 	}),
 
 	"multiplayer device seating": Science.suite({

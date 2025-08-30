@@ -17,7 +17,7 @@ export function testBindings() {
 	return asBindings({
 		basic: {
 			jump: [{lenses: [{code: "Space"}]}],
-			shoot: [{lenses: [{code: "LMB"}]}],
+			shoot: [{lenses: [{code: "mouse.button.left"}]}],
 		},
 	})
 }

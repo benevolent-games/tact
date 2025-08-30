@@ -15,10 +15,10 @@ export class PointerDevice extends SamplerDevice {
 
 	static buttonCode(event: PointerEvent) {
 		switch (event.button) {
-			case 0: return "LMB"
-			case 1: return "MMB"
-			case 2: return "RMB"
-			default: return `MB${event.button + 1}`
+			case 0: return "mouse.button.left"
+			case 1: return "mouse.button.middle"
+			case 2: return "mouse.button.right"
+			default: return `mouse.button.${event.button + 1}`
 		}
 	}
 
@@ -27,13 +27,13 @@ export class PointerDevice extends SamplerDevice {
 
 		if (event.deltaX)
 			movements.push([
-				event.deltaX > 0 ? "WheelRight" : "WheelLeft",
+				event.deltaX > 0 ? "mouse.wheel.right" : "mouse.wheel.left",
 				event.deltaX,
 			])
 
 		if (event.deltaY)
 			movements.push([
-				event.deltaY > 0 ? "WheelDown" : "WheelUp",
+				event.deltaY > 0 ? "mouse.wheel.down" : "mouse.wheel.up",
 				event.deltaY,
 			])
 
@@ -80,22 +80,22 @@ export class PointerDevice extends SamplerDevice {
 		this.on.pub(code, value)
 	}
 
-	getSamples() {
+	takeSamples() {
 		const {movementX, movementY} = this
 		const [left, right] = splitAxis(movementX)
 		const [down, up] = splitAxis(movementY)
 
 		if (movementX) {
 			if (movementX >= 0)
-				this.#publish(`PointerMoveRight`, Math.abs(right))
+				this.#publish(`mouse.move.right`, Math.abs(right))
 			else
-				this.#publish(`PointerMoveLeft`, Math.abs(left))
+				this.#publish(`mouse.move.left`, Math.abs(left))
 		}
 		if (movementY) {
 			if (movementY >= 0)
-				this.#publish(`PointerMoveUp`, Math.abs(up))
+				this.#publish(`mouse.move.up`, Math.abs(up))
 			else
-				this.#publish(`PointerMoveDown`, Math.abs(down))
+				this.#publish(`mouse.move.down`, Math.abs(down))
 		}
 
 		this.movementX = 0
