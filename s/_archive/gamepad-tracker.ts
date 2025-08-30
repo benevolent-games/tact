@@ -1,6 +1,5 @@
 
-import {ev} from "@e280/stz"
-import {signal} from "@e280/strata"
+import {ev, signal} from "@benev/slate"
 
 export class GamepadTracker {
 	gamepadsSignal = signal<Gamepad[]>([])

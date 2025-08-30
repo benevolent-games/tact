@@ -10,7 +10,7 @@ export * from "./seats/seating.js"
 
 export * from "./utils/modprefix.js"
 export * from "./utils/normalize-samples.js"
-export * from "./utils/split-axis.js"
+export * from "../utils/split-axis.js"
 
 export * from "./inputs.js"
 export * from "./types.js"

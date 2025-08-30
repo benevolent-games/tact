@@ -1,5 +1,5 @@
 
-import {Device} from "./device.js"
+import {Device} from "../devices/device.js"
 import {Cause} from "../parts/cause.js"
 import {isPressed} from "../utils/is-pressed.js"
 import {splitAxis} from "../utils/split-axis.js"
