@@ -1,17 +1,21 @@
 
 import {Sample} from "../types.js"
+import {SetG} from "../../utils/set-g.js"
 
 export abstract class Device {
 	abstract takeSamples(): Sample[]
 }
 
 export class DeviceGroup extends Device {
-	constructor(public devices: Device[]) {
+	devices = new SetG<Device>()
+
+	constructor(devices: Device[]) {
 		super()
+		this.devices.adds(...devices)
 	}
 
 	takeSamples() {
-		return this.devices.flatMap(device => device.takeSamples())
+		return [...this.devices].flatMap(device => device.takeSamples())
 	}
 }
 

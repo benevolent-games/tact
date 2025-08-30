@@ -1,5 +1,5 @@
 
-import {ob} from "@e280/stz"
+import {MapG, ob} from "@e280/stz"
 import {Lens} from "../parts/lens.js"
 import {Fork} from "../units/fork.js"
 import {Cause} from "../units/cause.js"
@@ -7,11 +7,9 @@ import {Spoon} from "../units/spoon.js"
 import {Action} from "../parts/action.js"
 import {Actions, Bindings, BracketBinds, LensBind, SpoonBind} from "../types.js"
 
-export type ObtainCauseFn = (code: string) => Cause
-
 export function makeInputsActions<B extends Bindings>(
 		bindings: B,
-		obtainCause: ObtainCauseFn,
+		causes: MapG<string, Cause>,
 	) {
 
 	function makeBracket<B2 extends BracketBinds>(binds: B2) {
@@ -32,7 +30,7 @@ export function makeInputsActions<B extends Bindings>(
 	}
 
 	function makeLens({code, settings}: LensBind) {
-		const cause = obtainCause(code)
+		const cause = causes.guarantee(code, () => new Cause)
 		return new Lens(cause, settings)
 	}
 

@@ -21,14 +21,14 @@ export function testBindings() {
 export function testSetupAlpha() {
 	const device = new SamplerDevice()
 	const inputs = new Inputs(testBindings())
-		.enableModes("basic")
-		.attachDevices(device)
+		.addModes("basic")
+		.addDevices(device)
 	return {device, inputs}
 }
 
 export function testSetupBravo() {
 	const seat = () => new Inputs(seatedBindings(testBindings()))
-		.enableModes("meta", "basic")
+		.addModes("meta", "basic")
 	const seating = new Seating([seat(), seat(), seat(), seat()])
 	return {seating}
 }

@@ -1,5 +1,6 @@
 
 import {MapG} from "@e280/stz"
+import {SetG} from "../utils/set-g.js"
 import {Cause} from "./units/cause.js"
 import {_poll} from "./parts/action.js"
 import {Device} from "./parts/device.js"
@@ -7,72 +8,56 @@ import {Actions, Bindings, Sample} from "./types.js"
 import {normalizeSamples} from "./utils/normalize-samples.js"
 import {makeInputsActions} from "./utils/make-actions-object.js"
 
-/** orchestrate multiple input brackets via modes */
+/** user input manager with customizable keybindings */
 export class Inputs<B extends Bindings> {
-	modes = new Set<keyof B>()
-	devices = new Set<Device>()
+	modes = new SetG<keyof B>()
+	devices = new SetG<Device>()
 	actions: Actions<B>
 	#causes = new MapG<string, Cause>()
 
 	constructor(bindings: B) {
-		this.actions = makeInputsActions(bindings, this.#obtainCause)
+		this.actions = makeInputsActions(bindings, this.#causes)
 	}
 
 	poll(now: number) {
-		this.#resetCausesToZero()
-		const samples = this.#takeAllDeviceSamples()
-		this.#assignSamplesToCauses(samples)
-		this.#pollActionsForActiveModes(now)
+		this.#reset_causes_to_zero()
+		const samples = this.#take_all_samples_from_devices()
+		this.#assign_sample_values_to_causes(samples)
+		this.#poll_active_mode_actions(now)
 	}
 
-	attachDevices(...devices: Device[]) {
+	addDevices(...devices: Device[]) {
 		for (const device of devices)
 			this.devices.add(device)
 		return this
 	}
 
-	detachDevices(...devices: Device[]) {
-		for (const device of devices)
-			this.devices.delete(device)
-		return this
-	}
-
-	enableModes(...modes: (keyof B)[]) {
+	addModes(...modes: (keyof B)[]) {
 		for (const mode of modes)
 			this.modes.add(mode)
 		return this
 	}
 
-	disableModes(...modes: (keyof B)[]) {
-		for (const mode of modes)
-			this.modes.add(mode)
-		return this
-	}
-
-	#obtainCause = (code: string) => {
-		return this.#causes.guarantee(code, () => new Cause())
-	}
-
-	#resetCausesToZero() {
+	#reset_causes_to_zero() {
 		for (const cause of this.#causes.values())
 			cause.value = 0
 	}
 
-	#takeAllDeviceSamples() {
+	#take_all_samples_from_devices() {
 		return normalizeSamples(
 			[...this.devices]
 				.flatMap(device => device.takeSamples())
 		)
 	}
 
-	#assignSamplesToCauses(samples: Sample[]) {
+	#assign_sample_values_to_causes(samples: Sample[]) {
 		for (const [code, value] of samples) {
 			const cause = this.#causes.get(code)
 			if (cause) cause.value = value
 		}
 	}
 
-	#pollActionsForActiveModes(now: number) {
+	#poll_active_mode_actions(now: number) {
 		for (const mode of this.modes) {
 			for (const action of Object.values(this.actions[mode])) {
 				action[_poll](now)

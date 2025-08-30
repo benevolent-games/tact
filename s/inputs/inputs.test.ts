@@ -1,7 +1,7 @@
 
 import {Science, test, expect} from "@e280/science"
+import {SamplerDevice} from "./parts/device.js"
 import {testFrame, testSetupAlpha, testSetupBravo} from "./testing/testing.js"
-import { SamplerDevice } from "./parts/device.js"
 
 export default Science.suite({
 	"sample to action value": test(async() => {
