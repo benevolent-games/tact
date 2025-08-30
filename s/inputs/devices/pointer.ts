@@ -43,7 +43,7 @@ export class PointerDevice extends SamplerDevice {
 	constructor(target: EventTarget) {
 		super()
 
-		const dispatch = (event: PointerEvent, code: string, value: number) => {
+		const dispatch = (event: PointerEvent | WheelEvent, code: string, value: number) => {
 			this.#publish(code, value)
 			this.#publish(modprefix(event, code), value)
 		}
@@ -67,10 +67,8 @@ export class PointerDevice extends SamplerDevice {
 			},
 
 			wheel: (event: WheelEvent) => {
-				for (const [code, value] of PointerDevice.wheelCodes(event)) {
-					this.#publish(code, value)
-					this.#publish(modprefix(event, code), value)
-				}
+				for (const [code, value] of PointerDevice.wheelCodes(event))
+					dispatch(event, code, value)
 			},
 		})
 	}
