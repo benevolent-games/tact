@@ -1,3 +1,4 @@
+import { Action } from "./parts/action.js"
 
 export type Sample = [code: string, value: number]
 
@@ -51,4 +52,10 @@ export type AsSeatedBindings<B extends Bindings> = {
 } & B
 
 export type SeatedBindings = AsSeatedBindings<Bindings>
+
+export type Actions<B extends Bindings> = {
+	[Mode in keyof B]: {
+		[K in keyof B[Mode]]: Action
+	}
+}
 
