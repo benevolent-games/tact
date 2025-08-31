@@ -5,7 +5,7 @@ import {ev, MapG} from "@e280/stz"
 
 import stylesCss from "./styles.css.js"
 
-import {NubStick} from "../nubs/stick/view.js"
+import {NubStick} from "../stick/view.js"
 import {VirtualGamepadDevice} from "./device.js"
 import {GamepadInputs} from "./utils/gamepad-inputs.js"
 import {touchTracking} from "./utils/touch-tracking.js"

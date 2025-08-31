@@ -5,7 +5,7 @@ import {Disposable} from "@e280/stz"
 import {splitAxis} from "../../utils/split-axis.js"
 import {SamplerDevice} from "../../station/devices/infra/sampler.js"
 
-export class Stick extends SamplerDevice implements Disposable {
+export class StickDevice extends SamplerDevice implements Disposable {
 	vector = signal(Vec2.zero())
 	dispose: () => void
 

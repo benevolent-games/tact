@@ -1,10 +1,10 @@
 
-import {Stick} from "../nubs/stick/stick.js"
-import {SamplerDevice} from "../station/devices/infra/sampler.js"
+import {StickDevice} from "../stick/device.js"
+import {SamplerDevice} from "../../station/devices/infra/sampler.js"
 
 export class VirtualGamepadDevice extends SamplerDevice {
-	stickLeft = new Stick()
-	stickRight = new Stick()
+	stickLeft = new StickDevice()
+	stickRight = new StickDevice()
 
 	takeSamples() {
 		const left = this.stickLeft.breakdown()
