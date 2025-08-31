@@ -4,8 +4,12 @@ import {Scalar} from "@benev/math"
 import {Station} from "./station.js"
 import {SwitchboardBindings} from "./types.js"
 import {Device} from "./devices/infra/device.js"
+import {switchboardBindings} from "./parts/switchboard-bindings.js"
 
 export class Switchboard<B extends SwitchboardBindings> {
+	static readonly mode = "switchboard" as const
+	static readonly bindings = switchboardBindings
+
 	devices = new SetG<Device>()
 
 	constructor(public stations: Station<B>[]) {
@@ -16,7 +20,7 @@ export class Switchboard<B extends SwitchboardBindings> {
 			}
 			station.actions.switchboard.shimmyNext.onDown(fn(1))
 			station.actions.switchboard.shimmyPrevious.onDown(fn(-1))
-			station.modes.add("meta")
+			station.modes.add(Switchboard.mode)
 		}
 	}
 

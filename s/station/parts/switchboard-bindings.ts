@@ -1,10 +1,11 @@
 
+import {Switchboard} from "../switchboard.js"
 import {AsSwitchboardBindings, Bindings} from "../types.js"
 
 export function switchboardBindings<B extends Bindings>(b: B): AsSwitchboardBindings<B> {
 	return {
 		...b,
-		switchboard: {
+		[Switchboard.mode]: {
 			shimmyNext: [
 				{lenses: [{code: "BracketRight"}]},
 				{lenses: [{code: "gamepad.right"}], required: [{code: "gamepad.gamma"}]},

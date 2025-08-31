@@ -34,7 +34,7 @@ export function testSetupAlpha() {
 export function testSetupBravo() {
 	const time = new TestTime()
 	const station = () => new Station(switchboardBindings(testBindings()))
-		.addModes("switchboard", "basic")
+		.addModes(Switchboard.mode, "basic")
 	const switchboard = new Switchboard([station(), station(), station(), station()])
 	return {switchboard, time}
 }
