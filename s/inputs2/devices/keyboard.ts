@@ -1,5 +1,5 @@
 
-import {ev, sub} from "@e280/stz"
+import {coalesce, ev, sub} from "@e280/stz"
 import {Sample} from "../types.js"
 import {Device} from "./device.js"
 import {modprefix} from "../utils/modprefix.js"
@@ -22,18 +22,28 @@ export class KeyboardDevice extends Device {
 			this.on.pub(code, 0)
 		}
 
-		this.dispose = ev(target, {
-			keydown: (event: KeyboardEvent) => {
-				if (event.repeat) return
-				down(event.code)
-				down(modprefix(event, event.code))
-			},
+		this.dispose = coalesce(
 
-			keyup: (event: KeyboardEvent) => {
-				up(event.code)
-				up(modprefix(event, event.code))
-			},
-		})
+			ev(target, {
+				keydown: (event: KeyboardEvent) => {
+					if (event.repeat) return
+					down(event.code)
+					down(modprefix(event, event.code))
+				},
+				keyup: (event: KeyboardEvent) => {
+					up(event.code)
+					up(modprefix(event, event.code))
+				},
+			}),
+
+			ev(window, {
+				blur: () => {
+					for (const code of this.#held)
+						this.on.pub(code, 0)
+					this.#held.clear()
+				},
+			})
+		)
 	}
 
 	takeSamples() {
