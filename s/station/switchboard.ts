@@ -2,12 +2,12 @@
 import {SetG} from "@e280/stz"
 import {Scalar} from "@benev/math"
 import {Station} from "./station.js"
-import {SwitchboardBindings} from "./types.js"
 import {Device} from "./devices/infra/device.js"
+import {switchboardMode, SwitchboardBindings} from "./types.js"
 import {switchboardBindings} from "./parts/switchboard-bindings.js"
 
 export class Switchboard<B extends SwitchboardBindings> {
-	static readonly mode = "switchboard" as const
+	static readonly mode = switchboardMode
 	static readonly bindings = switchboardBindings
 
 	devices = new SetG<Device>()
