@@ -19,67 +19,67 @@ export default Science.suite({
 		expect(station.actions.basic.shoot.value).is(3)
 	}),
 
-	"seating": Science.suite({
+	"switchboard": Science.suite({
 		"player1 inputs work": test(async() => {
 			const {switchboard, time} = testSetupBravo()
-			const [player1, player2] = switchboard.stations
-			const device1 = switchboard.connect(new SamplerDevice())
-			expect(player1.actions.basic.jump.value).is(0)
-			expect(player2.actions.basic.jump.value).is(0)
-			device1.setSample("Space", 1)
+			const [s1, s2] = switchboard.stations
+			const d1 = switchboard.connect(new SamplerDevice())
+			expect(s1.actions.basic.jump.value).is(0)
+			expect(s2.actions.basic.jump.value).is(0)
+			d1.setSample("Space", 1)
 			switchboard.poll(time.now)
-			expect(player1.actions.basic.jump.value).is(1)
-			expect(player2.actions.basic.jump.value).is(0)
+			expect(s1.actions.basic.jump.value).is(1)
+			expect(s2.actions.basic.jump.value).is(0)
 		}),
 
-		"two players playing on separate seats": test(async() => {
-			const {switchboard: seating, time} = testSetupBravo()
-			const [player1, player2] = seating.stations
-			const device1 = seating.connect(new SamplerDevice())
-			const device2 = seating.connect(new SamplerDevice())
-			device1.setSample("Space", 1)
-			device2.setSample("Space", 2)
-			seating.poll(time.now)
-			expect(player1.actions.basic.jump.value).is(1)
-			expect(player2.actions.basic.jump.value).is(2)
+		"two devices playing on separate stations": test(async() => {
+			const {switchboard, time} = testSetupBravo()
+			const [s1, s2] = switchboard.stations
+			const d1 = switchboard.connect(new SamplerDevice())
+			const d2 = switchboard.connect(new SamplerDevice())
+			d1.setSample("Space", 1)
+			d2.setSample("Space", 2)
+			switchboard.poll(time.now)
+			expect(s1.actions.basic.jump.value).is(1)
+			expect(s2.actions.basic.jump.value).is(2)
 		}),
 
-		"player can shimmy seats": test(async() => {
-			const {switchboard: seating, time} = testSetupBravo()
-			const [player1, player2] = seating.stations
-			const device1 = seating.connect(new SamplerDevice())
-			seating.shimmy(device1, 1)
-			device1.setSample("Space", 1)
-			seating.poll(time.now)
-			expect(player1.actions.basic.jump.value).is(0)
-			expect(player2.actions.basic.jump.value).is(1)
+		"player can shimmy": test(async() => {
+			const {switchboard, time} = testSetupBravo()
+			const [s1, s2] = switchboard.stations
+			const d1 = switchboard.connect(new SamplerDevice())
+			switchboard.shimmy(d1, 1)
+			d1.setSample("Space", 1)
+			switchboard.poll(time.now)
+			expect(s1.actions.basic.jump.value).is(0)
+			expect(s2.actions.basic.jump.value).is(1)
 		}),
 
-		"two players can share a seat": test(async() => {
-			const {switchboard: seating, time} = testSetupBravo()
-			const [player1, player2] = seating.stations
-			const device1 = seating.connect(new SamplerDevice())
-			const device2 = seating.connect(new SamplerDevice())
-			seating.shimmy(device2, -1)
-			expect(seating.stationByDevice(device1)).is(seating.stationByDevice(device2))
-			device1.setSample("Space", 1)
-			seating.poll(time.now)
-			expect(player1.actions.basic.jump.value).is(1)
-			expect(player2.actions.basic.jump.value).is(0)
-			device2.setSample("Space", 1)
-			seating.poll(time.now)
-			expect(player1.actions.basic.jump.value).is(1)
-			expect(player2.actions.basic.jump.value).is(0)
-			device1.setSample("Space", 1)
-			device2.setSample("Space", 2)
-			seating.poll(time.now)
-			expect(player1.actions.basic.jump.value).is(2)
-			expect(player2.actions.basic.jump.value).is(0)
-			device1.setSample("Space", 2)
-			device2.setSample("Space", 1)
-			seating.poll(time.now)
-			expect(player1.actions.basic.jump.value).is(2)
-			expect(player2.actions.basic.jump.value).is(0)
+		"two players can share a station": test(async() => {
+			const {switchboard, time} = testSetupBravo()
+			const [s1, s2] = switchboard.stations
+			const d1 = switchboard.connect(new SamplerDevice())
+			const d2 = switchboard.connect(new SamplerDevice())
+			switchboard.shimmy(d2, -1)
+			expect(switchboard.stationByDevice(d1)).is(switchboard.stationByDevice(d2))
+			d1.setSample("Space", 1)
+			switchboard.poll(time.now)
+			expect(s1.actions.basic.jump.value).is(1)
+			expect(s2.actions.basic.jump.value).is(0)
+			d2.setSample("Space", 1)
+			switchboard.poll(time.now)
+			expect(s1.actions.basic.jump.value).is(1)
+			expect(s2.actions.basic.jump.value).is(0)
+			d1.setSample("Space", 1)
+			d2.setSample("Space", 2)
+			switchboard.poll(time.now)
+			expect(s1.actions.basic.jump.value).is(2)
+			expect(s2.actions.basic.jump.value).is(0)
+			d1.setSample("Space", 2)
+			d2.setSample("Space", 1)
+			switchboard.poll(time.now)
+			expect(s1.actions.basic.jump.value).is(2)
+			expect(s2.actions.basic.jump.value).is(0)
 		}),
 	}),
 })
