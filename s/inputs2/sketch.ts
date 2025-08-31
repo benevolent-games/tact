@@ -1,6 +1,5 @@
 
-import {MapG, obMap, pipe} from "@e280/stz"
-import {SetG} from "../utils/set-g.js"
+import {MapG, SetG, obMap, pipe} from "@e280/stz"
 import {tmax} from "../inputs/utils/tmax.js"
 import {Device} from "../inputs/parts/device.js"
 import {isPressed} from "../inputs/utils/is-pressed.js"

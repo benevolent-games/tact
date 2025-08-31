@@ -1,6 +1,5 @@
 
-import {MapG} from "@e280/stz"
-import {SetG} from "../utils/set-g.js"
+import {MapG, SetG} from "@e280/stz"
 import {Cause} from "./units/cause.js"
 import {_poll} from "./parts/action.js"
 import {Device} from "./parts/device.js"

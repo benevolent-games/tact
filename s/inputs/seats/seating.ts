@@ -1,7 +1,7 @@
 
+import {SetG} from "@e280/stz"
 import {Scalar} from "@benev/math"
 import {Inputs} from "../inputs.js"
-import {SetG} from "../../utils/set-g.js"
 import {Device} from "../parts/device.js"
 import {SeatedBindings} from "../types.js"
 

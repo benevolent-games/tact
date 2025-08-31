@@ -1,7 +1,6 @@
 
-import {sub} from "@e280/stz"
+import {SetG, sub} from "@e280/stz"
 import {Sample} from "../types.js"
-import {SetG} from "../../utils/set-g.js"
 
 export abstract class Device {
 	abstract takeSamples(): Sample[]
