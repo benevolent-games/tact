@@ -1,11 +1,6 @@
 
 import {Action} from "./parts/action.js"
 
-export type Context = {
-	now: number
-	samples: Map<string, number>
-}
-
 export type Actions<B extends Bindings> = {
 	[Mode in keyof B]: {
 		[K in keyof B[Mode]]: Action
@@ -13,6 +8,7 @@ export type Actions<B extends Bindings> = {
 }
 
 export type Sample = [code: string, value: number]
+export type SampleMap = Map<string, number>
 
 export type Timing = (
 	| DirectTiming

@@ -1,7 +1,7 @@
 
 import {SetG} from "@e280/stz"
-import {Bindings} from "./types.js"
 import {Resolver} from "./parts/resolver.js"
+import {Bindings, SampleMap} from "./types.js"
 import {Device} from "./devices/infra/device.js"
 import {aggregate_samples_into_map} from "./parts/routines/aggregate_samples_into_map.js"
 
@@ -10,10 +10,10 @@ export class Station<B extends Bindings> {
 	readonly devices = new SetG<Device>()
 
 	#resolver: Resolver<B>
-	#samples = new Map<string, number>()
+	#samples: SampleMap = new Map()
 
 	constructor(bindings: B) {
-		this.#resolver = new Resolver(bindings, this.modes)
+		this.#resolver = new Resolver(bindings, this.modes, this.#samples)
 	}
 
 	get actions() {
@@ -40,10 +40,8 @@ export class Station<B extends Bindings> {
 
 	poll(now: number) {
 		this.#samples.clear()
-		this.#resolver.poll({
-			now,
-			samples: aggregate_samples_into_map(this.devices, this.#samples),
-		})
+		aggregate_samples_into_map(this.devices, this.#samples)
+		this.#resolver.poll(now)
 	}
 }
 

@@ -1,11 +1,11 @@
 
 import {sub} from "@e280/stz"
 import {Device} from "./device.js"
-import {Sample} from "../../types.js"
+import {Sample, SampleMap} from "../../types.js"
 
 export class SamplerDevice extends Device {
 	on = sub<Sample>()
-	#map = new Map<string, number>()
+	#map: SampleMap = new Map()
 
 	setSample(code: string, value: number) {
 		this.#map.set(code, value)
