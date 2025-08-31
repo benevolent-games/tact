@@ -7,13 +7,13 @@ export function seatedBindings<B extends Bindings>(b: B): AsSeatedBindings<B> {
 		meta: {
 			playerNext: [
 				{lenses: [{code: "BracketRight"}]},
-				{lenses: [{code: "pad.right"}], required: [{code: "pad.gamma"}]},
-				{lenses: [{code: "pad.bumper.right"}], required: [{code: "pad.gamma"}]},
+				{lenses: [{code: "gamepad.right"}], required: [{code: "gamepad.gamma"}]},
+				{lenses: [{code: "gamepad.bumper.right"}], required: [{code: "gamepad.gamma"}]},
 			],
 			playerPrevious: [
 				{lenses: [{code: "BracketLeft"}]},
-				{lenses: [{code: "pad.left"}], required: [{code: "pad.gamma"}]},
-				{lenses: [{code: "pad.bumper.left"}], required: [{code: "pad.gamma"}]},
+				{lenses: [{code: "gamepad.left"}], required: [{code: "gamepad.gamma"}]},
+				{lenses: [{code: "gamepad.bumper.left"}], required: [{code: "gamepad.gamma"}]},
 			],
 		},
 	}
