@@ -1,12 +1,14 @@
 
+import {Action} from "./parts/action.js"
+
 export type Context = {
 	now: number
 	samples: Map<string, number>
 }
 
-export type ActionSnapshot<B extends Bindings> = {
+export type Actions<B extends Bindings> = {
 	[Mode in keyof B]: {
-		[K in keyof B[Mode]]: number
+		[K in keyof B[Mode]]: Action
 	}
 }
 

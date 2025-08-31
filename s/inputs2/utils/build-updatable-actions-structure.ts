@@ -1,0 +1,29 @@
+
+import {obMap, xub} from "@e280/stz"
+import {Action} from "../parts/action.js"
+import {Bindings, Actions} from "../types.js"
+
+export function buildUpdatableActionsStructure<B extends Bindings>(
+		bindings: B,
+		resolveActionValue: (mode: keyof B, actionKey: keyof B[keyof B]) => number,
+	) {
+
+	const updateValues = xub()
+
+	const actions = obMap(bindings, (bracket, mode) =>
+		obMap(bracket, (_, actionKey) => {
+			const action = new Action()
+			updateValues.on(() => {
+				const value = resolveActionValue(mode, actionKey)
+				Action.updateValue(action, value)
+			})
+			return action
+		})
+	) as Actions<B>
+
+	return {
+		actions,
+		updateValues: updateValues.publish,
+	}
+}
+

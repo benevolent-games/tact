@@ -1,42 +1,35 @@
 
-import {MapG, obMap} from "@e280/stz"
+import {MapG} from "@e280/stz"
 import {tmax} from "../utils/tmax.js"
 import {lensingLogic} from "../utils/lensing-logic.js"
+import {Actions, Bindings, Context, Lens, LensState, Spoon} from "../types.js"
 import {defaultifyLensSettings, defaultLensState} from "../utils/lens-defaults.js"
-import {ActionSnapshot, Bindings, Bracket, Context, Lens, LensState, Spoon} from "../types.js"
+import {buildUpdatableActionsStructure} from "../utils/build-updatable-actions-structure.js"
 
 export class Resolver<B extends Bindings> {
-	actions: ActionSnapshot<B>
+	actions: Actions<B>
 	#now = 0
 	#samples = new Map<string, number>()
 	#lenses = new MapG<Lens, LensState>()
-	#refreshers: (() => void)[] = []
+	#updateValues: () => void
 
 	constructor(
 			public bindings: B,
 			private modes: Set<keyof B>,
 		) {
 		this.modes = modes as Set<keyof Bindings>
-		this.actions = obMap(bindings as Bindings, this.#resolveBracket) as ActionSnapshot<B>
+		const structure = buildUpdatableActionsStructure(bindings, this.#resolveActionValue)
+		this.actions = structure.actions
+		this.#updateValues = structure.updateValues
 	}
 
 	poll(context: Context) {
 		this.#now = context.now
 		this.#samples = context.samples
-		this.#refreshers.forEach(fn => fn())
+		this.#updateValues()
 	}
 
-	#resolveBracket = (bracket: Bracket, mode: keyof Bindings) => {
-		const actions = obMap(bracket, (_, actionKey) => {
-			this.#refreshers.push(() => {
-				actions[actionKey] = this.#resolveFork(mode, actionKey)
-			})
-			return this.#resolveFork(mode, actionKey)
-		})
-		return actions
-	}
-
-	#resolveFork = (mode: keyof Bindings, actionKey: keyof Bindings[keyof Bindings]) => {
+	#resolveActionValue = (mode: keyof B, actionKey: keyof B[keyof B]) => {
 		const fork = this.bindings[mode][actionKey]
 		const isModeActive = this.modes.has(mode)
 		if (!isModeActive) return 0

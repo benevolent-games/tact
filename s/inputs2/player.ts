@@ -26,6 +26,16 @@ export class Player<B extends Bindings> {
 		this.#resolver.bindings = bindings
 	}
 
+	addModes(...modes: (keyof B)[]) {
+		this.modes.adds(...modes)
+		return this
+	}
+
+	addDevices(...devices: Device[]) {
+		this.devices.adds(...devices)
+		return this
+	}
+
 	poll(now: number) {
 		const samples = collectSamples(...this.devices)
 		this.#resolver.poll({now, samples})
