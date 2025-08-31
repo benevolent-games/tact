@@ -39,6 +39,7 @@ export class Player<B extends Bindings> {
 	}
 
 	poll(now: number) {
+		this.#samples.clear()
 		this.#resolver.poll({
 			now,
 			samples: aggregate_samples_into_map(this.devices, this.#samples),
