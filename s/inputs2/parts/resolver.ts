@@ -1,16 +1,16 @@
 
-import {MapG} from "@e280/stz"
+import {WeakMapG} from "@e280/stz"
 import {tmax} from "../utils/tmax.js"
-import {lensingLogic} from "../utils/lensing-logic.js"
+import {lensingAlgorithm} from "../utils/lensing-algorithm.js"
 import {Actions, Bindings, Context, Lens, LensState, Spoon} from "../types.js"
 import {defaultifyLensSettings, defaultLensState} from "../utils/lens-defaults.js"
-import {buildUpdatableActionsStructure} from "../utils/build-updatable-actions-structure.js"
+import {build_updatable_actions_structure} from "../utils/build-updatable-actions-structure.js"
 
 export class Resolver<B extends Bindings> {
 	actions: Actions<B>
 	#now = 0
 	#samples = new Map<string, number>()
-	#lenses = new MapG<Lens, LensState>()
+	#lenses = new WeakMapG<Lens, LensState>()
 	#updateValues: () => void
 
 	constructor(
@@ -18,7 +18,10 @@ export class Resolver<B extends Bindings> {
 			private modes: Set<keyof B>,
 		) {
 		this.modes = modes as Set<keyof Bindings>
-		const structure = buildUpdatableActionsStructure(bindings, this.#resolveActionValue)
+		const structure = build_updatable_actions_structure(
+			bindings,
+			this.#resolveActionValue,
+		)
 		this.actions = structure.actions
 		this.#updateValues = structure.updateValues
 	}
@@ -64,7 +67,7 @@ export class Resolver<B extends Bindings> {
 		const value = this.#samples.get(code) ?? 0
 		const state = this.#lenses.guarantee(lens, defaultLensState)
 		const settings = defaultifyLensSettings(lens.settings)
-		return lensingLogic(value, settings, state, this.#now)
+		return lensingAlgorithm(value, settings, state, this.#now)
 	}
 }
 

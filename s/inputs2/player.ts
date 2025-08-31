@@ -3,12 +3,14 @@ import {SetG} from "@e280/stz"
 import {Bindings} from "./types.js"
 import {Device} from "./devices/device.js"
 import {Resolver} from "./parts/resolver.js"
-import {collectSamples} from "./utils/collect-samples.js"
+import {aggregate_samples_into_map} from "./utils/aggregate-samples-into-map.js"
 
 export class Player<B extends Bindings> {
 	readonly modes = new SetG<keyof B>()
 	readonly devices = new SetG<Device>()
+
 	#resolver: Resolver<B>
+	#samples = new Map<string, number>()
 
 	constructor(bindings: B) {
 		this.#resolver = new Resolver(bindings, this.modes)
@@ -37,8 +39,10 @@ export class Player<B extends Bindings> {
 	}
 
 	poll(now: number) {
-		const samples = collectSamples(...this.devices)
-		this.#resolver.poll({now, samples})
+		this.#resolver.poll({
+			now,
+			samples: aggregate_samples_into_map(this.devices, this.#samples),
+		})
 	}
 }
 

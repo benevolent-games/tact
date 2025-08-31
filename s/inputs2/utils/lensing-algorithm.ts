@@ -5,7 +5,7 @@ import {isPressed} from "./is-pressed.js"
 import {defaultHoldTime} from "./lens-defaults.js"
 import {LensSettings, LensState} from "../types.js"
 
-export const lensingLogic = (
+export const lensingAlgorithm = (
 		v: number,
 		settings: LensSettings,
 		state: LensState,
