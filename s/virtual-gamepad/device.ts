@@ -1,6 +1,6 @@
 
 import {Stick} from "../nubs/stick/stick.js"
-import {SamplerDevice} from "../inputs/parts/device.js"
+import {SamplerDevice} from "../station/devices/infra/sampler.js"
 
 export class VirtualGamepadDevice extends SamplerDevice {
 	stickLeft = new Stick()

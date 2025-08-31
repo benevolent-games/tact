@@ -1,16 +1,16 @@
 
-import {AsSeatedBindings, Bindings} from "../types.js"
+import {AsSwitchboardBindings, Bindings} from "../types.js"
 
-export function seatedBindings<B extends Bindings>(b: B): AsSeatedBindings<B> {
+export function switchboardBindings<B extends Bindings>(b: B): AsSwitchboardBindings<B> {
 	return {
 		...b,
-		meta: {
-			playerNext: [
+		switchboard: {
+			shimmyNext: [
 				{lenses: [{code: "BracketRight"}]},
 				{lenses: [{code: "gamepad.right"}], required: [{code: "gamepad.gamma"}]},
 				{lenses: [{code: "gamepad.bumper.right"}], required: [{code: "gamepad.gamma"}]},
 			],
-			playerPrevious: [
+			shimmyPrevious: [
 				{lenses: [{code: "BracketLeft"}]},
 				{lenses: [{code: "gamepad.left"}], required: [{code: "gamepad.gamma"}]},
 				{lenses: [{code: "gamepad.bumper.left"}], required: [{code: "gamepad.gamma"}]},

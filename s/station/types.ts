@@ -63,12 +63,12 @@ export function asBindings<B extends Bindings>(bindings: B) {
 	return bindings
 }
 
-export type AsSeatedBindings<B extends Bindings> = {
-	meta: {
-		playerNext: Spoon[],
-		playerPrevious: Spoon[],
+export type AsSwitchboardBindings<B extends Bindings> = {
+	switchboard: {
+		shimmyNext: Spoon[],
+		shimmyPrevious: Spoon[],
 	}
 } & B
 
-export type SeatedBindings = AsSeatedBindings<Bindings>
+export type SwitchboardBindings = AsSwitchboardBindings<Bindings>
 

@@ -1,9 +1,9 @@
 
-import {Player} from "../player.js"
-import {Seating} from "../seating.js"
+import {Station} from "../station.js"
 import {asBindings} from "../types.js"
+import {Switchboard} from "../switchboard.js"
 import {SamplerDevice} from "../devices/infra/sampler.js"
-import {seatedBindings} from "../parts/seated-bindings.js"
+import {switchboardBindings} from "../parts/switchboard-bindings.js"
 
 export class TestTime {
 	frame = 0
@@ -25,17 +25,17 @@ export function testBindings() {
 export function testSetupAlpha() {
 	const time = new TestTime()
 	const device = new SamplerDevice()
-	const player = new Player(testBindings())
+	const station = new Station(testBindings())
 		.addModes("basic")
 		.addDevices(device)
-	return {device, player, time}
+	return {device, station, time}
 }
 
 export function testSetupBravo() {
 	const time = new TestTime()
-	const player = () => new Player(seatedBindings(testBindings()))
-		.addModes("meta", "basic")
-	const seating = new Seating([player(), player(), player(), player()])
-	return {seating, time}
+	const station = () => new Station(switchboardBindings(testBindings()))
+		.addModes("switchboard", "basic")
+	const switchboard = new Switchboard([station(), station(), station(), station()])
+	return {switchboard, time}
 }
 

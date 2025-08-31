@@ -5,7 +5,7 @@ import {Resolver} from "./parts/resolver.js"
 import {Device} from "./devices/infra/device.js"
 import {aggregate_samples_into_map} from "./parts/routines/aggregate_samples_into_map.js"
 
-export class Player<B extends Bindings> {
+export class Station<B extends Bindings> {
 	readonly modes = new SetG<keyof B>()
 	readonly devices = new SetG<Device>()
 

@@ -3,7 +3,7 @@ import {Vec2} from "@benev/math"
 import {signal} from "@e280/strata"
 import {Disposable} from "@e280/stz"
 import {splitAxis} from "../../utils/split-axis.js"
-import {SamplerDevice} from "../../inputs/parts/device.js"
+import {SamplerDevice} from "../../station/devices/infra/sampler.js"
 
 export class Stick extends SamplerDevice implements Disposable {
 	vector = signal(Vec2.zero())
