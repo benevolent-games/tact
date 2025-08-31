@@ -24,4 +24,3 @@ export class Action {
 	get up() { return isPressed(this.#previous) && !isPressed(this.#value) }
 }
 
-

@@ -1,10 +1,10 @@
 
 import {WeakMapG} from "@e280/stz"
 import {tmax} from "../utils/tmax.js"
-import {lensingAlgorithm} from "../utils/lensing-algorithm.js"
+import {lensing_algorithm} from "./routines/lensing_algorithm.js"
+import {defaultifyLensSettings, defaultLensState} from "./defaults.js"
 import {Actions, Bindings, Context, Lens, LensState, Spoon} from "../types.js"
-import {defaultifyLensSettings, defaultLensState} from "../utils/lens-defaults.js"
-import {build_updatable_actions_structure} from "../utils/build-updatable-actions-structure.js"
+import {build_updatable_actions_structure} from "./routines/build_updatable_actions_structure.js"
 
 export class Resolver<B extends Bindings> {
 	actions: Actions<B>
@@ -67,7 +67,7 @@ export class Resolver<B extends Bindings> {
 		const value = this.#samples.get(code) ?? 0
 		const state = this.#lenses.guarantee(lens, defaultLensState)
 		const settings = defaultifyLensSettings(lens.settings)
-		return lensingAlgorithm(value, settings, state, this.#now)
+		return lensing_algorithm(value, settings, state, this.#now)
 	}
 }
 

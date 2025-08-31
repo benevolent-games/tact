@@ -1,11 +1,11 @@
 
 import {pipe} from "@e280/stz"
 import {Scalar} from "@benev/math"
-import {isPressed} from "./is-pressed.js"
-import {defaultHoldTime} from "./lens-defaults.js"
-import {LensSettings, LensState} from "../types.js"
+import {defaultHoldTime} from "../defaults.js"
+import {isPressed} from "../../utils/is-pressed.js"
+import {LensSettings, LensState} from "../../types.js"
 
-export const lensingAlgorithm = (
+export const lensing_algorithm = (
 		v: number,
 		settings: LensSettings,
 		state: LensState,

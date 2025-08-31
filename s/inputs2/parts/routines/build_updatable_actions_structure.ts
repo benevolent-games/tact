@@ -1,7 +1,7 @@
 
 import {obMap, xub} from "@e280/stz"
-import {Action} from "../parts/action.js"
-import {Bindings, Actions} from "../types.js"
+import {Action} from "../action.js"
+import {Bindings, Actions} from "../../types.js"
 
 export function build_updatable_actions_structure<B extends Bindings>(
 		bindings: B,

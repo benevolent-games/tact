@@ -1,5 +1,5 @@
 
-import {Device} from "../devices/infra/device.js"
+import {Device} from "../../devices/infra/device.js"
 
 export function aggregate_samples_into_map(
 		devices: Set<Device>,
