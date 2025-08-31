@@ -1,7 +1,7 @@
 
 import {tmax} from "../utils/tmax.js"
-import {SamplerDevice} from "./device.js"
 import {Pad} from "../../utils/gamepads.js"
+import {SamplerDevice} from "./infra/sampler.js"
 import {splitAxis} from "../../utils/split-axis.js"
 
 const gamepadButtonCodes = [

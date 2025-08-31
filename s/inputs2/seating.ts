@@ -3,7 +3,7 @@ import {SetG} from "@e280/stz"
 import {Scalar} from "@benev/math"
 import {Player} from "./player.js"
 import {SeatedBindings} from "./types.js"
-import {Device} from "./devices/device.js"
+import {Device} from "./devices/infra/device.js"
 
 export class Seating<B extends SeatedBindings> {
 	devices = new SetG<Device>()

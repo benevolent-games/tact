@@ -2,7 +2,7 @@
 import {Player} from "../player.js"
 import {Seating} from "../seating.js"
 import {asBindings} from "../types.js"
-import {SamplerDevice} from "../devices/device.js"
+import {SamplerDevice} from "../devices/infra/sampler.js"
 import {seatedBindings} from "../parts/seated-bindings.js"
 
 export class TestTime {

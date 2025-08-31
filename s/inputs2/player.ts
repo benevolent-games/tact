@@ -1,8 +1,8 @@
 
 import {SetG} from "@e280/stz"
 import {Bindings} from "./types.js"
-import {Device} from "./devices/device.js"
 import {Resolver} from "./parts/resolver.js"
+import {Device} from "./devices/infra/device.js"
 import {aggregate_samples_into_map} from "./utils/aggregate-samples-into-map.js"
 
 export class Player<B extends Bindings> {

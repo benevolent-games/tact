@@ -1,6 +1,6 @@
 
-import {SamplerDevice} from "./devices/device.js"
 import {Science, test, expect} from "@e280/science"
+import {SamplerDevice} from "./devices/infra/sampler.js"
 import {testSetupAlpha, testSetupBravo} from "./testing/testing.js"
 
 export default Science.suite({

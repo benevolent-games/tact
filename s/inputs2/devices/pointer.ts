@@ -1,7 +1,7 @@
 
 import {ev} from "@e280/stz"
-import {SamplerDevice} from "./device.js"
 import {modprefix} from "../utils/modprefix.js"
+import {SamplerDevice} from "./infra/sampler.js"
 import {splitAxis} from "../../utils/split-axis.js"
 
 export class PointerDevice extends SamplerDevice {

@@ -1,7 +1,7 @@
 
 import {coalesce, ev, sub} from "@e280/stz"
 import {Sample} from "../types.js"
-import {Device} from "./device.js"
+import {Device} from "./infra/device.js"
 import {modprefix} from "../utils/modprefix.js"
 
 export class KeyboardDevice extends Device {
