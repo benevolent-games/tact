@@ -1,6 +1,6 @@
 
-import {SampleMap} from "../../types.js"
-import {Controller} from "../../controllers/infra/controller.js"
+import {SampleMap} from "../../../controllers/types.js"
+import {Controller} from "../../../controllers/controller.js"
 
 export function aggregate_samples_into_map(
 		controllers: Set<Controller>,

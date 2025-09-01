@@ -1,7 +1,7 @@
 
 import {coalesce, ev, sub} from "@e280/stz"
 import {Sample} from "../types.js"
-import {Controller} from "./infra/controller.js"
+import {Controller} from "../controller.js"
 import {modprefix} from "../utils/modprefix.js"
 
 export class KeyboardController extends Controller {

@@ -3,7 +3,7 @@ import {pipe} from "@e280/stz"
 import {Scalar} from "@benev/math"
 import {defaultHoldTime} from "../defaults.js"
 import {isPressed} from "../../utils/is-pressed.js"
-import {LensSettings, LensState} from "../../types.js"
+import {LensSettings, LensState} from "../../../bindings/types.js"
 
 export const lensing_algorithm = (
 		v: number,

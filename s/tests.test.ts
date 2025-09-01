@@ -1,8 +1,6 @@
 
 import {Science} from "@e280/science"
-import station from "./station/station.test.js"
+import core from "./core/core.test.js"
 
-await Science.run({
-	station,
-})
+await Science.run({core})
 

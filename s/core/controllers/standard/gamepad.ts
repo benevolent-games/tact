@@ -1,8 +1,8 @@
 
-import {tmax} from "../utils/tmax.js"
-import {splitAxis} from "../../utils/split-axis.js"
-import {SamplerController} from "./infra/sampler.js"
-import {gamepads, Pad} from "../../utils/gamepads.js"
+import {tmax} from "../../../utils/quick-math.js"
+import {splitAxis} from "../../../utils/split-axis.js"
+import {SamplerController} from "../infra/sampler.js"
+import {gamepads, Pad} from "../../../utils/gamepads.js"
 
 const gamepadButtonCodes = [
 	"gamepad.a",

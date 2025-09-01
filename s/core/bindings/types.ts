@@ -1,15 +1,4 @@
 
-import {Action} from "./parts/action.js"
-
-export type Actions<B extends Bindings> = {
-	[Mode in keyof B]: {
-		[K in keyof B[Mode]]: Action
-	}
-}
-
-export type Sample = [code: string, value: number]
-export type SampleMap = Map<string, number>
-
 export type Timing = (
 	| DirectTiming
 	| TapTiming
@@ -59,10 +48,10 @@ export function asBindings<B extends Bindings>(bindings: B) {
 	return bindings
 }
 
-export const switchboardMode = "switchboard" as const
+export const hubMode = "hub" as const
 
 export type AsHubBindings<B extends Bindings> = {
-	[switchboardMode]: {
+	[hubMode]: {
 		shimmyNext: Spoon[],
 		shimmyPrevious: Spoon[],
 	}

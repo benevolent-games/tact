@@ -1,8 +1,10 @@
 
 import {WeakMapG} from "@e280/stz"
-import {tmax} from "../utils/tmax.js"
+import {tmax} from "../../../utils/quick-math.js"
+import {Actions} from "../types.js"
+import {SampleMap} from "../../controllers/types.js"
+import {Bindings, Lens, LensState, Spoon} from "../../bindings/types.js"
 import {lensing_algorithm} from "./routines/lensing_algorithm.js"
-import {Actions, Bindings, Lens, LensState, SampleMap, Spoon} from "../types.js"
 import {defaultifyLensSettings, defaultLensState} from "./defaults.js"
 import {build_updatable_actions_structure} from "./routines/build_updatable_actions_structure.js"
 

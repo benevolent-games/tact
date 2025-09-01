@@ -19,7 +19,7 @@ export default Science.suite({
 		expect(port.actions.basic.shoot.value).is(3)
 	}),
 
-	"switchboard": Science.suite({
+	"hub": Science.suite({
 		"controller inputs work": test(async() => {
 			const {hub, time} = testSetupBravo()
 			const [s1, s2] = hub.ports

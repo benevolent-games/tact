@@ -1,13 +1,13 @@
 
 import {SetG} from "@e280/stz"
 import {Scalar} from "@benev/math"
-import {Port} from "./port.js"
-import {Controller} from "./controllers/infra/controller.js"
-import {hubBindings} from "./parts/hub-bindings.js"
-import {switchboardMode, HubBindings} from "./types.js"
+import {Port} from "../port/port.js"
+import {hubBindings} from "./bindings.js"
+import {Controller} from "../controllers/controller.js"
+import {hubMode, HubBindings} from "../bindings/types.js"
 
 export class Hub<B extends HubBindings> {
-	static readonly mode = switchboardMode
+	static readonly mode = hubMode
 	static readonly bindings = hubBindings
 
 	readonly controllers = new SetG<Controller>()

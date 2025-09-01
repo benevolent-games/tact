@@ -1,6 +1,6 @@
 
 import {sub} from "@e280/stz"
-import {isPressed} from "../utils/is-pressed.js"
+import {isPressed} from "./utils/is-pressed.js"
 
 export class Action {
 	#value = 0

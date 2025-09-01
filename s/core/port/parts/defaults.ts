@@ -1,5 +1,5 @@
 
-import {LensSettings, LensState} from "../types.js"
+import {LensSettings, LensState} from "../../bindings/types.js"
 
 export const defaultHoldTime = 250
 

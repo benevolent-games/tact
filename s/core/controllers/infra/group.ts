@@ -1,6 +1,6 @@
 
 import {SetG} from "@e280/stz"
-import {Controller} from "./controller.js"
+import {Controller} from "../controller.js"
 
 export class GroupController extends Controller {
 	controllers = new SetG<Controller>()

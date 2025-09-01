@@ -1,9 +1,9 @@
 
-import {Hub} from "../hub.js"
-import {Port} from "../port.js"
-import {asBindings} from "../types.js"
-import {Controller} from "../controllers/infra/controller.js"
-import {hubBindings} from "../parts/hub-bindings.js"
+import {Hub} from "../hub/hub.js"
+import {Port} from "../port/port.js"
+import {asBindings} from "../bindings/types.js"
+import {hubBindings} from "../hub/bindings.js"
+import {Controller} from "../controllers/controller.js"
 import {SamplerController} from "../controllers/infra/sampler.js"
 
 export class TestTime {

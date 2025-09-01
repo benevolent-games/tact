@@ -1,6 +1,6 @@
 
-import {Hub} from "../hub.js"
-import {AsHubBindings, Bindings} from "../types.js"
+import {Hub} from "./hub.js"
+import {AsHubBindings, Bindings} from "../bindings/types.js"
 
 export function hubBindings<B extends Bindings>(b: B): AsHubBindings<B> {
 	return {

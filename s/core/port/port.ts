@@ -1,8 +1,9 @@
 
 import {SetG} from "@e280/stz"
+import {Bindings} from "../bindings/types.js"
 import {Resolver} from "./parts/resolver.js"
-import {Bindings, SampleMap} from "./types.js"
-import {Controller} from "./controllers/infra/controller.js"
+import {SampleMap} from "../controllers/types.js"
+import {Controller} from "../controllers/controller.js"
 import {aggregate_samples_into_map} from "./parts/routines/aggregate_samples_into_map.js"
 
 export class Port<B extends Bindings> {
