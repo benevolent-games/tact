@@ -3,9 +3,9 @@ import {Vec2} from "@benev/math"
 import {signal} from "@e280/strata"
 import {Disposable} from "@e280/stz"
 import {splitAxis} from "../../utils/split-axis.js"
-import {SamplerDevice} from "../../station/devices/infra/sampler.js"
+import {SamplerController} from "../../station/controllers/infra/sampler.js"
 
-export class StickDevice extends SamplerDevice implements Disposable {
+export class StickController extends SamplerController implements Disposable {
 	vector = signal(Vec2.zero())
 	dispose: () => void
 

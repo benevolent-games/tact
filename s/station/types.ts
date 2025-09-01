@@ -61,12 +61,12 @@ export function asBindings<B extends Bindings>(bindings: B) {
 
 export const switchboardMode = "switchboard" as const
 
-export type AsSwitchboardBindings<B extends Bindings> = {
+export type AsHubBindings<B extends Bindings> = {
 	[switchboardMode]: {
 		shimmyNext: Spoon[],
 		shimmyPrevious: Spoon[],
 	}
 } & B
 
-export type SwitchboardBindings = AsSwitchboardBindings<Bindings>
+export type HubBindings = AsHubBindings<Bindings>
 

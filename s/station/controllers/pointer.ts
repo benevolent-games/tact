@@ -2,10 +2,10 @@
 import {ev} from "@e280/stz"
 import {Vec2} from "@benev/math"
 import {modprefix} from "../utils/modprefix.js"
-import {SamplerDevice} from "./infra/sampler.js"
 import {splitAxis} from "../../utils/split-axis.js"
+import {SamplerController} from "./infra/sampler.js"
 
-export class PointerDevice extends SamplerDevice {
+export class PointerController extends SamplerController {
 	client = new Vec2(0, 0)
 	movement = new Vec2(0, 0)
 	dispose: () => void
@@ -47,12 +47,12 @@ export class PointerDevice extends SamplerDevice {
 
 		this.dispose = ev(target, {
 			pointerdown: (event: PointerEvent) => {
-				const code = PointerDevice.buttonCode(event)
+				const code = PointerController.buttonCode(event)
 				dispatch(event, code, 1)
 			},
 
 			pointerup: (event: PointerEvent) => {
-				const code = PointerDevice.buttonCode(event)
+				const code = PointerController.buttonCode(event)
 				dispatch(event, code, 0)
 			},
 
@@ -64,7 +64,7 @@ export class PointerDevice extends SamplerDevice {
 			},
 
 			wheel: (event: WheelEvent) => {
-				for (const [code, value] of PointerDevice.wheelCodes(event))
+				for (const [code, value] of PointerController.wheelCodes(event))
 					dispatch(event, code, value)
 			},
 		})

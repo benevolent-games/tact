@@ -1,83 +1,83 @@
 
 import {Science, test, expect} from "@e280/science"
-import {SamplerDevice} from "./devices/infra/sampler.js"
+import {SamplerController} from "./controllers/infra/sampler.js"
 import {testConnect, testSetupAlpha, testSetupBravo} from "./testing/testing.js"
 
 export default Science.suite({
 	"sample to action value": test(async() => {
-		const {station, device, time} = testSetupAlpha()
-		expect(station.actions.basic.jump.value).is(0)
-		expect(station.actions.basic.shoot.value).is(0)
-		device.setSample("Space", 1)
-		station.poll(time.now)
-		expect(station.actions.basic.jump.value).is(1)
-		expect(station.actions.basic.shoot.value).is(0)
-		device.setSample("Space", 2)
-		device.setSample("pointer.button.left", 3)
-		station.poll(time.now)
-		expect(station.actions.basic.jump.value).is(2)
-		expect(station.actions.basic.shoot.value).is(3)
+		const {port, controller, time} = testSetupAlpha()
+		expect(port.actions.basic.jump.value).is(0)
+		expect(port.actions.basic.shoot.value).is(0)
+		controller.setSample("Space", 1)
+		port.poll(time.now)
+		expect(port.actions.basic.jump.value).is(1)
+		expect(port.actions.basic.shoot.value).is(0)
+		controller.setSample("Space", 2)
+		controller.setSample("pointer.button.left", 3)
+		port.poll(time.now)
+		expect(port.actions.basic.jump.value).is(2)
+		expect(port.actions.basic.shoot.value).is(3)
 	}),
 
 	"switchboard": Science.suite({
-		"player1 inputs work": test(async() => {
-			const {switchboard, time} = testSetupBravo()
-			const [s1, s2] = switchboard.stations
-			const d1 = testConnect(switchboard, new SamplerDevice())
+		"controller inputs work": test(async() => {
+			const {hub, time} = testSetupBravo()
+			const [s1, s2] = hub.ports
+			const d1 = testConnect(hub, new SamplerController())
 			expect(s1.actions.basic.jump.value).is(0)
 			expect(s2.actions.basic.jump.value).is(0)
 			d1.setSample("Space", 1)
-			switchboard.poll(time.now)
+			hub.poll(time.now)
 			expect(s1.actions.basic.jump.value).is(1)
 			expect(s2.actions.basic.jump.value).is(0)
 		}),
 
-		"two devices playing on separate stations": test(async() => {
-			const {switchboard, time} = testSetupBravo()
-			const [s1, s2] = switchboard.stations
-			const d1 = testConnect(switchboard, new SamplerDevice())
-			const d2 = testConnect(switchboard, new SamplerDevice())
+		"two controllers playing on separate ports": test(async() => {
+			const {hub, time} = testSetupBravo()
+			const [s1, s2] = hub.ports
+			const d1 = testConnect(hub, new SamplerController())
+			const d2 = testConnect(hub, new SamplerController())
 			d1.setSample("Space", 1)
 			d2.setSample("Space", 2)
-			switchboard.poll(time.now)
+			hub.poll(time.now)
 			expect(s1.actions.basic.jump.value).is(1)
 			expect(s2.actions.basic.jump.value).is(2)
 		}),
 
-		"player can shimmy": test(async() => {
-			const {switchboard, time} = testSetupBravo()
-			const [s1, s2] = switchboard.stations
-			const d1 = testConnect(switchboard, new SamplerDevice())
-			switchboard.shimmy(d1, 1)
+		"controller can shimmy": test(async() => {
+			const {hub, time} = testSetupBravo()
+			const [s1, s2] = hub.ports
+			const d1 = testConnect(hub, new SamplerController())
+			hub.shimmy(d1, 1)
 			d1.setSample("Space", 1)
-			switchboard.poll(time.now)
+			hub.poll(time.now)
 			expect(s1.actions.basic.jump.value).is(0)
 			expect(s2.actions.basic.jump.value).is(1)
 		}),
 
-		"two players can share a station": test(async() => {
-			const {switchboard, time} = testSetupBravo()
-			const [s1, s2] = switchboard.stations
-			const d1 = testConnect(switchboard, new SamplerDevice())
-			const d2 = testConnect(switchboard, new SamplerDevice())
-			switchboard.shimmy(d2, -1)
-			expect(switchboard.stationByDevice(d1)).is(switchboard.stationByDevice(d2))
+		"two controllers can share a port": test(async() => {
+			const {hub, time} = testSetupBravo()
+			const [s1, s2] = hub.ports
+			const d1 = testConnect(hub, new SamplerController())
+			const d2 = testConnect(hub, new SamplerController())
+			hub.shimmy(d2, -1)
+			expect(hub.portByController(d1)).is(hub.portByController(d2))
 			d1.setSample("Space", 1)
-			switchboard.poll(time.now)
+			hub.poll(time.now)
 			expect(s1.actions.basic.jump.value).is(1)
 			expect(s2.actions.basic.jump.value).is(0)
 			d2.setSample("Space", 1)
-			switchboard.poll(time.now)
+			hub.poll(time.now)
 			expect(s1.actions.basic.jump.value).is(1)
 			expect(s2.actions.basic.jump.value).is(0)
 			d1.setSample("Space", 1)
 			d2.setSample("Space", 2)
-			switchboard.poll(time.now)
+			hub.poll(time.now)
 			expect(s1.actions.basic.jump.value).is(2)
 			expect(s2.actions.basic.jump.value).is(0)
 			d1.setSample("Space", 2)
 			d2.setSample("Space", 1)
-			switchboard.poll(time.now)
+			hub.poll(time.now)
 			expect(s1.actions.basic.jump.value).is(2)
 			expect(s2.actions.basic.jump.value).is(0)
 		}),

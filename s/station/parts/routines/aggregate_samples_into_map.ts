@@ -1,14 +1,14 @@
 
 import {SampleMap} from "../../types.js"
-import {Device} from "../../devices/infra/device.js"
+import {Controller} from "../../controllers/infra/controller.js"
 
 export function aggregate_samples_into_map(
-		devices: Set<Device>,
+		controllers: Set<Controller>,
 		map: SampleMap,
 	) {
 
-	for (const device of devices) {
-		for (const [code, value] of device.takeSamples()) {
+	for (const controller of controllers) {
+		for (const [code, value] of controller.takeSamples()) {
 			const previous = map.get(code) ?? 0
 			if (value > previous)
 				map.set(code, value)

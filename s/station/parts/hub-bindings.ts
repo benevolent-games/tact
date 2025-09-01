@@ -1,11 +1,11 @@
 
-import {Switchboard} from "../switchboard.js"
-import {AsSwitchboardBindings, Bindings} from "../types.js"
+import {Hub} from "../hub.js"
+import {AsHubBindings, Bindings} from "../types.js"
 
-export function switchboardBindings<B extends Bindings>(b: B): AsSwitchboardBindings<B> {
+export function hubBindings<B extends Bindings>(b: B): AsHubBindings<B> {
 	return {
 		...b,
-		[Switchboard.mode]: {
+		[Hub.mode]: {
 			shimmyNext: [
 				{lenses: [{code: "BracketRight"}]},
 				{lenses: [{code: "gamepad.right"}], required: [{code: "gamepad.gamma"}]},

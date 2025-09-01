@@ -2,12 +2,12 @@
 import {SetG} from "@e280/stz"
 import {Resolver} from "./parts/resolver.js"
 import {Bindings, SampleMap} from "./types.js"
-import {Device} from "./devices/infra/device.js"
+import {Controller} from "./controllers/infra/controller.js"
 import {aggregate_samples_into_map} from "./parts/routines/aggregate_samples_into_map.js"
 
-export class Station<B extends Bindings> {
+export class Port<B extends Bindings> {
 	readonly modes = new SetG<keyof B>()
-	readonly devices = new SetG<Device>()
+	readonly controllers = new SetG<Controller>()
 
 	#resolver: Resolver<B>
 	#samples: SampleMap = new Map()
@@ -33,14 +33,14 @@ export class Station<B extends Bindings> {
 		return this
 	}
 
-	addDevices(...devices: Device[]) {
-		this.devices.adds(...devices)
+	addControllers(...controller: Controller[]) {
+		this.controllers.adds(...controller)
 		return this
 	}
 
 	poll(now: number) {
 		this.#samples.clear()
-		aggregate_samples_into_map(this.devices, this.#samples)
+		aggregate_samples_into_map(this.controllers, this.#samples)
 		this.#resolver.poll(now)
 	}
 }

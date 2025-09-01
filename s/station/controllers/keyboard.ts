@@ -1,10 +1,10 @@
 
 import {coalesce, ev, sub} from "@e280/stz"
 import {Sample} from "../types.js"
-import {Device} from "./infra/device.js"
+import {Controller} from "./infra/controller.js"
 import {modprefix} from "../utils/modprefix.js"
 
-export class KeyboardDevice extends Device {
+export class KeyboardController extends Controller {
 	on = sub<Sample>()
 	dispose: () => void
 	#held = new Set<string>()

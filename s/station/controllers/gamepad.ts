@@ -1,7 +1,7 @@
 
 import {tmax} from "../utils/tmax.js"
-import {SamplerDevice} from "./infra/sampler.js"
 import {splitAxis} from "../../utils/split-axis.js"
+import {SamplerController} from "./infra/sampler.js"
 import {gamepads, Pad} from "../../utils/gamepads.js"
 
 const gamepadButtonCodes = [
@@ -24,8 +24,8 @@ const gamepadButtonCodes = [
 	"gamepad.gamma",
 ]
 
-export class GamepadDevice extends SamplerDevice {
-	static on(fn: (device: GamepadDevice) => () => void) {
+export class GamepadController extends SamplerController {
+	static on(fn: (controller: GamepadController) => () => void) {
 		return gamepads(pad => fn(new this(pad)))
 	}
 

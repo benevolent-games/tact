@@ -1,10 +1,10 @@
 
-import {Station} from "../station.js"
+import {Hub} from "../hub.js"
+import {Port} from "../port.js"
 import {asBindings} from "../types.js"
-import {Switchboard} from "../switchboard.js"
-import {Device} from "../devices/infra/device.js"
-import {SamplerDevice} from "../devices/infra/sampler.js"
-import {switchboardBindings} from "../parts/switchboard-bindings.js"
+import {Controller} from "../controllers/infra/controller.js"
+import {hubBindings} from "../parts/hub-bindings.js"
+import {SamplerController} from "../controllers/infra/sampler.js"
 
 export class TestTime {
 	frame = 0
@@ -23,25 +23,25 @@ export function testBindings() {
 	})
 }
 
-export function testConnect<D extends Device>(switchboard: Switchboard<any>, device: D) {
-	switchboard.connect(device)
-	return device
+export function testConnect<C extends Controller>(switchboard: Hub<any>, controller: C) {
+	switchboard.plug(controller)
+	return controller
 }
 
 export function testSetupAlpha() {
 	const time = new TestTime()
-	const device = new SamplerDevice()
-	const station = new Station(testBindings())
+	const controller = new SamplerController()
+	const port = new Port(testBindings())
 		.addModes("basic")
-		.addDevices(device)
-	return {device, station, time}
+		.addControllers(controller)
+	return {controller, port, time}
 }
 
 export function testSetupBravo() {
 	const time = new TestTime()
-	const station = () => new Station(switchboardBindings(testBindings()))
-		.addModes(Switchboard.mode, "basic")
-	const switchboard = new Switchboard([station(), station(), station(), station()])
-	return {switchboard, time}
+	const port = () => new Port(hubBindings(testBindings()))
+		.addModes(Hub.mode, "basic")
+	const hub = new Hub([port(), port(), port(), port()])
+	return {hub: hub, time}
 }
 

@@ -1,10 +1,10 @@
 
-import {StickDevice} from "../stick/device.js"
-import {SamplerDevice} from "../../station/devices/infra/sampler.js"
+import {StickController} from "../stick/controller.js"
+import {SamplerController} from "../../station/controllers/infra/sampler.js"
 
-export class VirtualGamepadDevice extends SamplerDevice {
-	stickLeft = new StickDevice()
-	stickRight = new StickDevice()
+export class VirtualGamepadController extends SamplerController {
+	stickLeft = new StickController()
+	stickRight = new StickController()
 
 	takeSamples() {
 		const left = this.stickLeft.breakdown()
