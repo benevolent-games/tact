@@ -33,7 +33,7 @@ export class Hub<B extends HubBindings> {
 	}
 
 	/** poll all the ports */
-	poll(now: number) {
+	poll(now: number = Date.now()) {
 		return this.ports.map(port => port.poll(now))
 	}
 
