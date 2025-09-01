@@ -13,7 +13,7 @@ export default Science.suite({
 		expect(station.actions.basic.jump.value).is(1)
 		expect(station.actions.basic.shoot.value).is(0)
 		device.setSample("Space", 2)
-		device.setSample("mouse.button.left", 3)
+		device.setSample("pointer.button.left", 3)
 		station.poll(time.now)
 		expect(station.actions.basic.jump.value).is(2)
 		expect(station.actions.basic.shoot.value).is(3)

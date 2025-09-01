@@ -13,10 +13,10 @@ export class PointerDevice extends SamplerDevice {
 
 	static buttonCode(event: PointerEvent) {
 		switch (event.button) {
-			case 0: return "mouse.button.left"
-			case 1: return "mouse.button.middle"
-			case 2: return "mouse.button.right"
-			default: return `mouse.button.${event.button + 1}`
+			case 0: return "pointer.button.left"
+			case 1: return "pointer.button.middle"
+			case 2: return "pointer.button.right"
+			default: return `pointer.button.${event.button + 1}`
 		}
 	}
 
@@ -25,13 +25,13 @@ export class PointerDevice extends SamplerDevice {
 
 		if (event.deltaX)
 			movements.push([
-				event.deltaX > 0 ? "mouse.wheel.right" : "mouse.wheel.left",
+				event.deltaX > 0 ? "pointer.wheel.right" : "pointer.wheel.left",
 				event.deltaX,
 			])
 
 		if (event.deltaY)
 			movements.push([
-				event.deltaY > 0 ? "mouse.wheel.down" : "mouse.wheel.up",
+				event.deltaY > 0 ? "pointer.wheel.down" : "pointer.wheel.up",
 				event.deltaY,
 			])
 
@@ -78,15 +78,15 @@ export class PointerDevice extends SamplerDevice {
 
 		if (movementX) {
 			if (movementX >= 0)
-				this.setSample(`mouse.move.right`, Math.abs(right))
+				this.setSample(`pointer.move.right`, Math.abs(right))
 			else
-				this.setSample(`mouse.move.left`, Math.abs(left))
+				this.setSample(`pointer.move.left`, Math.abs(left))
 		}
 		if (movementY) {
 			if (movementY >= 0)
-				this.setSample(`mouse.move.up`, Math.abs(up))
+				this.setSample(`pointer.move.up`, Math.abs(up))
 			else
-				this.setSample(`mouse.move.down`, Math.abs(down))
+				this.setSample(`pointer.move.down`, Math.abs(down))
 		}
 
 		this.movementX = 0
