@@ -27,12 +27,14 @@
 		"test-debug": "node inspect x/tests.test.js",
 		"count": "find s -path '*/_archive' -prune -o -name '*.ts' -exec wc -l {} +"
 	},
+	"peerDependencies": {
+		"lit": "^3.3.1"
+	},
 	"dependencies": {
 		"@benev/math": "^0.2.0-1",
 		"@e280/sly": "^0.1.1",
 		"@e280/strata": "^0.1.0",
-		"@e280/stz": "^0.2.0-4",
-		"lit": "^3.3.1"
+		"@e280/stz": "^0.2.0-4"
 	},
 	"devDependencies": {
 		"@e280/science": "^0.1.1",

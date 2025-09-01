@@ -1,7 +1,7 @@
 
 import {$, view} from "@e280/sly"
-import {StickDevice} from "../nubs/stick/device.js"
 import {NubStick} from "../nubs/stick/view.js"
+import {StickDevice} from "../nubs/stick/device.js"
 
 $.register({
 	TactDemo: view.component(use => {
