@@ -42,6 +42,7 @@ export class Port<B extends Bindings> {
 		this.#samples.clear()
 		aggregate_samples_into_map(this.controllers, this.#samples)
 		this.#resolver.poll(now)
+		return this.actions
 	}
 }
 

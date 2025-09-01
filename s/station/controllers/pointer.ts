@@ -10,34 +10,7 @@ export class PointerController extends SamplerController {
 	movement = new Vec2(0, 0)
 	dispose: () => void
 
-	static buttonCode(event: PointerEvent) {
-		switch (event.button) {
-			case 0: return "pointer.button.left"
-			case 1: return "pointer.button.middle"
-			case 2: return "pointer.button.right"
-			default: return `pointer.button.${event.button + 1}`
-		}
-	}
-
-	static wheelCodes(event: WheelEvent) {
-		const movements: [string, number][] = []
-
-		if (event.deltaX)
-			movements.push([
-				event.deltaX > 0 ? "pointer.wheel.right" : "pointer.wheel.left",
-				event.deltaX,
-			])
-
-		if (event.deltaY)
-			movements.push([
-				event.deltaY > 0 ? "pointer.wheel.down" : "pointer.wheel.up",
-				event.deltaY,
-			])
-
-		return movements
-	}
-
-	constructor(target: EventTarget) {
+	constructor(target: EventTarget = window) {
 		super()
 
 		const dispatch = (event: PointerEvent | WheelEvent, code: string, value: number) => {
@@ -68,6 +41,33 @@ export class PointerController extends SamplerController {
 					dispatch(event, code, value)
 			},
 		})
+	}
+
+	static buttonCode(event: PointerEvent) {
+		switch (event.button) {
+			case 0: return "pointer.button.left"
+			case 1: return "pointer.button.middle"
+			case 2: return "pointer.button.right"
+			default: return `pointer.button.${event.button + 1}`
+		}
+	}
+
+	static wheelCodes(event: WheelEvent) {
+		const movements: [string, number][] = []
+
+		if (event.deltaX)
+			movements.push([
+				event.deltaX > 0 ? "pointer.wheel.right" : "pointer.wheel.left",
+				event.deltaX,
+			])
+
+		if (event.deltaY)
+			movements.push([
+				event.deltaY > 0 ? "pointer.wheel.down" : "pointer.wheel.up",
+				event.deltaY,
+			])
+
+		return movements
 	}
 
 	takeSamples() {

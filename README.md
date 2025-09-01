@@ -6,45 +6,123 @@
 npm install @benev/tact
 ```
 
-- 🛰️ **devices** are for sampling user inputs
-- 🔗 **bindings** describe how samples influence actions
-- 📡 **station** runs device samples through bindings, updating actions
-- 🔌 **switchboard** assigns devices to stations (multi-gamepad couch co-op!)
-- 🔘 **nubs** is mobile ui virtual gamepad stuff
+- 🛹 **deck** user input coordinator with bindings persistence
+- 🎮 **controllers** produce user input samples
+- 🧩 **bindings** describe how actions interpret samples
+- 🔌 **port** updates actions by interpreting samples
+- 🛞 **hub** plugs controllers into ports (multi-gamepad couch co-op!)
+- 📱 **nubs** is mobile ui virtual gamepad stuff
+
+
 
 <br/><br/>
 
-## 🍋 tact devices
-> produces user input "samples"
+## 🍋 tact deck
+> *user input coordinator with bindings persistence*
 
-### 🥝 polling is good, actually
+the deck is the heart of tact.. it ties all the important parts together..
+
+### 🛹 deck setup
+- **import stuff from tact**
+    ```ts
+    import * as tact from "@benev/tact"
+    ```
+- **setup your deck**
+    ```ts
+    const deck = new tact.Deck({
+      ports: 4,
+      kv: tact.Deck.localStorageKv(),
+      defaultBindings: tact.Hub.bindings({
+        walking: {
+          forward: [
+            {lenses: [{code: "KeyW"}]},
+            {lenses: [{code: "gamepad.stick.left.up"}]},
+          ],
+          jump: [
+            {lenses: [{code: "Space"}]},
+            {lenses: [{code: "gamepad.a"}]},
+          ],
+        },
+        gunning: {
+          shoot: [
+            {lenses: [{code: "pointer.button.left"}]},
+            {lenses: [{code: "gamepad.trigger.right"}]},
+          ],
+        },
+      }),
+    })
+    ```
+
+### 🛹 plug controllers into the hub
+- **plug a keyboard/mouse player into the hub**
+    ```ts
+    deck.hub.plug(
+      new tact.GroupController(
+        new tact.KeyboardController(),
+        new tact.PointerController(),
+        new tact.VirtualGamepadController(),
+      )
+    )
+    ```
+- **auto connect/disconnect gamepads as they come and go**
+    ```ts
+    tact.autoGamepads(deck.hub.plug)
+    ```
+
+### 🛹 do your gameplay
+- **start with what modes you want enabled in your game**
+    ```ts
+    for (const port of deck.ports)
+      port.modes.adds("walking", "gunning")
+    ```
+- **poll the deck, interrogate actions for your gameplay**
+    ```ts
+    onEachTickInYourGame(() => {
+
+      // do your polling
+      const [p1, p2, p3, p4] = deck.hub.poll()
+
+      // check if the first player is pressing "forward" action
+      p1.actions.walking.forward.pressed // true
+
+      // check how hard the second player is pulling that trigger
+      p2.actions.gunning.shoot.value // 0.123
+    })
+    ```
+
+
+
+<br/><br/>
+
+## 🍋 tact controllers
+> *produces user input "samples"*
+
+### 🎮 polling is good, actually
 - tact operates on the basis of *polling*
 - *"but polling is bad"* says you — but no — you're wrong — polling is unironically *based,* and you *should* do it
 - in a game, we want to be processing our inputs *every frame*
 - the gift of polling is total control over *when* inputs are processed
 - i will elaborate no further 🗿
 
-### 🥝 basically how a device works
-- make a keyboard device
+### 🎮 basically how a controller works
+- make a controller
     ```ts
-    import {KeyboardDevice} from "@benev/tact"
-
-    const device = new KeyboardDevice(window)
+    const keyboard = new tact.KeyboardController()
     ```
 - take samples each frame
     ```ts
-    const samples = device.takeSamples()
+    const samples = keyboard.takeSamples()
       // [
       //   ["KeyA", 1],
       //   ["Space", 0]
       // ]
     ```
-- dispose the device when you're done with it
+- dispose when you're done with it
     ```ts
-    device.dispose()
+    keyboard.dispose()
     ```
 
-### 🥝 samples explained
+### 🎮 samples explained
 - a sample is a raw input of type `[code: string, value: number]`
 - a sample has a `code` string
   - it's either a [standard keycode](https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_code_values), like `KeyA`
@@ -57,7 +135,7 @@ npm install @benev/tact
   - sometimes we use numbers greater then `1`, like for dots of pointer movement like in `pointer.move.up`
   - don't worry about sensitivity, deadzones, values like `0.00001` — actions will account for all that using bindings later on
 
-### 🥝 sample code modprefixes
+### 🎮 sample code modprefixes
 - here at tact, we have this nifty `modprefix` convention
 - consider a keycode like `KeyA`
     - `ctrl-KeyA` means the "ctrl" modifier was held
@@ -68,8 +146,8 @@ npm install @benev/tact
     - `x-KeyA` means *no* modifier was held (exclusive)
     - `KeyA` doesn't care if any modifiers were held or not
 
-### 🥝 sample code reference
-- **KeyboardDevice**
+### 🎮 sample code reference
+- **KeyboardController**
     - any [standard keycode](https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_code_values)
         - `KeyA`
         - `Space`
@@ -80,7 +158,7 @@ npm install @benev/tact
         - `alt-shift-Space`
         - `x-Digit2`
         - etc
-- **PointerDevice**
+- **PointerController**
     - mouse buttons (plus modprefixes)
         - `pointer.button.left`
         - `pointer.button.right`
@@ -97,7 +175,7 @@ npm install @benev/tact
         - `pointer.move.down`
         - `pointer.move.left`
         - `pointer.move.right`
-- **GamepadDevice**
+- **GamepadController**
     - gamepad buttons
         - `gamepad.a`
         - `gamepad.b`
@@ -126,17 +204,17 @@ npm install @benev/tact
         - `gamepad.stick.right.left`
         - `gamepad.stick.right.right`
 
+
+
 <br/><br/>
 
 ## 🍋 tact bindings
-> keybindings! they describe how actions interpret samples
+> *keybindings! they describe how actions interpret samples*
 
-### 🥝 bindings example
+### 🧩 bindings example
 - let's start with a small example:
     ```ts
-    import {Bindings} from "@benev/tact"
-
-    const bindings = asBindings({
+    const bindings = tact.asBindings({
       walking: {
         forward: [{lenses: [{code: "KeyW"}]}],
         jump: [{lenses: [{code: "Space"}]}],
@@ -152,32 +230,46 @@ npm install @benev/tact
       - 🚨 TODO okay these rules are complex and i'm gonna rework them soon
     - whole modes can be enabled or disabled
 
+
+
 <br/><br/>
 
-## 🍋 tact station
-> polling gives you actions
+## 🍋 tact port
+> *polling gives you "actions"*
 
-### 🥝 creating a station
-- create a station
+### 🔌 port basics
+- **make a port**
     ```ts
-    import {Station} from "@benev/tact"
-
-    const station = new Station(bindings)
-      .addModes("walking")
-      .addDevices(
-        new KeyboardDevice(window),
-        new PointerDevice(window),
-      )
+    const port = new tact.Port(bindings)
+    ```
+- **attach some controllers to the port**
+    ```ts
+    port.controllers
+      .add(new tact.KeyboardController())
+      .add(new tact.PointerController())
+      .add(new tact.VirtualGamepadController())
+    ```
+    - you can add/delete controllers from the set any time
+- **don't forget to enable modes!**
+    ```ts
+    port.modes.add("walking")
+    ```
+    - if you don't enable any modes, no actions will happen
+    - actions only happen for enabled modes
+    - you can toggle modes on and off by adding/deleting them from the modes set
+- **you can update the bindings any time**
+    ```ts
+    port.bindings = freshBindings
     ```
 
-### 🥝 how to use actions
-- poll the station every frame
+### 🔌 interrogating actions
+- **poll the port every frame**
     ```ts
-    station.poll(Date.now())
+    const actions = port.poll()
     ```
-- now you use the `actions`
+- **now you can inspect the `actions`**
     ```ts
-    station.actions.walking.forward.value // 1
+    actions.walking.forward.value // 1
     ```
     - `walking` is a `mode`
     - `forward` is an `action`
@@ -190,110 +282,79 @@ npm install @benev/tact
     - `action.on(action => {})` — react to changes ([`@e280/stz`](https://github.com/e280/stz) sub fn)
     - `action.onDown(action => {})` — react only on down ([`@e280/stz`](https://github.com/e280/stz) sub fn)
 
-### 🥝 more about station
-- you can enable/disable modes like this (it's a set)
-    ```ts
-    station.modes.add("gunning")
-      // now the "gunning" actions can fire
 
-    station.modes.delete("walking")
-      // now the "walking" actions *cannot* fire
-    ```
-- you can add/remove devices from the set any time
-    ```ts
-    station.devices.add(new GamepadDevice(pad))
-    ```
-- you can update the bindings at runtime
-    ```ts
-    station.bindings = bindings2
-    ```
 
 <br/><br/>
 
-## 🍋 tact switchboard
-> multiple gamepads! couch co-op is so back
+## 🍋 tact hub
+> *multiple gamepads! couch co-op is so back*
 
-### 🥝 feel the vibes
-- you know the way old timey game consoles had controller ports? and then players could plug their controller into whatever port they wanted? and then you could unplug and replug your controller into a different port? yeah — that's what switchboard does.
-- with the switchboard, think of the "stations" as controller ports, and the "devices" as player controllers.
-- import stuff:
-    ```ts
-    import {
-      Switchboard, Station,
-      GroupDevice, GamepadDevice, KeyboardDevice, PointerDevice,
-    } from "@benev/tact"
-    ```
+the hub's job is coordinating the plugging and unplugging of controllers into ports
 
-### 🥝 create a switchboard with stations
-- **adopt standard switchboard bindings**
+### 🛞 create a hub with ports
+- **adopt standard hub bindings**
     ```ts
-    // transform your game's bindings into switchboard-friendly bindings
-    const sBindings = Switchboard.bindings(bindings)
+    // transform your game's bindings into hub-friendly bindings
+    const hubBindings = tact.Hub.bindings(bindings)
     ```
-    - this allows players to shimmy what station their controller controls
+    - this augments your bindings with standard hub-specific bindings
+    - this lets players to shimmy what port their controller is plugged into
     - gamepad: hold middle button and press bumpers
     - keyboard: left bracket or right bracket
-- **make switchboard with stations at the ready**
+- **make hub with multiple ports at the ready**
     ```ts
-    const switchboard = new Switchboard([
-      new Station(sBindings),
-      new Station(sBindings),
-      new Station(sBindings),
-      new Station(sBindings),
+    const hub = new tact.Hub([
+      new tact.Port(hubBindings),
+      new tact.Port(hubBindings),
+      new tact.Port(hubBindings),
+      new tact.Port(hubBindings),
     ])
     ```
-    - yes that's right — each player can have their own bindings 🤯
+    - yes that's right — each player port gets its own bindings 🤯
 
-### 🥝 connect player's devices to the switchboard
-- **let's connect the keyboard/mouse player**
+### 🛞 plug in some controllers
+- **let's plug in the keyboard/mouse player**
     ```ts
-    switchboard.connect(
-      new GroupDevice(
-        new KeyboardDevice(window),
-        new PointerDevice(window),
+    hub.plug(
+      new tact.GroupController(
+        new tact.KeyboardController(),
+        new tact.PointerController(),
+        new tact.VirtualGamepadController(),
       )
     )
     ```
-    - the switchboard assumes a single device represents a single player, thus we can use a `GroupDevice` to combine multple devices into one
+    - the hub requires a single controller to represent a player, thus we can use a `GroupController` to combine multple controllers into one
 - **wire up gamepad auto connect/disconnect**
     ```ts
-    GamepadDevice.on(device => switchboard.connect(device))
+    tact.autoGamepads(hub.plug)
     ```
 
-### 🥝 you're ready!
+### 🛞 it's gaming time
 - **do your polling, interrogate those actions**
     ```ts
-    const [p1, p2, p3, p4] = switchboard.stations
+    const [p1, p2, p3, p4] = hub.poll()
 
-    // poll them all
-    switchboard.poll(Date.now())
-
-    p1.actions.walking.jump.value // 1
-    p2.actions.walking.jump.value // 0
+    p1.walking.jump.value // 1
+    p2.walking.jump.value // 0
     ```
 
-### 🥝 the more you know, about the switchboard
-- `switchboard.stations` — direct access to the array of stations
-- `switchboard.isActive(p1)` — check if there's a switchboard-connected-device assigned to this station
-- `switchboard.shimmy(device, 1)` — shimmy a device forward one station
-- `switchboard.shimmy(device, -1)` — shimmy a device backward one station
-- `switchboard.connect(device, p4)` — connect-or-reassign a device to a specific station
-- `switchboard.connect(device)` — connect a device to the next unassigned station (or the last station)
-- `switchboard.disconnect(device)` — unassign a device and forget about it
+
 
 <br/><br/>
 
 ## 🍋 tact nubs
-> mobile ui like virtual thumbsticks and buttons
+> *mobile ui like virtual thumbsticks and buttons*
 
-### 🥝 nub stick
+### 📱 nub stick
 > TODO lol need to write docs
 
-### 🥝 nub virtual gamepad
+### 📱 nub virtual gamepad
 > TODO lol need to write docs
+
+
 
 <br/><br/>
 
 ## 🍋 tact is by https://benevolent.games/
-> building the future of web games
+> *building the future of web games*
 

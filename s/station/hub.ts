@@ -34,8 +34,7 @@ export class Hub<B extends HubBindings> {
 
 	/** poll all the ports */
 	poll(now: number) {
-		for (const port of this.ports)
-			port.poll(now)
+		return this.ports.map(port => port.poll(now))
 	}
 
 	/** check if a port has a known switchboard controller assigned */
@@ -74,10 +73,7 @@ export class Hub<B extends HubBindings> {
 	}
 
 	/** plug a controller into a port */
-	plug(
-			controller: Controller,
-			port: Port<B> = this.getLonelyPort(),
-		) {
+	plug = (controller: Controller, port: Port<B> = this.getLonelyPort()) => {
 		this.unplug(controller)
 		this.controllers.add(controller)
 		port.controllers.add(controller)

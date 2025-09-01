@@ -9,7 +9,7 @@ export class KeyboardController extends Controller {
 	dispose: () => void
 	#held = new Set<string>()
 
-	constructor(target: EventTarget) {
+	constructor(target: EventTarget = window) {
 		super()
 
 		const down = (code: string) => {
