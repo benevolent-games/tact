@@ -10,9 +10,9 @@ export class Switchboard<B extends SwitchboardBindings> {
 	static readonly mode = switchboardMode
 	static readonly bindings = switchboardBindings
 
-	devices = new SetG<Device>()
+	readonly devices = new SetG<Device>()
 
-	constructor(public stations: Station<B>[]) {
+	constructor(public readonly stations: Station<B>[]) {
 		for (const station of stations) {
 			const fn = (delta: 1 | -1) => () => {
 				const device = this.deviceByStation(station)
@@ -32,9 +32,15 @@ export class Switchboard<B extends SwitchboardBindings> {
 		yield* this.stations.entries()
 	}
 
+	/** poll all the stations */
 	poll(now: number) {
 		for (const station of this.stations)
 			station.poll(now)
+	}
+
+	/** check if a station has a known switchboard device assigned */
+	isActive(station: Station<B>) {
+		return !!this.deviceByStation(station)
 	}
 
 	stationByIndex(index: number) {
@@ -67,7 +73,7 @@ export class Switchboard<B extends SwitchboardBindings> {
 		return station
 	}
 
-	/** plug in a player's device so they can play (maybe is a DeviceGroup) */
+	/** connect-or-assign a device to a station */
 	connect<D extends Device>(
 			device: D,
 			station: Station<B> = this.chooseLonelyStation(),
@@ -75,7 +81,7 @@ export class Switchboard<B extends SwitchboardBindings> {
 		this.#removeDeviceFromAllStations(device)
 		this.devices.add(device)
 		station.devices.add(device)
-		return device
+		return () => this.disconnect(device)
 	}
 
 	/** unplug a player's device */

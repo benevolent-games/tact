@@ -1,14 +1,13 @@
 
 import {ev} from "@e280/stz"
+import {Vec2} from "@benev/math"
 import {modprefix} from "../utils/modprefix.js"
 import {SamplerDevice} from "./infra/sampler.js"
 import {splitAxis} from "../../utils/split-axis.js"
 
 export class PointerDevice extends SamplerDevice {
-	clientX = 0
-	clientY = 0
-	movementX = 0
-	movementY = 0
+	client = new Vec2(0, 0)
+	movement = new Vec2(0, 0)
 	dispose: () => void
 
 	static buttonCode(event: PointerEvent) {
@@ -58,10 +57,10 @@ export class PointerDevice extends SamplerDevice {
 			},
 
 			pointermove: (event: PointerEvent) => {
-				this.clientX = event.clientX
-				this.clientY = event.clientY
-				this.movementX += event.movementX
-				this.movementY += event.movementY
+				this.client.x = event.clientX
+				this.client.y = event.clientY
+				this.movement.x += event.movementX
+				this.movement.y += event.movementY
 			},
 
 			wheel: (event: WheelEvent) => {
@@ -72,26 +71,24 @@ export class PointerDevice extends SamplerDevice {
 	}
 
 	takeSamples() {
-		const {movementX, movementY} = this
-		const [left, right] = splitAxis(movementX)
-		const [down, up] = splitAxis(movementY)
+		const [x, y] = this.movement
+		const [left, right] = splitAxis(x)
+		const [down, up] = splitAxis(y)
 
-		if (movementX) {
-			if (movementX >= 0)
+		if (x) {
+			if (x >= 0)
 				this.setSample(`pointer.move.right`, Math.abs(right))
 			else
 				this.setSample(`pointer.move.left`, Math.abs(left))
 		}
-		if (movementY) {
-			if (movementY >= 0)
+		if (y) {
+			if (y >= 0)
 				this.setSample(`pointer.move.up`, Math.abs(up))
 			else
 				this.setSample(`pointer.move.down`, Math.abs(down))
 		}
 
-		this.movementX = 0
-		this.movementY = 0
-
+		this.movement.set_(0, 0)
 		return super.takeSamples()
 	}
 }

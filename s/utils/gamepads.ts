@@ -12,28 +12,30 @@ export class Pad {
 }
 
 /** track gamepad lifecycles as they connect or disconnect */
+export function gamepads(on: (pad: Pad) => () => void) {
+	const pads = new MapG<number, {pad: Pad, dispose: () => void}>()
+	return ev(window, {
+		gamepadconnected: ({gamepad}: GamepadEvent) => {
+			const get = () => navigator.getGamepads().at(gamepad.index)
+			const pad = new Pad(evergreen(gamepad, get))
+			const dispose = on(pad)
+			pads.set(gamepad.index, {pad, dispose})
+		},
+
+		gamepaddisconnected: ({gamepad}: GamepadEvent) => {
+			const result = pads.get(gamepad.index)
+			if (result) {
+				pads.delete(gamepad.index)
+				result.dispose()
+			}
+		},
+	})
+}
+
 export class Gamepads implements Disposable {
 	dispose: () => void
-	#pads = new MapG<number, {pad: Pad, dispose: () => void}>()
-
 	constructor(public on: (pad: Pad) => () => void) {
-		this.dispose = ev(window, {
-
-			gamepadconnected: ({gamepad}: GamepadEvent) => {
-				const get = () => navigator.getGamepads().at(gamepad.index)
-				const pad = new Pad(evergreen(gamepad, get))
-				const dispose = this.on(pad)
-				this.#pads.set(gamepad.index, {pad, dispose})
-			},
-
-			gamepaddisconnected: ({gamepad}: GamepadEvent) => {
-				const result = this.#pads.get(gamepad.index)
-				if (result) {
-					this.#pads.delete(gamepad.index)
-					result.dispose()
-				}
-			},
-		})
+		this.dispose = gamepads(on)
 	}
 }
 

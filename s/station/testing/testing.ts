@@ -2,6 +2,7 @@
 import {Station} from "../station.js"
 import {asBindings} from "../types.js"
 import {Switchboard} from "../switchboard.js"
+import {Device} from "../devices/infra/device.js"
 import {SamplerDevice} from "../devices/infra/sampler.js"
 import {switchboardBindings} from "../parts/switchboard-bindings.js"
 
@@ -20,6 +21,11 @@ export function testBindings() {
 			shoot: [{lenses: [{code: "pointer.button.left"}]}],
 		},
 	})
+}
+
+export function testConnect<D extends Device>(switchboard: Switchboard<any>, device: D) {
+	switchboard.connect(device)
+	return device
 }
 
 export function testSetupAlpha() {
