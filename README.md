@@ -1,6 +1,6 @@
 
 # @benev/tact
-> user input keybindings and gamepad support for web games
+> web game input library, from keypress to couch co-op
 
 ```ts
 npm install @benev/tact
