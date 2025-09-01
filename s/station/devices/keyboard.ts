@@ -23,7 +23,6 @@ export class KeyboardDevice extends Device {
 		}
 
 		this.dispose = coalesce(
-
 			ev(target, {
 				keydown: (event: KeyboardEvent) => {
 					if (event.repeat) return
