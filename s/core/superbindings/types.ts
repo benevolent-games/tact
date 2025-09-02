@@ -1,8 +1,10 @@
 
+import {Action} from "./action.js"
+
 export type Bindings = {[mode: string]: Bracket}
 export type Bracket = {[action: string]: Atom}
 
-export type Code = ["code", string, settings?: Partial<Settings>]
+export type Code = ["code", string, settings?: Partial<CodeSettings>]
 export type And = ["and", ...Atom[]]
 export type Or = ["or", ...Atom[]]
 export type Not = ["not", Atom]
@@ -18,7 +20,7 @@ export type Atom = string | (
 	| Mods
 )
 
-export type Settings = {
+export type CodeSettings = {
 	scale: number
 	invert: boolean
 	deadzone: number
@@ -27,6 +29,12 @@ export type Settings = {
 		| ["tap", holdTime?: number]
 		| ["hold", holdTime?: number]
 	)
+}
+
+export type CodeState = {
+	settings: CodeSettings
+	lastValue: number
+	holdStart: number
 }
 
 export type Modifiers = {
@@ -40,21 +48,27 @@ export function asBindings<B extends Bindings>(bindings: B) {
 	return bindings
 }
 
-asBindings({
-	normal: {
-		forward: "KeyW",
-		jump: ["or", "Space", "gamepad.a"],
+export type Actions<B extends Bindings> = {
+	[Mode in keyof B]: {
+		[K in keyof B[Mode]]: Action
+	}
+}
 
-		// ctrl+q
-		menu: ["cond", "KeyQ", ["and",
-			["or", "ControlLeft", "ControlRight"],
-			["not", ["or", "ShiftLeft", "ShiftRight"]],
-			["not", ["or", "MetaLeft", "MetaRight"]],
-			["not", ["or", "AltLeft", "AltRight"]],
-		]],
-
-		// ctrl+e
-		inventory: ["mods", "KeyE", {ctrl: true}],
-	},
-})
+// asBindings({
+// 	normal: {
+// 		forward: "KeyW",
+// 		jump: ["or", "Space", "gamepad.a"],
+//
+// 		// ctrl+q
+// 		menu: ["cond", "KeyQ", ["and",
+// 			["or", "ControlLeft", "ControlRight"],
+// 			["not", ["or", "ShiftLeft", "ShiftRight"]],
+// 			["not", ["or", "MetaLeft", "MetaRight"]],
+// 			["not", ["or", "AltLeft", "AltRight"]],
+// 		]],
+//
+// 		// ctrl+e
+// 		inventory: ["mods", "KeyE", {ctrl: true}],
+// 	},
+// })
 
