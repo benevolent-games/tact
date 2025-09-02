@@ -14,12 +14,6 @@ export class Hub<B extends HubBindings> {
 
 	constructor(public readonly ports: Port<B>[]) {
 		for (const port of ports) {
-			const fn = (delta: 1 | -1) => () => {
-				const controller = this.controllerByPort(port)
-				if (controller) this.shimmy(controller, delta)
-			}
-			port.actions.switchboard.shimmyNext.onDown(fn(1))
-			port.actions.switchboard.shimmyPrevious.onDown(fn(-1))
 			port.modes.add(Hub.mode)
 		}
 	}
@@ -32,9 +26,18 @@ export class Hub<B extends HubBindings> {
 		yield* this.ports.entries()
 	}
 
-	/** poll all the ports */
+	/** poll all the ports, and actuate hub bindings for shimmying */
 	poll(now: number = Date.now()) {
-		return this.ports.map(port => port.poll(now))
+		return this.ports.map(port => {
+			const actions = port.poll(now)
+			const fn = (delta: 1 | -1) => {
+				const controller = this.controllerByPort(port)
+				if (controller) this.shimmy(controller, delta)
+			}
+			if (actions[hubMode].shimmyNext.down) fn(1)
+			if (actions[hubMode].shimmyPrevious.down) fn(-1)
+			return actions
+		})
 	}
 
 	/** check if a port has a known switchboard controller assigned */

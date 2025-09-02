@@ -32,15 +32,18 @@ export function testSetupAlpha() {
 	const time = new TestTime()
 	const controller = new SamplerController()
 	const port = new Port(testBindings())
-		.addModes("basic")
-		.addControllers(controller)
+	port.modes.add("basic")
+	port.controllers.add(controller)
 	return {controller, port, time}
 }
 
 export function testSetupBravo() {
 	const time = new TestTime()
-	const port = () => new Port(hubBindings(testBindings()))
-		.addModes(Hub.mode, "basic")
+	const port = () => {
+		const port = new Port(hubBindings(testBindings()))
+		port.modes.adds(Hub.mode, "basic")
+		return port
+	}
 	const hub = new Hub([port(), port(), port(), port()])
 	return {hub: hub, time}
 }

@@ -7,8 +7,8 @@ import {SampleMap} from "../controllers/types.js"
 import {Bindings, Lens} from "../bindings/types.js"
 import {zeroedActions} from "./resolution/zeroed.js"
 import {Controller} from "../controllers/controller.js"
-import {wipe_samples_map} from "./parts/routines/wipe_samples_map.js"
-import {aggregate_samples_into_map} from "./parts/routines/aggregate_samples_into_map.js"
+import {wipe_samples_map} from "./utils/wipe_samples_map.js"
+import {aggregate_samples_into_map} from "./utils/aggregate_samples_into_map.js"
 
 export class Port<B extends Bindings> {
 	readonly modes = new SetG<keyof B>()
