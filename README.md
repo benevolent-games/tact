@@ -1,6 +1,6 @@
 
-# @benev/tact
-> web game input library, from keypress to couch co-op
+# 🎮 @benev/tact
+> *web game input library, from keypress to couch co-op*
 
 ```ts
 npm install @benev/tact
