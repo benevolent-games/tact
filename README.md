@@ -6,7 +6,7 @@
 npm install @benev/tact
 ```
 
-- 🛹 **deck** user input coordinator with bindings persistence
+- 🛹 **deck** full setup with localstorate persistence
 - 🎮 **controllers** produce user input samples
 - 🧩 **bindings** describe how actions interpret samples
 - 🔌 **port** updates actions by interpreting samples
@@ -18,11 +18,9 @@ npm install @benev/tact
 <br/><br/>
 
 ## 🍋 tact deck
-> *full user input system with localstorage bindings persistence*
+> *the full setup*
 
-the deck is the heart of tact, bundling together a hub with multiple ports, and handling persistence for bindings preferences.
-
-you don't have to use the deck, you could wire up a hub and ports yourself — but the deck wraps it up and puts a bow on it for you.
+the deck is the heart of tact, tying all the pieces together and putting a bow in it for you.
 
 ### 🛹 deck setup
 - **import stuff from tact**
@@ -32,8 +30,14 @@ you don't have to use the deck, you could wire up a hub and ports yourself — b
 - **setup your deck, and your game's bindings**
     ```ts
     const deck = await tact.Deck.load({
+
+      // how many players ports are possible? 1 is fine..
       portCount: 4,
+
+      // where to store the user-customized bindings
       kv: tact.localStorageKv(),
+
+      // default archetypal bindings for your game
       bindings: {
         ...tact.hubBindings(),
         walking: {
@@ -77,10 +81,10 @@ you don't have to use the deck, you could wire up a hub and ports yourself — b
       const [p1, p2, p3, p4] = deck.hub.poll()
 
       // check if the first player is pressing "forward" action
-      p1.actions.walking.forward.pressed // true
+      p1.walking.forward.pressed // true
 
       // check how hard the second player is pulling that trigger
-      p2.actions.gunning.shoot.value // 0.123
+      p2.gunning.shoot.value // 0.123
     })
     ```
 
@@ -89,7 +93,7 @@ you don't have to use the deck, you could wire up a hub and ports yourself — b
 <br/><br/>
 
 ## 🍋 tact controllers
-> *produces user input "samples"*
+> *sources of user input "samples"*
 
 ### 🎮 polling is good, actually
 - tact operates on the basis of *polling*
@@ -285,6 +289,8 @@ you don't have to use the deck, you could wire up a hub and ports yourself — b
 ## 🍋 tact port
 > *polling gives you "actions"*
 
+a port represents a single playable port, and you poll it each frame to resolve actions for you to read.
+
 ### 🔌 port basics
 - **make a port**
     ```ts
@@ -308,6 +314,13 @@ you don't have to use the deck, you could wire up a hub and ports yourself — b
 - **you can update the bindings any time**
     ```ts
     port.bindings = freshBindings
+    ```
+- **wire up gamepad auto connect/disconnect**
+    ```ts
+    tact.autoGamepads(controller => {
+      port.controllers.add(controller)
+      return () => port.controllers.delete(controller)
+    })
     ```
 
 ### 🔌 interrogating actions
