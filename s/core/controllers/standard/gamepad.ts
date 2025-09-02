@@ -1,8 +1,8 @@
 
+import {Pad} from "../../../utils/gamepads.js"
 import {tmax} from "../../../utils/quick-math.js"
 import {splitAxis} from "../../../utils/split-axis.js"
 import {SamplerController} from "../infra/sampler.js"
-import {gamepads, Pad} from "../../../utils/gamepads.js"
 
 const gamepadButtonCodes = [
 	"gamepad.a",
@@ -25,10 +25,6 @@ const gamepadButtonCodes = [
 ]
 
 export class GamepadController extends SamplerController {
-	static on(fn: (controller: GamepadController) => () => void) {
-		return gamepads(pad => fn(new this(pad)))
-	}
-
 	constructor(public pad: Pad) {
 		super()
 	}
