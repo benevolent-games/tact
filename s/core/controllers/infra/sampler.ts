@@ -1,7 +1,7 @@
 
 import {sub} from "@e280/stz"
 import {Controller} from "../controller.js"
-import { Sample, SampleMap } from "../types.js"
+import {Sample, SampleMap} from "../types.js"
 
 export class SamplerController extends Controller {
 	on = sub<Sample>()

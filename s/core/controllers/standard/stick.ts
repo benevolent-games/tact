@@ -2,8 +2,8 @@
 import {Vec2} from "@benev/math"
 import {signal} from "@e280/strata"
 import {Disposable} from "@e280/stz"
-import {splitAxis} from "../../../utils/split-axis.js"
 import {SamplerController} from "../infra/sampler.js"
+import {splitAxis} from "../../../utils/split-axis.js"
 
 export class StickController extends SamplerController implements Disposable {
 	vector = signal(Vec2.zero())
