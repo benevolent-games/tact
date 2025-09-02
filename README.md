@@ -18,16 +18,18 @@ npm install @benev/tact
 <br/><br/>
 
 ## 🍋 tact deck
-> *user input coordinator with bindings persistence*
+> *user input system*
 
-the deck is the heart of tact.. it ties all the important parts together..
+the deck is the heart of tact, bundling together a hub with multiple ports, and handling persistence for bindings preferences.
+
+you don't have to use the deck, you could wire up a hub and ports yourself — but the deck wraps it up and puts a bow on it for you.
 
 ### 🛹 deck setup
 - **import stuff from tact**
     ```ts
     import * as tact from "@benev/tact"
     ```
-- **setup your deck**
+- **setup your deck, and your game's bindings**
     ```ts
     const deck = new tact.Deck({
       ports: 4,
@@ -117,7 +119,7 @@ the deck is the heart of tact.. it ties all the important parts together..
       //   ["Space", 0]
       // ]
     ```
-- dispose when you're done with it
+- some controllers have disposers to call when you're done with them
     ```ts
     keyboard.dispose()
     ```
