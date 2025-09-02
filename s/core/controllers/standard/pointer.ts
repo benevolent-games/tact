@@ -1,7 +1,6 @@
 
 import {ev} from "@e280/stz"
 import {Vec2} from "@benev/math"
-import {modprefix} from "../utils/modprefix.js"
 import {splitAxis} from "../../../utils/split-axis.js"
 import {SamplerController} from "../infra/sampler.js"
 
@@ -13,20 +12,15 @@ export class PointerController extends SamplerController {
 	constructor(target: EventTarget = window) {
 		super()
 
-		const dispatch = (event: PointerEvent | WheelEvent, code: string, value: number) => {
-			this.setSample(code, value)
-			this.setSample(modprefix(event, code), value)
-		}
-
 		this.dispose = ev(target, {
 			pointerdown: (event: PointerEvent) => {
 				const code = PointerController.buttonCode(event)
-				dispatch(event, code, 1)
+				this.setSample(code, 1)
 			},
 
 			pointerup: (event: PointerEvent) => {
 				const code = PointerController.buttonCode(event)
-				dispatch(event, code, 0)
+				this.setSample(code, 0)
 			},
 
 			pointermove: (event: PointerEvent) => {
@@ -38,7 +32,7 @@ export class PointerController extends SamplerController {
 
 			wheel: (event: WheelEvent) => {
 				for (const [code, value] of PointerController.wheelCodes(event))
-					dispatch(event, code, value)
+					this.setSample(code, value)
 			},
 		})
 	}

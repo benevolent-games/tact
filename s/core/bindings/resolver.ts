@@ -57,12 +57,12 @@ export class Resolver<B extends Bindings> {
 			case "and": {
 				const [,...atoms] = atom
 				const values = atoms.map(resolveAtom)
-				return tmax(values)
+				return tmin(values)
 			}
 			case "or": {
 				const [,...atoms] = atom
 				const values = atoms.map(resolveAtom)
-				return tmin(values)
+				return tmax(values)
 			}
 			case "not": {
 				const [, subject] = atom

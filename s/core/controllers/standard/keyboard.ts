@@ -2,7 +2,6 @@
 import {coalesce, ev, sub} from "@e280/stz"
 import {Sample} from "../types.js"
 import {Controller} from "../controller.js"
-import {modprefix} from "../utils/modprefix.js"
 
 export class KeyboardController extends Controller {
 	on = sub<Sample>()
@@ -27,11 +26,9 @@ export class KeyboardController extends Controller {
 				keydown: (event: KeyboardEvent) => {
 					if (event.repeat) return
 					down(event.code)
-					down(modprefix(event, event.code))
 				},
 				keyup: (event: KeyboardEvent) => {
 					up(event.code)
-					up(modprefix(event, event.code))
 				},
 			}),
 

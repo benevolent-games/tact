@@ -37,20 +37,11 @@ you don't have to use the deck, you could wire up a hub and ports yourself — b
       bindings: {
         ...tact.hubBindings(),
         walking: {
-          forward: [
-            {lenses: [{code: "KeyW"}]},
-            {lenses: [{code: "gamepad.stick.left.up"}]},
-          ],
-          jump: [
-            {lenses: [{code: "Space"}]},
-            {lenses: [{code: "gamepad.a"}]},
-          ],
+          forward: "KeyW",
+          jump: "Space",
         },
         gunning: {
-          shoot: [
-            {lenses: [{code: "pointer.button.left"}]},
-            {lenses: [{code: "gamepad.trigger.right"}]},
-          ],
+          shoot: ["or", "pointer.button.left", "gamepad.trigger.right"],
         },
       },
     })
@@ -138,17 +129,6 @@ you don't have to use the deck, you could wire up a hub and ports yourself — b
   - sometimes we use numbers greater then `1`, like for dots of pointer movement like in `pointer.move.up`
   - don't worry about sensitivity, deadzones, values like `0.00001` — actions will account for all that using bindings later on
 
-### 🎮 sample code modprefixes
-- here at tact, we have this nifty `modprefix` convention
-- consider a keycode like `KeyA`
-    - `ctrl-KeyA` means the "ctrl" modifier was held
-    - `alt-KeyA` means the "alt" modifier was held
-    - `meta-KeyA` means the "meta" modifier was held (command or windows keys)
-    - `shift-KeyA` means the "shift" modifier was held
-    - `ctrl-alt-meta-shift-KeyA` they can stack, but always in this order (the word `cams` helps remind me the valid order)
-    - `x-KeyA` means *no* modifier was held (exclusive)
-    - `KeyA` doesn't care if any modifiers were held or not
-
 ### 🎮 sample code reference
 - **KeyboardController**
     - any [standard keycode](https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_code_values)
@@ -156,19 +136,14 @@ you don't have to use the deck, you could wire up a hub and ports yourself — b
         - `Space`
         - `Digit2`
         - etc
-    - plus the modprefixes
-        - `ctrl-KeyA`
-        - `alt-shift-Space`
-        - `x-Digit2`
-        - etc
 - **PointerController**
-    - mouse buttons (plus modprefixes)
+    - mouse buttons
         - `pointer.button.left`
         - `pointer.button.right`
         - `pointer.button.middle`
         - `pointer.button.4`
         - `pointer.button.5`
-    - mouse wheel (plus modprefixes)
+    - mouse wheel
         - `pointer.wheel.up`
         - `pointer.wheel.down`
         - `pointer.wheel.left`
@@ -215,23 +190,93 @@ you don't have to use the deck, you could wire up a hub and ports yourself — b
 > *keybindings! they describe how actions interpret samples*
 
 ### 🧩 bindings example
-- let's start with a small example:
+- **let's start with a small example:**
     ```ts
     const bindings = tact.asBindings({
       walking: {
-        forward: [{lenses: [{code: "KeyW"}]}],
-        jump: [{lenses: [{code: "Space"}]}],
+        forward: "KeyW",
+        jump: "Space",
       },
       gunning: {
-        shoot: [{lenses: [{code: "pointer.button.left"}]}],
+        shoot: ["or", "pointer.button.left", "gamepad.trigger.right"],
       },
     })
     ```
     - `walking` and `gunning` are **modes**
     - `forward`, `jump`, and `shoot` are **actions**
-    - data like `[{lenses: [{code: "KeyW"}]}]` are the rules for triggering the action.
-      - 🚨 TODO okay these rules are complex and i'm gonna rework them soon
-    - whole modes can be enabled or disabled
+    - note that whole modes can be enabled or disabled during gameplay
+
+### 🧩 bindings are a lispy domain-specific-language
+- **you can do complex stuff**
+    ```ts
+    ["or",
+      "KeyQ",
+      ["and",
+        "KeyA",
+        "KeyD",
+        ["not", "KeyS"],
+      ],
+    ]
+    ```
+    - press Q, or
+    - press A + D, while not pressing S
+- **you can get really weird**
+    ```ts
+    ["cond",
+      ["code", "gamepad.trigger.right", {deadzone: 0.5, timing: ["tap"]}],
+      ["and", "gamepad.bumper.left", ["not", "gamepad.trigger.left"]],
+    ]
+    ```
+    - hold LB and tap RT halfway while not holding LT
+
+### 🧩 bindings atom reference
+- **string** — strings are interpreted as "code" atoms with default settings
+- **"code"** — allows you to customize the settings
+    ```ts
+    ["code", "KeyA", {
+		  scale: 1,
+		  invert: false,
+		  deadzone: 0.2,
+		  timing: ["direct"],
+    }]
+    ```
+    - defaults shown
+    - `scale` is sensitivity, the value gets multiplied by this
+    - `invert` will invert a value by subtracting it from 1
+    - `deadzone` ignores values below the threshold (and remaps to preserve the range)
+    - `timing` lets you specify special timing considerations
+      - `["direct"]` ignores timing considerations
+      - `["tap", 250]` only fires for taps under 250ms
+      - `["hold", 250]` only fires for holds over 250ms
+- **"or"** — resolves to the maximum value
+    ```ts
+    ["or", "KeyA", "KeyB", "KeyC"]
+    ```
+- **"and"** — resolves to the minimum value
+    ```ts
+    ["and", "KeyA", "KeyB", "KeyC"]
+    ```
+- **"not"** — resolves to the opposite effect
+    ```ts
+    ["not", "KeyA"]
+    ```
+- **"cond"** — conditional situation (example for modifiers shown)
+    ```ts
+    ["cond", "KeyA", ["and",
+      ["or", "ControlLeft", "ControlRight"],
+      ["not", ["or", "AltLeft", "AltRight"]],
+      ["not", ["or", "MetaLeft", "MetaRight"]],
+      ["not", ["or", "ShiftLeft", "ShiftRight"]],
+    ]]
+    ```
+    - KeyA is the value that gets used
+    - but only if the following condition passes
+- **"mods"** — macro for modifiers
+    ```ts
+    ["mods", "KeyA", {ctrl: true}]
+    ```
+    - equivalent to the "cond" example above
+    - `ctrl`, `alt`, `meta`, `shift` are available
 
 
 
@@ -300,7 +345,7 @@ the hub embraces that analogy, helping you coordinate the plugging and unpluggin
     const hubBindings = {
       ...yourBindings,
 
-      // mixin the hub bindings
+      // mixin standard hub bindings
       ...tact.hubBindings(),
     }
     ```
