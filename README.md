@@ -287,7 +287,9 @@ the deck is the heart of tact.. it ties all the important parts together..
 ## 🍋 tact hub
 > *multiple gamepads! couch co-op is so back*
 
-the hub's job is coordinating the plugging and unplugging of controllers into ports
+you know the way old-timey game consoles had four controller ports on the front?
+
+the hub embraces that analogy, helping you coordinate the plugging and unplugging of virtual controllers into its virtual ports.
 
 ### 🛞 create a hub with ports
 - **adopt standard hub bindings**
@@ -297,7 +299,7 @@ the hub's job is coordinating the plugging and unplugging of controllers into po
     ```
     - this augments your bindings with standard hub-specific bindings
     - this lets players to shimmy what port their controller is plugged into
-    - gamepad: hold middle button and press bumpers
+    - gamepad: hold gamma (middle button) and press bumpers
     - keyboard: left bracket or right bracket
 - **make hub with multiple ports at the ready**
     ```ts
