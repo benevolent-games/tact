@@ -279,8 +279,6 @@ the deck is the heart of tact.. it ties all the important parts together..
     - `action.pressed` — true if the value > 0
     - `action.down` — true for one frame when the key goes from up to down
     - `action.up` — true for one frame when the key goes from down to up
-    - `action.on(action => {})` — react to changes ([`@e280/stz`](https://github.com/e280/stz) sub fn)
-    - `action.onDown(action => {})` — react only on down ([`@e280/stz`](https://github.com/e280/stz) sub fn)
 
 
 
