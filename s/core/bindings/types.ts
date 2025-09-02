@@ -21,11 +21,6 @@ export type Lens = {
 	settings?: Partial<LensSettings>
 }
 
-export type LensState = {
-	lastValue: number
-	holdStart: number
-}
-
 export type Spoon = {
 	lenses: Lens[]
 	required?: Lens[]

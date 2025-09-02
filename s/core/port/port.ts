@@ -1,39 +1,38 @@
 
-import {SetG} from "@e280/stz"
-import {Resolver} from "./parts/resolver.js"
-import {Bindings} from "../bindings/types.js"
+import {SetG, WeakMapG} from "@e280/stz"
+import {Actions} from "./types.js"
+import {LensState} from "./resolution/types.js"
+import {resolve} from "./resolution/resolve.js"
 import {SampleMap} from "../controllers/types.js"
+import {Bindings, Lens} from "../bindings/types.js"
+import {zeroedActions} from "./resolution/zeroed.js"
 import {Controller} from "../controllers/controller.js"
+import {wipe_samples_map} from "./parts/routines/wipe_samples_map.js"
 import {aggregate_samples_into_map} from "./parts/routines/aggregate_samples_into_map.js"
 
 export class Port<B extends Bindings> {
 	readonly modes = new SetG<keyof B>()
 	readonly controllers = new SetG<Controller>()
 
-	#resolver: Resolver<B>
+	#previousActions: Actions<B>
 	#samples: SampleMap = new Map()
+	#lensStates = new WeakMapG<Lens, LensState>()
 
-	constructor(bindings: B) {
-		this.#resolver = new Resolver(bindings, this.modes, this.#samples)
-	}
-
-	get actions() {
-		return this.#resolver.actions
-	}
-
-	get bindings() {
-		return this.#resolver.bindings
-	}
-
-	set bindings(bindings: B) {
-		this.#resolver.bindings = bindings
+	constructor(public bindings: B) {
+		this.#previousActions = zeroedActions(bindings)
 	}
 
 	poll(now: number = Date.now()) {
-		this.#samples.clear()
+		wipe_samples_map(this.#samples)
 		aggregate_samples_into_map(this.controllers, this.#samples)
-		this.#resolver.poll(now)
-		return this.actions
+		return resolve({
+			now,
+			bindings: this.bindings,
+			lensStates: this.#lensStates,
+			modes: this.modes as Set<any>,
+			previousActions: this.#previousActions,
+			samples: this.#samples,
+		})
 	}
 }
 
