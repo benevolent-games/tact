@@ -2,14 +2,19 @@
 import {isPressed} from "./utils/is-pressed.js"
 
 export class Action {
-	constructor(
-		public value: number,
-		public previous: number,
-	) {}
+	#value = 0
+	#previous = 0
 
-	get changed() { return this.value !== this.previous }
-	get pressed() { return isPressed(this.value) }
-	get down() { return !isPressed(this.previous) && isPressed(this.value) }
-	get up() { return isPressed(this.previous) && !isPressed(this.value) }
+	static update(action: Action, value: number) {
+		action.#previous = action.#value
+		action.#value = value
+	}
+
+	get value() { return this.#value }
+	get previous() { return this.#previous }
+	get changed() { return this.#value !== this.#previous }
+	get pressed() { return isPressed(this.#value) }
+	get down() { return !isPressed(this.#previous) && isPressed(this.#value) }
+	get up() { return isPressed(this.#previous) && !isPressed(this.#value) }
 }
 
