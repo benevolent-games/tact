@@ -9,6 +9,10 @@ export * from "./controllers/utils/modprefix.js"
 export * from "./controllers/controller.js"
 export * from "./controllers/types.js"
 
+export * from "./deck/parts/bindings-depot.js"
+export * from "./deck/parts/local-storage-kv.js"
+export * from "./deck/deck.js"
+
 export * from "./hub/auto-gamepads.js"
 export * from "./hub/bindings.js"
 export * from "./hub/hub.js"

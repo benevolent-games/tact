@@ -45,12 +45,12 @@ export function asBindings<B extends Bindings>(bindings: B) {
 
 export const hubMode = "hub" as const
 
-export type AsHubBindings<B extends Bindings> = {
+export type HubBindings = AsBindings<{
 	[hubMode]: {
 		shimmyNext: Spoon[],
 		shimmyPrevious: Spoon[],
 	}
-} & B
+}>
 
-export type HubBindings = AsHubBindings<Bindings>
+export type HubFriendlyBindings = Bindings & HubBindings
 

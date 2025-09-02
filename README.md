@@ -18,7 +18,7 @@ npm install @benev/tact
 <br/><br/>
 
 ## 🍋 tact deck
-> *user input system*
+> *full user input system with localstorage bindings persistence*
 
 the deck is the heart of tact, bundling together a hub with multiple ports, and handling persistence for bindings preferences.
 
@@ -31,10 +31,11 @@ you don't have to use the deck, you could wire up a hub and ports yourself — b
     ```
 - **setup your deck, and your game's bindings**
     ```ts
-    const deck = new tact.Deck({
-      ports: 4,
-      kv: tact.Deck.localStorageKv(),
-      defaultBindings: tact.Hub.bindings({
+    const deck = await tact.Deck.load({
+      portCount: 4,
+      kv: tact.localStorageKv(),
+      bindings: {
+        ...tact.hubBindings(),
         walking: {
           forward: [
             {lenses: [{code: "KeyW"}]},
@@ -51,7 +52,7 @@ you don't have to use the deck, you could wire up a hub and ports yourself — b
             {lenses: [{code: "gamepad.trigger.right"}]},
           ],
         },
-      }),
+      },
     })
     ```
 
@@ -296,11 +297,14 @@ the hub embraces that analogy, helping you coordinate the plugging and unpluggin
 ### 🛞 create a hub with ports
 - **adopt standard hub bindings**
     ```ts
-    // transform your game's bindings into hub-friendly bindings
-    const hubBindings = tact.Hub.bindings(bindings)
+    const hubBindings = {
+      ...yourBindings,
+
+      // mixin the hub bindings
+      ...tact.hubBindings(),
+    }
     ```
-    - this augments your bindings with standard hub-specific bindings
-    - this lets players to shimmy what port their controller is plugged into
+    - hub bindings let players shimmy what port their controller is plugged into
     - gamepad: hold gamma (middle button) and press bumpers
     - keyboard: left bracket or right bracket
 - **make hub with multiple ports at the ready**

@@ -2,9 +2,9 @@
 import {Hub} from "../hub/hub.js"
 import {Port} from "../port/port.js"
 import {asBindings} from "../bindings/types.js"
-import {hubBindings} from "../hub/bindings.js"
 import {Controller} from "../controllers/controller.js"
 import {SamplerController} from "../controllers/infra/sampler.js"
+import { hubBindings } from "../hub/bindings.js"
 
 export class TestTime {
 	frame = 0
@@ -40,11 +40,11 @@ export function testSetupAlpha() {
 export function testSetupBravo() {
 	const time = new TestTime()
 	const port = () => {
-		const port = new Port(hubBindings(testBindings()))
+		const port = new Port({...testBindings(), ...hubBindings()})
 		port.modes.adds(Hub.mode, "basic")
 		return port
 	}
 	const hub = new Hub([port(), port(), port(), port()])
-	return {hub: hub, time}
+	return {hub, time}
 }
 

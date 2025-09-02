@@ -1,21 +1,18 @@
 
-import {Hub} from "./hub.js"
-import {AsHubBindings, Bindings} from "../bindings/types.js"
+import {HubBindings, hubMode} from "../bindings/types.js"
 
-export function hubBindings<B extends Bindings>(b: B): AsHubBindings<B> {
-	return {
-		...b,
-		[Hub.mode]: {
-			shimmyNext: [
-				{lenses: [{code: "BracketRight"}]},
-				{lenses: [{code: "gamepad.right"}], required: [{code: "gamepad.gamma"}]},
-				{lenses: [{code: "gamepad.bumper.right"}], required: [{code: "gamepad.gamma"}]},
-			],
-			shimmyPrevious: [
-				{lenses: [{code: "BracketLeft"}]},
-				{lenses: [{code: "gamepad.left"}], required: [{code: "gamepad.gamma"}]},
-				{lenses: [{code: "gamepad.bumper.left"}], required: [{code: "gamepad.gamma"}]},
-			],
-		},
-	}
-}
+export const hubBindings = (): HubBindings => ({
+	[hubMode]: {
+		shimmyNext: [
+			{lenses: [{code: "BracketRight"}]},
+			{lenses: [{code: "gamepad.right"}], required: [{code: "gamepad.gamma"}]},
+			{lenses: [{code: "gamepad.bumper.right"}], required: [{code: "gamepad.gamma"}]},
+		],
+		shimmyPrevious: [
+			{lenses: [{code: "BracketLeft"}]},
+			{lenses: [{code: "gamepad.left"}], required: [{code: "gamepad.gamma"}]},
+			{lenses: [{code: "gamepad.bumper.left"}], required: [{code: "gamepad.gamma"}]},
+		],
+	},
+})
+
