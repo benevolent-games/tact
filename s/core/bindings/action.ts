@@ -1,5 +1,5 @@
 
-import {isPressed} from "../port/utils/is-pressed.js"
+import {isPressed} from "./parts/is-pressed.js"
 
 export class Action {
 	#value = 0

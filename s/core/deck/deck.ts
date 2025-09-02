@@ -1,10 +1,9 @@
 
 import {Kv} from "@e280/kv"
-
 import {Hub} from "../hub/hub.js"
 import {Port} from "../port/port.js"
+import {HubFriendlyBindings} from "../hub/types.js"
 import {BindingsDepot} from "./parts/bindings-depot.js"
-import {HubFriendlyBindings} from "../bindings/types.js"
 
 export class Deck<B extends HubFriendlyBindings> {
 	static async load<B extends HubFriendlyBindings>(options: {

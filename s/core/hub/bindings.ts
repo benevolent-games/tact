@@ -1,5 +1,5 @@
 
-import {HubBindings, hubMode} from "../bindings/types.js"
+import {HubBindings, hubMode} from "./types.js"
 
 export const hubBindings = (): HubBindings => ({
 	[hubMode]: {

@@ -1,10 +1,9 @@
 
 import {pipe} from "@e280/stz"
 import {Scalar} from "@benev/math"
-
 import {CodeState} from "../types.js"
+import {isPressed} from "./is-pressed.js"
 import {defaultHoldTime} from "./defaults.js"
-import {isPressed} from "../../port/utils/is-pressed.js"
 
 export const lensAlgo = (
 		now: number,

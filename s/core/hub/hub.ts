@@ -4,7 +4,7 @@ import {Scalar} from "@benev/math"
 import {Port} from "../port/port.js"
 import {hubBindings} from "./bindings.js"
 import {Controller} from "../controllers/controller.js"
-import {hubMode, HubFriendlyBindings} from "../bindings/types.js"
+import {HubFriendlyBindings, hubMode} from "./types.js"
 
 export class Hub<B extends HubFriendlyBindings> {
 	static readonly mode = hubMode

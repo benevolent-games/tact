@@ -1,7 +1,7 @@
 
 import {Kv} from "@e280/kv"
 import {deep, range} from "@e280/stz"
-import {HubFriendlyBindings} from "../../bindings/types.js"
+import {HubFriendlyBindings} from "../../hub/types.js"
 
 export class BindingsDepot<B extends HubFriendlyBindings> {
 	#kv: Kv<B>

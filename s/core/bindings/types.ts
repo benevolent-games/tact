@@ -1,8 +1,19 @@
 
 import {Action} from "./action.js"
 
+export type Actions<B extends Bindings> = {
+	[Mode in keyof B]: {
+		[K in keyof B[Mode]]: Action
+	}
+}
+
 export type Bindings = {[mode: string]: Bracket}
 export type Bracket = {[action: string]: Atom}
+
+export type AsBindings<B extends Bindings> = B
+export function asBindings<B extends Bindings>(bindings: B) {
+	return bindings
+}
 
 export type Code = ["code", string, settings?: Partial<CodeSettings>]
 export type And = ["and", ...Atom[]]
@@ -43,27 +54,4 @@ export type Modifiers = {
 	shift: boolean
 	meta: boolean
 }
-
-export type AsBindings<B extends Bindings> = B
-
-export function asBindings<B extends Bindings>(bindings: B) {
-	return bindings
-}
-
-export type Actions<B extends Bindings> = {
-	[Mode in keyof B]: {
-		[K in keyof B[Mode]]: Action
-	}
-}
-
-export const hubMode = "hub" as const
-
-export type HubBindings = AsBindings<{
-	[hubMode]: {
-		shimmyNext: Atom
-		shimmyPrevious: Atom
-	}
-}>
-
-export type HubFriendlyBindings = Bindings & HubBindings
 
