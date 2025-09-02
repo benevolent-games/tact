@@ -1,6 +1,6 @@
 
-import {StickController} from "../stick/controller.js"
-import {SamplerController} from "../../core/controllers/infra/sampler.js"
+import {StickController} from "./stick.js"
+import {SamplerController} from "../infra/sampler.js"
 
 export class VirtualGamepadController extends SamplerController {
 	stickLeft = new StickController()

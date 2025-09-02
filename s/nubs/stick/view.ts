@@ -4,9 +4,9 @@ import {view} from "@e280/sly"
 import {Vec2} from "@benev/math"
 
 import {styles} from "./styles.js"
-import {StickController} from "./controller.js"
 import {Basis} from "../stick-graphic/types/basis.js"
 import {NubStickGraphic} from "../stick-graphic/view.js"
+import {StickController} from "../../core/controllers/standard/stick.js"
 import {make_pointer_listeners} from "./utils/make_pointer_listeners.js"
 import {calculate_new_vector_from_pointer_position} from "./utils/calculate_new_vector_from_pointer_position.js"
 
