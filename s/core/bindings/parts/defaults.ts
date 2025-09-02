@@ -1,5 +1,5 @@
 
-import {Code, CodeSettings, CodeState} from "./types.js"
+import {Code, CodeSettings, CodeState} from "../types.js"
 
 export const defaultHoldTime = 250
 

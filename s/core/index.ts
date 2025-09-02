@@ -1,4 +1,5 @@
 
+export * from "./bindings/action.js"
 export * from "./bindings/types.js"
 
 export * as controllers from "./controllers/standard/index.js"
@@ -17,7 +18,5 @@ export * from "./hub/auto-gamepads.js"
 export * from "./hub/bindings.js"
 export * from "./hub/hub.js"
 
-export * from "./port/action.js"
 export * from "./port/port.js"
-export * from "./port/types.js"
 

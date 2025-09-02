@@ -1,10 +1,10 @@
 
 import {MapG, pub, obMap} from "@e280/stz"
 import {Action} from "./action.js"
-import {lensAlgo} from "./lens-algo.js"
-import {defaultCodeState} from "./defaults.js"
+import {lensAlgo} from "./parts/lens-algo.js"
 import {SampleMap} from "../controllers/types.js"
 import {tmax, tmin} from "../../utils/quick-math.js"
+import {defaultCodeState} from "./parts/defaults.js"
 import {Actions, Atom, Bindings, CodeSettings, CodeState} from "./types.js"
 
 export class Resolver<B extends Bindings> {
@@ -33,6 +33,15 @@ export class Resolver<B extends Bindings> {
 		this.#samples = samples
 		this.#update()
 		return this.#actions
+	}
+
+	#resolveCode(count: number, code: string, settings?: Partial<CodeSettings>) {
+		const state = this.#codeStates.guarantee(
+			count,
+			() => defaultCodeState(["code", code, settings]),
+		)
+		const value = this.#samples.get(code) ?? 0
+		return lensAlgo(this.#now, state, value)
 	}
 
 	#resolveAtom = (context: {count: number} = {count: 0}) => (atom: Atom): number => {
@@ -82,15 +91,6 @@ export class Resolver<B extends Bindings> {
 					: 0
 			}
 		}
-	}
-
-	#resolveCode(count: number, code: string, settings?: Partial<CodeSettings>) {
-		const state = this.#codeStates.guarantee(
-			count,
-			() => defaultCodeState(["code", code, settings]),
-		)
-		const value = this.#samples.get(code) ?? 0
-		return lensAlgo(this.#now, state, value)
 	}
 }
 

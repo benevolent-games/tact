@@ -3,15 +3,15 @@ import {HubBindings, hubMode} from "../bindings/types.js"
 
 export const hubBindings = (): HubBindings => ({
 	[hubMode]: {
-		shimmyNext: [
-			{lenses: [{code: "BracketRight"}]},
-			{lenses: [{code: "gamepad.right"}], required: [{code: "gamepad.gamma"}]},
-			{lenses: [{code: "gamepad.bumper.right"}], required: [{code: "gamepad.gamma"}]},
+		shimmyNext: ["or",
+			"BracketRight",
+			["and", "gamepad.gamma", "gamepad.right"],
+			["and", "gamepad.gamma", "gamepad.bumper.right"],
 		],
-		shimmyPrevious: [
-			{lenses: [{code: "BracketLeft"}]},
-			{lenses: [{code: "gamepad.left"}], required: [{code: "gamepad.gamma"}]},
-			{lenses: [{code: "gamepad.bumper.left"}], required: [{code: "gamepad.gamma"}]},
+		shimmyPrevious: ["or",
+			"BracketLeft",
+			["and", "gamepad.gamma", "gamepad.left"],
+			["and", "gamepad.gamma", "gamepad.bumper.left"],
 		],
 	},
 })

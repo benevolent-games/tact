@@ -1,40 +1,47 @@
 
-export type Timing = (
-	| DirectTiming
-	| TapTiming
-	| HoldTiming
+import {Action} from "./action.js"
+
+export type Bindings = {[mode: string]: Bracket}
+export type Bracket = {[action: string]: Atom}
+
+export type Code = ["code", string, settings?: Partial<CodeSettings>]
+export type And = ["and", ...Atom[]]
+export type Or = ["or", ...Atom[]]
+export type Not = ["not", Atom]
+export type Cond = ["cond", Atom, guard: Atom]
+export type Mods = ["mods", Atom, modifiers: Partial<Modifiers>]
+
+export type Atom = string | (
+	| Code
+	| And
+	| Or
+	| Not
+	| Cond
+	| Mods
 )
 
-export type DirectTiming = {style: "direct"}
-export type TapTiming = {style: "tap", holdTime?: number}
-export type HoldTiming = {style: "hold", holdTime?: number}
-
-export type LensSettings = {
+export type CodeSettings = {
 	scale: number
 	invert: boolean
 	deadzone: number
-	timing: Timing
+	timing: (
+		| ["direct"]
+		| ["tap", holdTime?: number]
+		| ["hold", holdTime?: number]
+	)
 }
 
-export type Lens = {
-	code: string
-	settings?: Partial<LensSettings>
+export type CodeState = {
+	settings: CodeSettings
+	lastValue: number
+	holdStart: number
 }
 
-export type Spoon = {
-	lenses: Lens[]
-	required?: Lens[]
-	forbidden?: Lens[]
-}
-
-export type Fork = Spoon[]
-
-export type Bracket = {
-	[action: string]: Spoon[]
-}
-
-export type Bindings = {
-	[mode: string]: Bracket
+export type Modifiers = {
+	ctrl: boolean
+	alt: boolean
+	shift: boolean
+	meta: boolean
 }
 
 export type AsBindings<B extends Bindings> = B
@@ -43,12 +50,18 @@ export function asBindings<B extends Bindings>(bindings: B) {
 	return bindings
 }
 
+export type Actions<B extends Bindings> = {
+	[Mode in keyof B]: {
+		[K in keyof B[Mode]]: Action
+	}
+}
+
 export const hubMode = "hub" as const
 
 export type HubBindings = AsBindings<{
 	[hubMode]: {
-		shimmyNext: Spoon[],
-		shimmyPrevious: Spoon[],
+		shimmyNext: Atom
+		shimmyPrevious: Atom
 	}
 }>
 

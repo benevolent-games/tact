@@ -1,8 +1,8 @@
 
 import {SetG} from "@e280/stz"
 import {Bindings} from "../bindings/types.js"
+import {Resolver} from "../bindings/resolver.js"
 import {SampleMap} from "../controllers/types.js"
-import {Resolver} from "./resolution/resolver.js"
 import {Controller} from "../controllers/controller.js"
 import {wipe_samples_map} from "./utils/wipe_samples_map.js"
 import {aggregate_samples_into_map} from "./utils/aggregate_samples_into_map.js"

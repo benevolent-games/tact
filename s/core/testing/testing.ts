@@ -17,8 +17,8 @@ export class TestTime {
 export function testBindings() {
 	return asBindings({
 		basic: {
-			jump: [{lenses: [{code: "Space"}]}],
-			shoot: [{lenses: [{code: "pointer.button.left"}]}],
+			jump: "Space",
+			shoot: "pointer.button.left",
 		},
 	})
 }
