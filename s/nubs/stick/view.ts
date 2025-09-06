@@ -39,11 +39,10 @@ export const NubStick = view(use => (stick: StickController) => {
 			.vector="${stick.vector}"
 			@pointerdown="${listeners.pointerdown}"
 			@pointermove="${listeners.pointermove}"
-			@pointerup="${listeners.pointerup}"
-			>
-			${NubStickGraphic
+			@pointerup="${listeners.pointerup}">
+			${NubStickGraphic.props(stick.vector.get(), updateBasis)
 				.attr("part", "graphic")
-				.props(stick.vector.get(), updateBasis)}
+				.render()}
 		</div>
 	`
 })

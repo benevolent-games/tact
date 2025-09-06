@@ -121,17 +121,17 @@ export const VirtualGamepad = view(use => (controller: VirtualGamepadController)
 			<div class="left side">
 				${renderLeftShoulder()}
 				${renderDPad()}
-				${NubStick
+				${NubStick.props(controller.stickLeft)
 					.attr("class", "stick")
-					.props(controller.stickLeft)}
+					.render}
 			</div>
 
 			<div class="right side">
 				${renderRightShoulder()}
 				${renderButtonPad()}
-				${NubStick
+				${NubStick.props(controller.stickRight)
 					.attr("class", "stick")
-					.props(controller.stickRight)}
+					.render}
 			</div>
 		</div>
 	`
