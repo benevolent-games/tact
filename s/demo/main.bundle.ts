@@ -1,14 +1,10 @@
 
-import {dom, view} from "@e280/sly"
-import {NubStick} from "../nubs/stick/view.js"
-import {StickController} from "../core/controllers/standard/stick.js"
+import {dom} from "@e280/sly"
+import {TactDemo} from "./ui/tact-demo/tact-demo.js"
 
 dom.register({
-	TactDemo: view.component(use => {
-		const stick = use.once(() => new StickController())
-		return NubStick(stick)
-	}),
+	TactDemo,
 })
 
-console.log("tact")
+console.log("🎮 tact")
 

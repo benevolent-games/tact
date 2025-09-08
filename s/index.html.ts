@@ -12,10 +12,6 @@ export default ssg.page(import.meta.url, async orb => ({
 	css: "demo/main.css",
 	dark: true,
 	favicon,
-	head: html`
-		<meta data-version="${orb.packageVersion()}" />
-	`,
-
 	socialCard: {
 		title,
 		description,
@@ -31,8 +27,10 @@ export default ssg.page(import.meta.url, async orb => ({
 				<span>v${orb.packageVersion()}</span>
 			</h1>
 			<div class=deets>
-				<a href="https://github.com/benevolent-games/tact">github</a>
-				<a href="https://benevolent.games/">benevolent.games</a>
+				<p><em>"from keypress to couch co-op"</em></p>
+				<p>tact is a user input system for the web. it's good at customizable keybindings, and multiple gamepad support.</p>
+				<p>tact is on <a href="https://github.com/benevolent-games/tact">github</a></p>
+				<p>tact is by <a href="https://benevolent.games/">benevolent.games</a></p>
 			</div>
 		</header>
 
