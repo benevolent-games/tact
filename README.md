@@ -6,16 +6,20 @@
 npm install @benev/tact
 ```
 
-- 🛹 **deck** full setup with localstorate persistence
-- 🎮 **controllers** produce user input samples
-- 🧩 **bindings** describe how actions interpret samples
-- 🔌 **port** updates actions by interpreting samples
-- 🛞 **hub** plugs controllers into ports (multi-gamepad couch co-op!)
-- 📱 **nubs** is mobile ui virtual gamepad stuff
+tact is a toolbox for handling user inputs on the web.  
+it's good at user-customizable keybindings, multiple gamepad support, and mobile ui.  
+
+- 🛹 **[#deck](#deck)** full setup with localstorate persistence
+- 🎮 **[#controllers](#controllers)** produce user input samples
+- 🧩 **[#bindings](#bindings)** describe how actions interpret samples
+- 🔌 **[#port](#port)** updates actions by interpreting samples
+- 🛞 **[#hub](#hub)** plugs controllers into ports (multi-gamepad couch co-op!)
+- 📱 **[#nubs](#nubs)** is mobile ui virtual gamepad stuff
 
 
 
 <br/><br/>
+<a id="#deck"></a>
 
 ## 🍋 tact deck
 > *the full setup*
@@ -91,6 +95,7 @@ the deck is the heart of tact, tying all the pieces together and putting a bow i
 
 
 <br/><br/>
+<a id="#controllers"></a>
 
 ## 🍋 tact controllers
 > *sources of user input "samples"*
@@ -189,6 +194,7 @@ the deck is the heart of tact, tying all the pieces together and putting a bow i
 
 
 <br/><br/>
+<a id="#bindings"></a>
 
 ## 🍋 tact bindings
 > *keybindings! they describe how actions interpret samples*
@@ -285,6 +291,7 @@ the deck is the heart of tact, tying all the pieces together and putting a bow i
 
 
 <br/><br/>
+<a id="#port"></a>
 
 ## 🍋 tact port
 > *polling gives you "actions"*
@@ -344,6 +351,7 @@ a port represents a single playable port, and you poll it each frame to resolve 
 
 
 <br/><br/>
+<a id="#hub"></a>
 
 ## 🍋 tact hub
 > *multiple gamepads! couch co-op is so back*
@@ -405,6 +413,7 @@ the hub embraces that analogy, helping you coordinate the plugging and unpluggin
 
 
 <br/><br/>
+<a id="#nubs"></a>
 
 ## 🍋 tact nubs
 > *mobile ui like virtual thumbsticks and buttons*
@@ -418,6 +427,7 @@ the hub embraces that analogy, helping you coordinate the plugging and unpluggin
 
 
 <br/><br/>
+<a id="#benev"></a>
 
 ## 🍋 tact is by https://benevolent.games/
 > *building the future of web games*
