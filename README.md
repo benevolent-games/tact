@@ -24,7 +24,7 @@ it's good at user-customizable keybindings, multiple gamepad support, and mobile
 ## 🍋 tact deck
 > *the full setup*
 
-the deck is the heart of tact, tying all the pieces together and putting a bow in it for you.
+the deck is the heart of tact, tying all the pieces together and putting a bow on it for you.
 
 ### 🛹 deck setup
 - **import stuff from tact**
