@@ -1,25 +1,25 @@
 
 import {MapG, pub, obMap} from "@e280/stz"
 import {Action} from "./action.js"
+import {SampleMap} from "./sample-map.js"
 import {lensAlgo} from "./parts/lens-algo.js"
-import {SampleMap} from "../controllers/types.js"
 import {tmax, tmin} from "../../utils/quick-math.js"
 import {defaultCodeState} from "./parts/defaults.js"
 import {Actions, Atom, Bindings, CodeSettings, CodeState} from "./types.js"
 
 export class Resolver<B extends Bindings> {
-	#actions: Actions<B>
-
+	modes = new Set<keyof B>()
 	#now = 0
-	#samples: SampleMap = new Map()
+	#samples = new SampleMap()
 	#codeStates = new MapG<number, CodeState>()
 	#update = pub()
+	#actions: Actions<B>
 
-	constructor(public readonly bindings: B, modes: Set<keyof B>) {
+	constructor(public bindings: B) {
 		this.#actions = obMap(bindings, (bracket, mode) => obMap(bracket, atom => {
 			const action = new Action()
 			this.#update.subscribe(() => {
-				const value = modes.has(mode)
+				const value = this.modes.has(mode)
 					? this.#resolveAtom()(atom)
 					: 0
 				Action.update(action, value)
@@ -28,7 +28,7 @@ export class Resolver<B extends Bindings> {
 		})) as Actions<B>
 	}
 
-	poll(now: number, samples: SampleMap) {
+	resolve(now: number, samples: SampleMap) {
 		this.#now = now
 		this.#samples = samples
 		this.#update()

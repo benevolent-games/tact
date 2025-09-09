@@ -5,7 +5,7 @@ import {State} from "./parts/state.js"
 import {Players} from "./parts/player.js"
 import {Renderer} from "./parts/renderer.js"
 import {GameDeck} from "./parts/game-deck.js"
-import {GameController, GameKeyboard, GameStick} from "./parts/controllers.js"
+import {GameController, GameKeyboard} from "./parts/controllers.js"
 
 export class Minigame {
 	state = new State()

@@ -1,7 +1,7 @@
 
 import {Kv} from "@e280/kv"
 import {Hub} from "../hub/hub.js"
-import {Port} from "../port/port.js"
+import {Port} from "../hub/port.js"
 import {HubFriendlyBindings} from "../hub/types.js"
 import {BindingsDepot} from "./parts/bindings-depot.js"
 

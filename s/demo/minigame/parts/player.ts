@@ -4,7 +4,7 @@ import {Agent} from "./agent.js"
 import {State} from "./state.js"
 import {GameBindings} from "./game-deck.js"
 import {Hub} from "../../../core/hub/hub.js"
-import {Port} from "../../../core/port/port.js"
+import {Port} from "../../../core/hub/port.js"
 
 export class Player {
 	constructor(
@@ -14,7 +14,7 @@ export class Player {
 	) {}
 
 	poll() {
-		const actions = this.port.poll()
+		const actions = this.port.resolve()
 		this.hub.actuatePortActions(this.port, actions)
 		return actions
 	}

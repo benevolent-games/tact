@@ -1,41 +1,58 @@
 
 import {Scalar} from "@benev/math"
-import {SetG, sub} from "@e280/stz"
-import {Port} from "../port/port.js"
-import {hubBindings} from "./bindings.js"
-import {Actions} from "../bindings/types.js"
+import {Port} from "./port.js"
+import {MapG, SetG, sub} from "@e280/stz"
+import {metaBindings} from "./bindings.js"
+import {Resolver} from "../bindings/resolver.js"
+import {MetaBindings, metaMode} from "./types.js"
+import {Actions, Bindings} from "../bindings/types.js"
 import {Controller} from "../controllers/controller.js"
-import {HubFriendlyBindings, hubMode} from "./types.js"
+import { SampleMap } from "../bindings/sample-map.js"
 
-export class Hub<B extends HubFriendlyBindings> {
-	static readonly mode = hubMode
-	static readonly bindings = hubBindings
+export class Hub<B extends Bindings> {
+	static readonly metaMode = metaMode
+	static readonly metaBindings = metaBindings
 
+	/** special bindings for controllers to shimmy between ports. */
+	metaBindings = metaBindings()
+
+	/** all controllers known to this hub. */
 	readonly controllers = new SetG<Controller>()
+
+	/** event fires whenever a controller changes ports. */
 	readonly on = sub()
 
-	constructor(public readonly ports: Port<B>[]) {
-		for (const port of ports)
-			port.modes.add(Hub.mode)
-	}
+	/** special resolvers hard-attached to each controller, listening for meta actions like shimmy between ports. */
+	#metaResolvers = new MapG<Controller, Resolver<MetaBindings>>()
 
-	/** poll all the ports, and actuate hub bindings for shimmying */
-	poll(now: number = Date.now()) {
-		return this.ports.map(port => {
-			const actions = port.poll(now)
-			this.actuatePortActions(port, actions)
-			return actions
-		})
-	}
+	constructor(
 
-	/** manually perform hub actions for the given port */
-	actuatePortActions(port: Port<B>, actions: Actions<B>) {
-		const fn = (delta: 1 | -1) => {
-			const controller = this.controllerByPort(port)
-			if (controller) this.shimmy(controller, delta)
+		/** available ports that controllers can be assigned to. */
+		public readonly ports: Port<B>[],
+	) {}
+
+	/** poll every controller, providing actions for each port, and internally handling meta actions. */
+	poll(now = Date.now()) {
+		const samplemapByController = new MapG<Controller, SampleMap>()
+
+		for (const controller of this.controllers) {
+			const samples = new SampleMap(controller.takeSamples())
+			samplemapByController.set(controller, samples)
+
+			// actuate meta actions
+			const metaResolver = this.#metaResolvers.require(controller)
+			const metaActions = metaResolver.resolve(now, samples)
+			if (metaActions[metaMode].shimmyNext.down) this.shimmy(controller, 1)
+			if (metaActions[metaMode].shimmyPrevious.down) this.shimmy(controller, -1)
 		}
-		if (actions[hubMode].shimmyNext.up) fn(1)
-		if (actions[hubMode].shimmyPrevious.up) fn(-1)
+
+		return this.ports.map(port => {
+			const samples = SampleMap.combine(
+				...port.controllers.array()
+					.map(controller => samplemapByController.require(controller))
+			)
+			return port.resolve(now, samples)
+		})
 	}
 
 	/** check if a port has a known switchboard controller assigned */

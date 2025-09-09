@@ -1,14 +1,12 @@
 
-import {AsBindings, Atom, Bindings} from "../bindings/types.js"
+import {AsBindings, Atom} from "../bindings/types.js"
 
-export const hubMode = "hub" as const
+export const metaMode = "meta" as const
 
-export type HubBindings = AsBindings<{
-	[hubMode]: {
+export type MetaBindings = AsBindings<{
+	[metaMode]: {
 		shimmyNext: Atom
 		shimmyPrevious: Atom
 	}
 }>
-
-export type HubFriendlyBindings = Bindings & HubBindings
 

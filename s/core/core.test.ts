@@ -8,14 +8,14 @@ export default Science.suite({
 		const {port, controller, time} = testSetupAlpha()
 		{
 			controller.setSample("Space", 1)
-			const actions = port.poll(time.now)
+			const actions = port.resolve(time.now)
 			expect(actions.basic.jump.value).is(1)
 			expect(actions.basic.shoot.value).is(0)
 		}
 		{
 			controller.setSample("Space", 2)
 			controller.setSample("pointer.button.left", 3)
-			const actions = port.poll(time.now)
+			const actions = port.resolve(time.now)
 			expect(actions.basic.jump.value).is(2)
 			expect(actions.basic.shoot.value).is(3)
 		}

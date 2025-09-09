@@ -1,8 +1,8 @@
 
-import {HubBindings, hubMode} from "./types.js"
+import {MetaBindings, metaMode} from "./types.js"
 
-export const hubBindings = (): HubBindings => ({
-	[hubMode]: {
+export const metaBindings = (): MetaBindings => ({
+	[metaMode]: {
 		shimmyNext: ["or",
 			"BracketRight",
 			["and", "gamepad.gamma", "gamepad.right"],

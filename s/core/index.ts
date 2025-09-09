@@ -17,5 +17,5 @@ export * from "./hub/auto-gamepads.js"
 export * from "./hub/bindings.js"
 export * from "./hub/hub.js"
 
-export * from "./port/port.js"
+export * from "./hub/port.js"
 
