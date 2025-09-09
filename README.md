@@ -19,7 +19,7 @@ it's good at user-customizable keybindings, multiple gamepad support, and mobile
 
 
 <br/><br/>
-<a id="#deck"></a>
+<a id="deck"></a>
 
 ## 🍋 tact deck
 > *the full setup*
@@ -95,7 +95,7 @@ the deck is the heart of tact, tying all the pieces together and putting a bow o
 
 
 <br/><br/>
-<a id="#controllers"></a>
+<a id="controllers"></a>
 
 ## 🍋 tact controllers
 > *sources of user input "samples"*
@@ -194,7 +194,7 @@ the deck is the heart of tact, tying all the pieces together and putting a bow o
 
 
 <br/><br/>
-<a id="#bindings"></a>
+<a id="bindings"></a>
 
 ## 🍋 tact bindings
 > *keybindings! they describe how actions interpret samples*
@@ -291,7 +291,7 @@ the deck is the heart of tact, tying all the pieces together and putting a bow o
 
 
 <br/><br/>
-<a id="#port"></a>
+<a id="port"></a>
 
 ## 🍋 tact port
 > *polling gives you "actions"*
@@ -351,7 +351,7 @@ a port represents a single playable port, and you poll it each frame to resolve 
 
 
 <br/><br/>
-<a id="#hub"></a>
+<a id="hub"></a>
 
 ## 🍋 tact hub
 > *multiple gamepads! couch co-op is so back*
@@ -413,7 +413,7 @@ the hub embraces that analogy, helping you coordinate the plugging and unpluggin
 
 
 <br/><br/>
-<a id="#nubs"></a>
+<a id="nubs"></a>
 
 ## 🍋 tact nubs
 > *mobile ui like virtual thumbsticks and buttons*
@@ -427,7 +427,7 @@ the hub embraces that analogy, helping you coordinate the plugging and unpluggin
 
 
 <br/><br/>
-<a id="#benev"></a>
+<a id="benev"></a>
 
 ## 🍋 tact is by https://benevolent.games/
 > *building the future of web games*
