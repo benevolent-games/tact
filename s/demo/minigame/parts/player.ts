@@ -1,5 +1,5 @@
 
-import {RzMap} from "@e280/strata"
+import {RMap} from "@e280/strata"
 import {Agent} from "./agent.js"
 import {State} from "./state.js"
 import {GameBindings} from "./game-deck.js"
@@ -21,7 +21,7 @@ export class Player {
 }
 
 export class Players {
-	#map = new RzMap<Port<GameBindings>, Player>()
+	#map = new RMap<Port<GameBindings>, Player>()
 
 	constructor(hub: Hub<GameBindings>, state: State) {
 		for (const port of hub.ports)
