@@ -8,16 +8,9 @@ import {Port} from "../../../core/hub/port.js"
 
 export class Player {
 	constructor(
-		public hub: Hub<any>,
 		public port: Port<GameBindings>,
 		public agent: Agent,
 	) {}
-
-	poll() {
-		const actions = this.port.resolve()
-		this.hub.actuatePortActions(this.port, actions)
-		return actions
-	}
 }
 
 export class Players {
@@ -25,7 +18,7 @@ export class Players {
 
 	constructor(hub: Hub<GameBindings>, state: State) {
 		for (const port of hub.ports)
-			this.#map.set(port, new Player(hub, port, state.makeAgent()))
+			this.#map.set(port, new Player(port, state.makeAgent()))
 	}
 
 	;[Symbol.iterator]() {

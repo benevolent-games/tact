@@ -16,7 +16,7 @@ export class Minigame {
 
 		// initialize port modes
 		for (const port of this.deck.hub.ports)
-			port.modes.adds("gameplay", "hub")
+			port.modes.adds("gameplay")
 
 		this.logic = new Logic(
 			this.state,
@@ -41,6 +41,7 @@ export class Minigame {
 	loop(hz: number) {
 		return repeat(async() => {
 			await nap(1000 / hz)
+			this.deck.hub.poll()
 			this.logic.tick()
 			this.renderer.render()
 		})

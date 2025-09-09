@@ -11,8 +11,7 @@ export class Logic {
 
 	tick() {
 		for (const player of this.players) {
-			const {agent} = player
-			const actions = player.poll()
+			const {agent, port: {actions}} = player
 
 			const speed = (actions.gameplay.sprint.pressed)
 				? 3

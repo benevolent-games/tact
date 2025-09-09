@@ -5,9 +5,13 @@ import {Sample} from "../controllers/types.js"
 export class SampleMap extends MapG<string, number> {
 	static combine(...maps: SampleMap[]) {
 		const samples = new this()
-		for (const map of maps)
-			for (const [code, value] of map)
-				samples.set(code, value)
+		for (const map of maps) {
+			for (const [code, value] of map) {
+				const previous = samples.get(code) ?? 0
+				if (value > previous)
+					samples.set(code, value)
+			}
+		}
 		return samples
 	}
 

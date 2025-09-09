@@ -1,5 +1,5 @@
 
-import {MapG, pub, obMap} from "@e280/stz"
+import {MapG, pub, obMap, SetG} from "@e280/stz"
 import {Action} from "./action.js"
 import {SampleMap} from "./sample-map.js"
 import {lensAlgo} from "./parts/lens-algo.js"
@@ -8,15 +8,15 @@ import {defaultCodeState} from "./parts/defaults.js"
 import {Actions, Atom, Bindings, CodeSettings, CodeState} from "./types.js"
 
 export class Resolver<B extends Bindings> {
-	modes = new Set<keyof B>()
+	readonly actions: Actions<B>
+	modes = new SetG<keyof B>()
 	#now = 0
 	#samples = new SampleMap()
 	#codeStates = new MapG<number, CodeState>()
 	#update = pub()
-	#actions: Actions<B>
 
 	constructor(public bindings: B) {
-		this.#actions = obMap(bindings, (bracket, mode) => obMap(bracket, atom => {
+		this.actions = obMap(bindings, (bracket, mode) => obMap(bracket, atom => {
 			const action = new Action()
 			this.#update.subscribe(() => {
 				const value = this.modes.has(mode)
@@ -32,7 +32,7 @@ export class Resolver<B extends Bindings> {
 		this.#now = now
 		this.#samples = samples
 		this.#update()
-		return this.#actions
+		return this.actions
 	}
 
 	#resolveCode(count: number, code: string, settings?: Partial<CodeSettings>) {

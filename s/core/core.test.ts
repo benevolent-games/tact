@@ -5,17 +5,19 @@ import {testConnect, testSetupAlpha, testSetupBravo} from "./testing/testing.js"
 
 export default Science.suite({
 	"sample to action value": test(async() => {
-		const {port, controller, time} = testSetupAlpha()
+		const {time, controller, resolve} = testSetupAlpha()
 		{
+			time.frame = 1
 			controller.setSample("Space", 1)
-			const actions = port.resolve(time.now)
+			const actions = resolve()
 			expect(actions.basic.jump.value).is(1)
 			expect(actions.basic.shoot.value).is(0)
 		}
 		{
+			time.frame = 2
 			controller.setSample("Space", 2)
 			controller.setSample("pointer.button.left", 3)
-			const actions = port.resolve(time.now)
+			const actions = resolve()
 			expect(actions.basic.jump.value).is(2)
 			expect(actions.basic.shoot.value).is(3)
 		}

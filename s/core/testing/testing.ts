@@ -5,6 +5,8 @@ import {asBindings} from "../bindings/types.js"
 import {Controller} from "../controllers/controller.js"
 import {SamplerController} from "../controllers/infra/sampler.js"
 import { metaBindings } from "../hub/bindings.js"
+import { Resolver } from "../bindings/resolver.js"
+import { SampleMap } from "../bindings/sample-map.js"
 
 export class TestTime {
 	frame = 0
@@ -31,17 +33,20 @@ export function testConnect<C extends Controller>(switchboard: Hub<any>, control
 export function testSetupAlpha() {
 	const time = new TestTime()
 	const controller = new SamplerController()
-	const port = new Port(testBindings())
-	port.modes.add("basic")
-	port.controllers.add(controller)
-	return {controller, port, time}
+	const resolver = new Resolver(testBindings())
+	resolver.modes.add("basic")
+	const resolve = () => resolver.resolve(
+		time.now,
+		new SampleMap(controller.takeSamples()),
+	)
+	return {controller, resolver, resolve, time}
 }
 
 export function testSetupBravo() {
 	const time = new TestTime()
 	const port = () => {
-		const port = new Port({...testBindings(), ...metaBindings()})
-		port.modes.adds(Hub.mode, "basic")
+		const port = new Port(testBindings())
+		port.modes.adds("basic")
 		return port
 	}
 	const hub = new Hub([port(), port(), port(), port()])

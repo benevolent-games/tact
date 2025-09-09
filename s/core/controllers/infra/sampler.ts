@@ -1,11 +1,12 @@
 
 import {sub} from "@e280/stz"
+import {Sample} from "../types.js"
 import {Controller} from "../controller.js"
-import {Sample, SampleMap} from "../types.js"
+import {SampleMap} from "../../bindings/sample-map.js"
 
 export class SamplerController extends Controller {
 	on = sub<Sample>()
-	#map: SampleMap = new Map()
+	#map = new SampleMap()
 
 	setSample(code: string, value: number) {
 		this.#map.set(code, value)
@@ -15,7 +16,7 @@ export class SamplerController extends Controller {
 
 	takeSamples(): Sample[] {
 		const samples = [...this.#map]
-		this.#map.clear()
+		this.#map.zero()
 		return samples
 	}
 }
