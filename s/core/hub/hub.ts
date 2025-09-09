@@ -19,31 +19,23 @@ export class Hub<B extends HubFriendlyBindings> {
 			port.modes.add(Hub.mode)
 	}
 
-	*[Symbol.iterator]() {
-		yield* this.ports.values()
-	}
-
-	*entries() {
-		yield* this.ports.entries()
-	}
-
 	/** poll all the ports, and actuate hub bindings for shimmying */
 	poll(now: number = Date.now()) {
 		return this.ports.map(port => {
 			const actions = port.poll(now)
-			this.actuateHubActions(port, actions)
+			this.actuatePortActions(port, actions)
 			return actions
 		})
 	}
 
 	/** perform hub actions for the given port */
-	actuateHubActions(port: Port<B>, actions: Actions<B>) {
+	actuatePortActions(port: Port<B>, actions: Actions<B>) {
 		const fn = (delta: 1 | -1) => {
 			const controller = this.controllerByPort(port)
 			if (controller) this.shimmy(controller, delta)
 		}
-		if (actions[hubMode].shimmyNext.down) fn(1)
-		if (actions[hubMode].shimmyPrevious.down) fn(-1)
+		if (actions[hubMode].shimmyNext.up) fn(1)
+		if (actions[hubMode].shimmyPrevious.up) fn(-1)
 	}
 
 	/** check if a port has a known switchboard controller assigned */

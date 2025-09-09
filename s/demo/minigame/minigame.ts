@@ -1,40 +1,29 @@
 
-import {MapG, nap, repeat} from "@e280/stz"
+import {nap, repeat} from "@e280/stz"
 import {Logic} from "./parts/logic.js"
 import {State} from "./parts/state.js"
+import {Players} from "./parts/player.js"
 import {Renderer} from "./parts/renderer.js"
 import {GameDeck} from "./parts/game-deck.js"
-import {Controller} from "../../core/controllers/controller.js"
-import {GroupController} from "../../core/controllers/infra/group.js"
-import {PointerController} from "../../core/controllers/standard/pointer.js"
-import {KeyboardController} from "../../core/controllers/standard/keyboard.js"
-
-export class Mechanism {
-	constructor(
-		public label: string,
-		public controller: Controller,
-	) {}
-}
+import {GameController, GameKeyboard} from "./parts/controllers.js"
 
 export class Minigame {
 	state = new State()
 	renderer = new Renderer(this.state)
-	mechanisms = new MapG<Controller, Mechanism>()
 	logic: Logic
 
 	constructor(public deck: GameDeck) {
-		this.logic = new Logic(deck, this.state)
 
-		const mechanism = new Mechanism(
-			"keyboard",
-			new GroupController(
-				new KeyboardController(),
-				new PointerController(),
-			),
+		// initialize port modes
+		for (const port of this.deck.hub.ports)
+			port.modes.adds("gameplay", "hub")
+
+		this.logic = new Logic(
+			this.state,
+			new Players(deck.hub, this.state),
 		)
 
-		this.plugPlayer(mechanism.controller)
-		this.mechanisms.set(mechanism.controller, mechanism)
+		this.plug(new GameKeyboard())
 
 		// autoGamepads(deck.hub.plug)
 		// this.plugPlayer(new StickController("stick"))
@@ -42,12 +31,10 @@ export class Minigame {
 		// this.plugPlayer(new StickController("stick"))
 	}
 
-	plugPlayer(controller: Controller) {
+	plug(controller: GameController) {
 		const port = this.deck.hub.getLonelyPort()
 		this.deck.hub.plug(controller)
-		const player = this.logic.players.require(port)
-		player.agent.alive = true
-		return player
+		return this.logic.players.require(port)
 	}
 
 	loop(hz: number) {

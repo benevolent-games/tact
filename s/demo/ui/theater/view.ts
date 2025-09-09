@@ -5,6 +5,7 @@ import {view} from "@e280/sly"
 import {styles} from "./styles.css.js"
 import {Minigame} from "../../minigame/minigame.js"
 import {GameDeck} from "../../minigame/parts/game-deck.js"
+import {GameKeyboard, GameStick} from "../../minigame/parts/controllers.js"
 
 export const Theater = view(use => (deck: GameDeck) => {
 	use.css(styles)
@@ -22,10 +23,14 @@ export const Theater = view(use => (deck: GameDeck) => {
 					<span>port</span>
 					<div>
 						${[...player.port.controllers].map(controller => {
-							const mechanism = minigame.mechanisms.require(controller)
-							return html`
-								<span>${mechanism.label}</span>
-							`
+							if (controller instanceof GameKeyboard)
+								return html`
+									<span>Keyboard</span>
+								`
+							else if (controller instanceof GameStick)
+								return html`
+									<span>Stick</span>
+								`
 						})}
 					</div>
 				</div>

@@ -2,26 +2,17 @@
 import {Vec2} from "@benev/math"
 import {State} from "./state.js"
 import {Players} from "./player.js"
-import {GameDeck} from "./game-deck.js"
 
 export class Logic {
-	players: Players
-
 	constructor(
-			public deck: GameDeck,
-			public state: State,
-		) {
-
-		this.players = new Players(this.state, deck.hub.ports)
-
-		for (const port of this.deck.hub.ports)
-			port.modes.adds("gameplay", "hub")
-	}
+		public state: State,
+		public players: Players,
+	) {}
 
 	tick() {
-		for (const {port, agent} of this.players) {
-			const actions = port.poll()
-			this.deck.hub.actuateHubActions(port, actions)
+		for (const player of this.players) {
+			const {agent} = player
+			const actions = player.poll()
 
 			const speed = (actions.gameplay.sprint.pressed)
 				? 3

@@ -3,21 +3,29 @@ import {RzMap} from "@e280/strata"
 import {Agent} from "./agent.js"
 import {State} from "./state.js"
 import {GameBindings} from "./game-deck.js"
+import {Hub} from "../../../core/hub/hub.js"
 import {Port} from "../../../core/port/port.js"
 
 export class Player {
 	constructor(
+		public hub: Hub<any>,
 		public port: Port<GameBindings>,
 		public agent: Agent,
 	) {}
+
+	poll() {
+		const actions = this.port.poll()
+		this.hub.actuatePortActions(this.port, actions)
+		return actions
+	}
 }
 
 export class Players {
 	#map = new RzMap<Port<GameBindings>, Player>()
 
-	constructor(state: State, ports: Port<GameBindings>[]) {
-		for (const port of ports)
-			this.#map.set(port, new Player(port, state.makeAgent()))
+	constructor(hub: Hub<GameBindings>, state: State) {
+		for (const port of hub.ports)
+			this.#map.set(port, new Player(hub, port, state.makeAgent()))
 	}
 
 	;[Symbol.iterator]() {
