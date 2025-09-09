@@ -5,6 +5,7 @@ import {Port} from "../port/port.js"
 import {hubBindings} from "./bindings.js"
 import {Controller} from "../controllers/controller.js"
 import {HubFriendlyBindings, hubMode} from "./types.js"
+import { Actions } from "../bindings/types.js"
 
 export class Hub<B extends HubFriendlyBindings> {
 	static readonly mode = hubMode
@@ -30,14 +31,19 @@ export class Hub<B extends HubFriendlyBindings> {
 	poll(now: number = Date.now()) {
 		return this.ports.map(port => {
 			const actions = port.poll(now)
-			const fn = (delta: 1 | -1) => {
-				const controller = this.controllerByPort(port)
-				if (controller) this.shimmy(controller, delta)
-			}
-			if (actions[hubMode].shimmyNext.down) fn(1)
-			if (actions[hubMode].shimmyPrevious.down) fn(-1)
+			this.actuateHubActions(port, actions)
 			return actions
 		})
+	}
+
+	/** perform hub actions for the given port */
+	actuateHubActions(port: Port<B>, actions: Actions<B>) {
+		const fn = (delta: 1 | -1) => {
+			const controller = this.controllerByPort(port)
+			if (controller) this.shimmy(controller, delta)
+		}
+		if (actions[hubMode].shimmyNext.down) fn(1)
+		if (actions[hubMode].shimmyPrevious.down) fn(-1)
 	}
 
 	/** check if a port has a known switchboard controller assigned */

@@ -1,6 +1,6 @@
 
-import { Pipe, pipe } from "@e280/stz"
 import {State} from "./state.js"
+import {Vec2} from "@benev/math"
 
 export class Renderer {
 	canvas = (() => {
@@ -19,20 +19,17 @@ export class Renderer {
 		return Math.ceil(shorty * (n / 100))
 	}
 
-	resolve([x, y]: [x: number, y: number]) {
-		return [
-			pipe(x).line(
-				a => Math.max(a, 0),
-				a => Math.min(a, 1),
-				a => a * this.canvas.width,
-			),
-			pipe(y).line(
-				a => Math.max(a, 0),
-				a => Math.min(a, 1),
-				a => 1 - a,
-				a => a * this.canvas.height,
-			),
-		] as [x: number, y: number]
+	resolve(position: Vec2) {
+		return position.clone()
+
+			// 0-1 relative to arena scale
+			.divide(this.state.arenaSize)
+
+			// flip y axis
+			.morph(v => {v.y = 1 - v.y})
+
+			// stretch to the size of the canvas
+			.multiply_(this.canvas.width, this.canvas.height)
 	}
 
 	render() {

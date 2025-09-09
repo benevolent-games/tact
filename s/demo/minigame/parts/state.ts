@@ -1,11 +1,13 @@
 
+import {Vec2} from "@benev/math"
 import {Dispenser} from "@e280/stz"
 import {Agent} from "./agent.js"
 
 export class State {
+	arenaSize = new Vec2(200, 100)
 	agents = new Set<Agent>()
+
 	#colors = new Dispenser(() => [
-		"#aaa",
 		"#fa0",
 		"#0fa",
 		"#a0f",
@@ -17,7 +19,7 @@ export class State {
 	makeAgent() {
 		const agent = new Agent()
 		agent.color = this.#colors.takeRandom()
-		agent.position = [Math.random(), Math.random()]
+		agent.position.set_(Math.random(), Math.random())
 		this.agents.add(agent)
 		return agent
 	}

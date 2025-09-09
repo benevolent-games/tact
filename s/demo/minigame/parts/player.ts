@@ -1,5 +1,5 @@
 
-import {Agent} from "./agent.js";
+import {Agent} from "./agent.js"
 import {Controller} from "../../../core/controllers/controller.js"
 
 export class Player {

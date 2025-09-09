@@ -1,45 +1,43 @@
 
-import {MapG, pipe} from "@e280/stz"
+import {MapG} from "@e280/stz"
+import {Vec2} from "@benev/math"
+import {State} from "./state.js"
 import {Agent} from "./agent.js"
-import {GameDeck} from "./load-deck.js"
 import {Port} from "../../../core/port/port.js"
+import {GameBindings, GameDeck} from "./game-deck.js"
 
 export class Logic {
 	constructor(
 			public deck: GameDeck,
-			public agents: MapG<Port<any>, Agent>,
+			public state: State,
+			public agents: MapG<Port<GameBindings>, Agent>,
 		) {
 		for (const port of this.deck.hub.ports)
 			port.modes.adds("gameplay", "hub")
 	}
 
 	tick() {
-		const speed = 0.02
-
-		function clamp(x: number) {
-			return pipe(x).line(
-				a => Math.max(a, 0),
-				a => Math.min(a, 1),
-			)
-		}
-
 		for (const [port, agent] of this.agents) {
 			const actions = port.poll()
+			this.deck.hub.actuateHubActions(port, actions)
+
+			const speed = (actions.gameplay.sprint.pressed)
+				? 3
+				: 1
 
 			if (actions.gameplay.up.pressed)
-				agent.position[1] += (speed * 2)
+				agent.position.y += speed
 
 			if (actions.gameplay.down.pressed)
-				agent.position[1] -= (speed * 2)
+				agent.position.y -= speed
 
 			if (actions.gameplay.left.pressed)
-				agent.position[0] -= (speed)
+				agent.position.x -= (speed)
 
 			if (actions.gameplay.right.pressed)
-				agent.position[0] += (speed)
+				agent.position.x += (speed)
 
-			agent.position[0] = clamp(agent.position[0])
-			agent.position[1] = clamp(agent.position[1])
+			agent.position.clamp(Vec2.zero(), this.state.arenaSize)
 		}
 	}
 }
