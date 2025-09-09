@@ -6,7 +6,7 @@
 npm install @benev/tact
 ```
 
-tact is a toolbox for handling user inputs on the web.  
+tact is a toolkit for handling user inputs on the web.  
 it's good at user-customizable keybindings, multiple gamepad support, and mobile ui.  
 
 - 🛹 **[#deck](#deck)** full setup with localstorate persistence
@@ -74,7 +74,7 @@ the deck is the heart of tact, tying all the pieces together and putting a bow o
 ### 🛹 do your gameplay
 - **start with what modes you want enabled in your game**
     ```ts
-    for (const port of deck.ports)
+    for (const port of deck.hub.ports)
       port.modes.adds("walking", "gunning")
     ```
 - **poll the deck, interrogate actions for your gameplay**

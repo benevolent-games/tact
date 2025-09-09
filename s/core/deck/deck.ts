@@ -11,7 +11,7 @@ export class Deck<B extends HubFriendlyBindings> {
 			kv: Kv
 			bindings: B
 		}) {
-		const bindingsDepot = new BindingsDepot<B>(options.portCount, options.kv)
+		const bindingsDepot = new BindingsDepot<B>(options.portCount, options.kv, options.bindings)
 		const bindings = await bindingsDepot.loadAll()
 		const ports = bindings.map(b => new Port(b))
 		const hub = new Hub<B>(ports)

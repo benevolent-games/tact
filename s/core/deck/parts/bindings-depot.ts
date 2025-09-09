@@ -6,7 +6,11 @@ import {HubFriendlyBindings} from "../../hub/types.js"
 export class BindingsDepot<B extends HubFriendlyBindings> {
 	#kv: Kv<B>
 
-	constructor(public readonly portCount: number, rootKv: Kv) {
+	constructor(
+			public readonly portCount: number,
+			rootKv: Kv,
+			public readonly fallbackBindings: B,
+		) {
 		this.#kv = rootKv.scope("bindings")
 	}
 
@@ -14,7 +18,7 @@ export class BindingsDepot<B extends HubFriendlyBindings> {
 		const indices = range(this.portCount)
 		const keys = indices.map(k => k.toString())
 		return (await this.#kv.gets(...keys))
-			.map(bindings => bindings ?? deep.clone(bindings)) as B[]
+			.map(bindings => bindings ?? deep.clone(this.fallbackBindings)) as B[]
 	}
 
 	async save(index: number, bindings: B) {

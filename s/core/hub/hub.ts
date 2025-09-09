@@ -80,7 +80,8 @@ export class Hub<B extends HubFriendlyBindings> {
 		this.unplug(controller)
 		this.controllers.add(controller)
 		port.controllers.add(controller)
-		return () => this.unplug(controller)
+		const unplug = () => this.unplug(controller)
+		return {port, unplug}
 	}
 
 	/** unplug a controller */

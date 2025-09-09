@@ -30,7 +30,7 @@ export default ssg.page(import.meta.url, async orb => ({
 			<div class=deets>
 				<p><em>"from keypress to couch co-op"</em></p>
 				<p>
-					tact is a user input system for the web. it's good at customizable keybindings, and multiple gamepad support.
+					tact is a user input toolkit for the web. it's good at customizable keybindings, and multiple gamepad support.
 					tact is on <a href="https://github.com/benevolent-games/tact">github</a>.
 					tact is by <a href="https://benevolent.games/">benevolent.games</a>.
 				</p>
