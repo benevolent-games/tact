@@ -1,22 +1,22 @@
 
-import {SetG} from "@e280/stz"
 import {Scalar} from "@benev/math"
+import {SetG, sub} from "@e280/stz"
 import {Port} from "../port/port.js"
 import {hubBindings} from "./bindings.js"
+import {Actions} from "../bindings/types.js"
 import {Controller} from "../controllers/controller.js"
 import {HubFriendlyBindings, hubMode} from "./types.js"
-import { Actions } from "../bindings/types.js"
 
 export class Hub<B extends HubFriendlyBindings> {
 	static readonly mode = hubMode
 	static readonly bindings = hubBindings
 
 	readonly controllers = new SetG<Controller>()
+	readonly on = sub()
 
 	constructor(public readonly ports: Port<B>[]) {
-		for (const port of ports) {
+		for (const port of ports)
 			port.modes.add(Hub.mode)
-		}
 	}
 
 	*[Symbol.iterator]() {
@@ -86,14 +86,15 @@ export class Hub<B extends HubFriendlyBindings> {
 		this.unplug(controller)
 		this.controllers.add(controller)
 		port.controllers.add(controller)
-		const unplug = () => this.unplug(controller)
-		return {port, unplug}
+		this.on.publish()
+		return () => this.unplug(controller)
 	}
 
 	/** unplug a controller */
 	unplug(controller: Controller) {
 		this.ports.forEach(port => port.controllers.delete(controller))
 		this.controllers.delete(controller)
+		this.on.publish()
 	}
 
 	/** returns an unplugged port (otherwise the last one) */

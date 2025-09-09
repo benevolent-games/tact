@@ -1,23 +1,25 @@
 
-import {MapG} from "@e280/stz"
 import {Vec2} from "@benev/math"
 import {State} from "./state.js"
-import {Agent} from "./agent.js"
-import {Port} from "../../../core/port/port.js"
-import {GameBindings, GameDeck} from "./game-deck.js"
+import {Players} from "./player.js"
+import {GameDeck} from "./game-deck.js"
 
 export class Logic {
+	players: Players
+
 	constructor(
 			public deck: GameDeck,
 			public state: State,
-			public agents: MapG<Port<GameBindings>, Agent>,
 		) {
+
+		this.players = new Players(this.state, deck.hub.ports)
+
 		for (const port of this.deck.hub.ports)
 			port.modes.adds("gameplay", "hub")
 	}
 
 	tick() {
-		for (const [port, agent] of this.agents) {
+		for (const {port, agent} of this.players) {
 			const actions = port.poll()
 			this.deck.hub.actuateHubActions(port, actions)
 

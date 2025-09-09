@@ -19,7 +19,9 @@ export class State {
 	makeAgent() {
 		const agent = new Agent()
 		agent.color = this.#colors.takeRandom()
-		agent.position.set_(Math.random(), Math.random())
+		agent.position
+			.set_(Math.random(), Math.random())
+			.multiply(this.arenaSize)
 		this.agents.add(agent)
 		return agent
 	}

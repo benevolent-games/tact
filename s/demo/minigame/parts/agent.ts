@@ -2,7 +2,7 @@
 import {Vec2} from "@benev/math"
 
 export class Agent {
-	alive = false
+	alive = true
 	color = "#444"
 	position = Vec2.zero()
 }

@@ -11,9 +11,26 @@ export const Theater = view(use => (deck: GameDeck) => {
 
 	const minigame = use.once(() => new Minigame(deck))
 	use.mount(() => minigame.loop(60))
+	use.mount(() => minigame.deck.hub.on(use.render))
 
 	return html`
 		${minigame.renderer.canvas}
+
+		<div class=ports>
+			${[...minigame.logic.players].map(player => html`
+				<div style="color: ${player.agent.color};">
+					<span>port</span>
+					<div>
+						${[...player.port.controllers].map(controller => {
+							const mechanism = minigame.mechanisms.require(controller)
+							return html`
+								<span>${mechanism.label}</span>
+							`
+						})}
+					</div>
+				</div>
+			`)}
+		</div>
 	`
 })
 
