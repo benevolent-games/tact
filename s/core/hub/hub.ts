@@ -28,7 +28,7 @@ export class Hub<B extends HubFriendlyBindings> {
 		})
 	}
 
-	/** perform hub actions for the given port */
+	/** manually perform hub actions for the given port */
 	actuatePortActions(port: Port<B>, actions: Actions<B>) {
 		const fn = (delta: 1 | -1) => {
 			const controller = this.controllerByPort(port)

@@ -5,7 +5,7 @@
 	:root {
 		color-scheme: dark;
 		--link: cyan;
-		--prime: #aaa;
+		--prime: #ccc;
 		--bg: #181818;
 		--bg2: #111111;
 	}
@@ -69,6 +69,7 @@
 		}
 
 		header {
+			padding: 0 2em;
 			h1 small { font-size: 0.6em; font-weight: normal; }
 			* + * { margin-top: 0.5em; }
 		}
