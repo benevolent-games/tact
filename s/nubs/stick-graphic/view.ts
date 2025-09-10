@@ -4,7 +4,7 @@ import {view} from "@e280/sly"
 import {Vec2} from "@benev/math"
 
 import {styles} from "./styles.js"
-import {Basis} from "./types/basis.js"
+import {Basis} from "./types.js"
 import {transform} from "./utils/transform.js"
 import {calculate_basis} from "./utils/calculate_basis.js"
 import {stick_vector_to_pixels} from "./utils/stick_vector_to_pixels.js"

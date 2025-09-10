@@ -4,7 +4,7 @@ import {view} from "@e280/sly"
 import {Vec2} from "@benev/math"
 
 import {styles} from "./styles.js"
-import {Basis} from "../stick-graphic/types/basis.js"
+import {Basis} from "../stick-graphic/types.js"
 import {NubStickGraphic} from "../stick-graphic/view.js"
 import {StickController} from "../../core/controllers/standard/stick.js"
 import {make_pointer_listeners} from "./utils/make_pointer_listeners.js"

@@ -1,7 +1,7 @@
 
 import {Vec2} from "@benev/math"
 import {within_radius} from "./within_radius.js"
-import {Basis} from "../../stick-graphic/types/basis.js"
+import {Basis} from "../../stick-graphic/types.js"
 import {find_closest_point_on_circle} from "./find_closest_point_on_circle.js"
 
 export function calculate_new_vector_from_pointer_position(

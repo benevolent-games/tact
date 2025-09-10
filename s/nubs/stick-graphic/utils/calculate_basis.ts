@@ -1,5 +1,5 @@
 
-import {Basis} from "../types/basis.js"
+import {Basis} from "../types.js"
 
 export function calculate_basis(
 		base: HTMLElement,
