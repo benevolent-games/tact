@@ -1,15 +1,13 @@
 
 import {html} from "lit"
-import {view} from "@e280/sly"
 import {Scalar} from "@benev/math"
+import {dom, view} from "@e280/sly"
 
 import {style} from "./style.js"
-import {eve} from "../../utils/eve.js"
 import {SchtickController} from "./controller.js"
 
 export const Schtick = view(use => ({$vector}: SchtickController) => {
 	use.css(style)
-
 	const outerThreshold = 0.2
 	const innerThreshold = 0.2
 
@@ -39,7 +37,7 @@ export const Schtick = view(use => ({$vector}: SchtickController) => {
 			}
 		}
 
-		return eve(use.element, {
+		return dom.events(use.element, {
 			pointerdown: (event: PointerEvent) => {
 				if (pointerId === undefined) {
 					pointerId = event.pointerId
@@ -57,7 +55,6 @@ export const Schtick = view(use => ({$vector}: SchtickController) => {
 	})
 
 	const vector = $vector.get()
-
 	const innerstyle = `width: ${innerThreshold * 100}%;`
 	const outerstyle = `width: ${100 - (outerThreshold * 100)}%;`
 
