@@ -1,11 +1,10 @@
 
-import {nap, repeat} from "@e280/stz"
+import {disposer, nap, repeat} from "@e280/stz"
 import {Logic} from "./parts/logic.js"
 import {State} from "./parts/state.js"
 import {Players} from "./parts/player.js"
 import {Renderer} from "./parts/renderer.js"
 import {Deck} from "../../core/deck/deck.js"
-import {disposer} from "../../utils/disposer.js"
 import {gameBindings, GameDeck} from "./parts/game-bindings.js"
 import {localStorageKv} from "../../core/deck/parts/local-storage-kv.js"
 import {Device, KeyboardDevice, VirtualDevice} from "./parts/devices.js"
