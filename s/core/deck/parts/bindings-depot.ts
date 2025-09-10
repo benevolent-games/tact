@@ -1,7 +1,8 @@
 
 import {Kv} from "@e280/kv"
-import {deep, range} from "@e280/stz"
+import {range} from "@e280/stz"
 import {Bindings} from "../../bindings/types.js"
+import {mergeBindings} from "./merge-bindings.js"
 
 export class BindingsDepot<B extends Bindings> {
 	#kv: Kv<B>
@@ -11,14 +12,14 @@ export class BindingsDepot<B extends Bindings> {
 			rootKv: Kv,
 			public readonly fallbackBindings: B,
 		) {
-		this.#kv = rootKv.scope("bindings")
+		this.#kv = rootKv.scope<B>("bindings")
 	}
 
 	async loadAll() {
 		const indices = range(this.portCount)
 		const keys = indices.map(k => k.toString())
 		return (await this.#kv.gets(...keys))
-			.map(bindings => bindings ?? deep.clone(this.fallbackBindings)) as B[]
+			.map(suspect => mergeBindings(this.fallbackBindings, suspect))
 	}
 
 	async save(index: number, bindings: B) {
