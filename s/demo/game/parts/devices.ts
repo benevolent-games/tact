@@ -1,8 +1,8 @@
 
 import {Hex} from "@e280/stz"
 import {Hub} from "../../../core/hub/hub.js"
+import {SchtickController} from "../../../nubs/schtick/controller.js"
 import {GroupController} from "../../../core/controllers/infra/group.js"
-import {StickController} from "../../../core/controllers/standard/stick.js"
 import {PointerController} from "../../../core/controllers/standard/pointer.js"
 import {KeyboardController} from "../../../core/controllers/standard/keyboard.js"
 
@@ -20,10 +20,10 @@ export class KeyboardDevice extends Device {
 }
 
 export class VirtualDevice extends Device {
-	stick: StickController
+	stick: SchtickController
 
 	constructor(private hub: Hub<any>) {
-		const stick = new StickController()
+		const stick = new SchtickController()
 		super(stick)
 		this.stick = stick
 	}

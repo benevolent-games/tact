@@ -7,6 +7,7 @@ import {style} from "./style.js"
 import {SchtickController} from "./controller.js"
 
 export const Schtick = view(use => ({$vector}: SchtickController) => {
+	use.name("nub-stick")
 	use.css(style)
 	const outerThreshold = 0.2
 	const innerThreshold = 0.2

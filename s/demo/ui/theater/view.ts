@@ -5,10 +5,8 @@ import {repeat} from "lit/directives/repeat.js"
 
 import {styles} from "./styles.css.js"
 import {Game} from "../../game/game.js"
-import {Schtick} from "../../../nubs/schtick/view.js"
 import {VirtualDeviceView} from "../devices/virtual/view.js"
 import {KeyboardDeviceView} from "../devices/keyboard/view.js"
-import {SchtickController} from "../../../nubs/schtick/controller.js"
 import {Device, KeyboardDevice, VirtualDevice} from "../../game/parts/devices.js"
 
 export const Theater = view(use => (game: Game) => {
@@ -26,8 +24,6 @@ export const Theater = view(use => (game: Game) => {
 	}
 
 	return html`
-		${Schtick(new SchtickController())}
-
 		${game.renderer.canvas}
 
 		<div class=ports>
