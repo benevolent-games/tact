@@ -250,7 +250,7 @@ the deck is the heart of tact, tying all the pieces together and putting a bow o
     ["code", "KeyA", {
 		  scale: 1,
 		  invert: false,
-		  deadzone: 0.2,
+		  deadzone: 0,
 		  timing: ["direct"],
     }]
     ```
