@@ -5,6 +5,7 @@ import {State} from "./parts/state.js"
 import {Players} from "./parts/player.js"
 import {Renderer} from "./parts/renderer.js"
 import {Deck} from "../../core/deck/deck.js"
+import {disposer} from "../../utils/disposer.js"
 import {gameBindings, GameDeck} from "./parts/game-bindings.js"
 import {localStorageKv} from "../../core/deck/parts/local-storage-kv.js"
 import {Device, KeyboardDevice, VirtualDevice} from "./parts/devices.js"
@@ -18,6 +19,7 @@ export class Game {
 		}))
 	}
 
+	dispose = disposer()
 	state = new State()
 	renderer = new Renderer(this.state)
 	logic: Logic
@@ -35,6 +37,13 @@ export class Game {
 
 		this.plug(new KeyboardDevice())
 		this.plug(new VirtualDevice(deck.hub))
+
+		this.dispose.schedule(
+			this.deck.hub.on(() => {
+				for (const player of this.logic.players)
+					player.agent.alive = player.port.controllers.size > 0
+			})
+		)
 	}
 
 	plug(device: Device) {

@@ -38,7 +38,7 @@ canvas {
 		text-align: center;
 	}
 
-	> * {
+	.port {
 		flex: 1 1 0;
 		display: flex;
 		flex-direction: column;
@@ -58,6 +58,11 @@ canvas {
 			&[device] {
 				color: color-mix(in lch, white, var(--color) 50%);
 			}
+		}
+
+		&:not([data-active]) {
+			color: #ccc;
+			> * { background: #5554; }
 		}
 	}
 }

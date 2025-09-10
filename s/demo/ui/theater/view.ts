@@ -28,7 +28,11 @@ export const Theater = view(use => (game: Game) => {
 
 		<div class=ports>
 			${[...game.logic.players].map((player, index) => html`
-				<div style="--color: ${player.agent.color};">
+				<div
+					class=port
+					?data-active="${player.port.controllers.size > 0}"
+					style="--color: ${player.agent.color};">
+
 					<header>p${index + 1}</header>
 					${repeat(
 						player.port.controllers.array() as Device[],
