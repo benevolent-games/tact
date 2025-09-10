@@ -15,7 +15,9 @@ function defaultCodeSettings(): CodeSettings {
 	return {
 		scale: 1,
 		invert: false,
-		deadzone: 0,
+		range: null,
+		bottom: null,
+		top: null,
 		timing: ["direct"],
 	}
 }

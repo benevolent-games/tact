@@ -19,10 +19,9 @@ export class Resolver<B extends Bindings> {
 		this.actions = obMap(bindings, (bracket, mode) => obMap(bracket, atom => {
 			const action = new Action()
 			this.#update.subscribe(() => {
-				const value = this.modes.has(mode)
+				action.value = this.modes.has(mode)
 					? this.#resolveAtom()(atom)
 					: 0
-				Action.update(action, value)
 			})
 			return action
 		})) as Actions<B>

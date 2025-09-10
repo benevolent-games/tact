@@ -34,7 +34,9 @@ export type Atom = string | (
 export type CodeSettings = {
 	scale: number
 	invert: boolean
-	deadzone: number
+	range: null | [number, number]
+	bottom: null | number
+	top: null | number
 	timing: (
 		| ["direct"]
 		| ["tap", holdTime?: number]

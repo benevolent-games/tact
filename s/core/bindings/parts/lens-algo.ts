@@ -11,18 +11,20 @@ export const lensAlgo = (
 		v: number,
 	) => pipe(v).line(
 
-	function deadzone(value) {
-		if (value < state.settings.deadzone)
-			return 0
-
-		if (value > 1)
-			return value
-
-		return Scalar.remap(
-			value,
-			state.settings.deadzone, 1,
-			0, 1,
-		)
+	function clippings(value) {
+		const {settings} = state
+		if (settings.range) {
+			const [bottom, top] = settings.range
+			value = Scalar.remap(
+				value,
+				bottom, top,
+				0, 1,
+				true,
+			)
+		}
+		if (settings.bottom) value = Math.max(settings.bottom, value)
+		if (settings.top) value = Math.min(settings.top, value)
+		return value
 	},
 
 	function inversion(value) {
