@@ -1,7 +1,7 @@
 
 import {MetaBindings, metaMode} from "./types.js"
 
-export const metaBindings = (): MetaBindings => ({
+export const makeMetaBindings = (): MetaBindings => ({
 	[metaMode]: {
 		shimmyNext: ["or",
 			"BracketRight",

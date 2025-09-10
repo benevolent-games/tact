@@ -12,23 +12,11 @@ export class Logic {
 	tick() {
 		for (const player of this.players) {
 			const {agent, port: {actions}} = player
-
-			const speed = (actions.gameplay.sprint.pressed)
-				? 3
-				: 1
-
-			if (actions.gameplay.up.pressed)
-				agent.position.y += speed
-
-			if (actions.gameplay.down.pressed)
-				agent.position.y -= speed
-
-			if (actions.gameplay.left.pressed)
-				agent.position.x -= (speed)
-
-			if (actions.gameplay.right.pressed)
-				agent.position.x += (speed)
-
+			const speed = 1
+			agent.position.y += speed * actions.gameplay.up.value
+			agent.position.y -= speed * actions.gameplay.down.value
+			agent.position.x -= speed * actions.gameplay.left.value
+			agent.position.x += speed * actions.gameplay.right.value
 			agent.position.clamp(Vec2.zero(), this.state.arenaSize)
 		}
 	}

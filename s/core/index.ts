@@ -14,7 +14,7 @@ export * from "./deck/parts/local-storage-kv.js"
 export * from "./deck/deck.js"
 
 export * from "./hub/auto-gamepads.js"
-export * from "./hub/bindings.js"
+export * from "./hub/meta-bindings.js"
 export * from "./hub/hub.js"
 
 export * from "./hub/port.js"

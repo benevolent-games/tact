@@ -2,11 +2,10 @@
 import {Hub} from "../hub/hub.js"
 import {Port} from "../hub/port.js"
 import {asBindings} from "../bindings/types.js"
+import {Resolver} from "../bindings/resolver.js"
+import {SampleMap} from "../bindings/sample-map.js"
 import {Controller} from "../controllers/controller.js"
 import {SamplerController} from "../controllers/infra/sampler.js"
-import { metaBindings } from "../hub/bindings.js"
-import { Resolver } from "../bindings/resolver.js"
-import { SampleMap } from "../bindings/sample-map.js"
 
 export class TestTime {
 	frame = 0

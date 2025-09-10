@@ -36,13 +36,22 @@ canvas {
 
 	> * {
 		flex: 1 1 0;
-		background: #000;
-		border-radius: 0.5em;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+
+		gap: 1em;
 		min-height: 4em;
 		padding: 0.5em;
+
+		color: var(--color);
+		background: color-mix(in lch, transparent, var(--color) 10%);
+		border-radius: 0.5em;
+
+		span { font-size: 3em; }
+		[view="nub-stick"] { width: 3em; }
 	}
 
-	[view="nub-stick"] { width: 3em; }
 }
 
 `

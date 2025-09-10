@@ -4,10 +4,20 @@ import {Logic} from "./parts/logic.js"
 import {State} from "./parts/state.js"
 import {Players} from "./parts/player.js"
 import {Renderer} from "./parts/renderer.js"
-import {GameDeck} from "./parts/game-deck.js"
-import {GameController, GameKeyboard} from "./parts/controllers.js"
+import {Deck} from "../../core/deck/deck.js"
+import {gameBindings, GameDeck} from "./parts/game-bindings.js"
+import {localStorageKv} from "../../core/deck/parts/local-storage-kv.js"
+import {GameController, GameKeyboard, GameStick} from "./parts/controllers.js"
 
-export class Minigame {
+export class Game {
+	static async load() {
+		return new this(await Deck.load({
+			portCount: 4,
+			kv: localStorageKv(),
+			bindings: gameBindings,
+		}))
+	}
+
 	state = new State()
 	renderer = new Renderer(this.state)
 	logic: Logic
@@ -24,12 +34,9 @@ export class Minigame {
 		)
 
 		this.plug(new GameKeyboard())
-		// this.plug(new GameStick())
-
-		// autoGamepads(deck.hub.plug)
-		// this.plugPlayer(new StickController("stick"))
-		// this.plugPlayer(new StickController("stick"))
-		// this.plugPlayer(new StickController("stick"))
+		this.plug(new GameStick())
+		this.plug(new GameStick())
+		this.plug(new GameStick())
 	}
 
 	plug(controller: GameController) {

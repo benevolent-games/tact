@@ -7,15 +7,15 @@ export const styles = css`
 	width: 8em;
 	height: 8em;
 	--size: var(--nub-stick-size, 66%);
-	--background: var(--nub-stick-background, black);
-	--color: var(--nub-stick-color, white);
+	--background: var(--nub-stick-background, #0004);
+	--color: var(--nub-stick-color, #fffa);
 }
 
 [part="base"] {
 	position: relative;
-	aspect-ratio: 1/1;
+	aspect-ratio: 1 / 1;
 	width: 100%;
-	height: 100%;
+	height: auto;
 	background: var(--background);
 	border-radius: 100%;
 }

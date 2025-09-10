@@ -3,8 +3,8 @@ import {Scalar} from "@benev/math"
 import {debounce, MapG, sub} from "@e280/stz"
 import {Port} from "./port.js"
 import {metaMode} from "./types.js"
-import {metaBindings} from "./bindings.js"
 import {Bindings} from "../bindings/types.js"
+import {makeMetaBindings} from "./meta-bindings.js"
 import {SampleMap} from "../bindings/sample-map.js"
 import {Controller} from "../controllers/controller.js"
 import {ConnectedController} from "./parts/connected-controller.js"
@@ -14,9 +14,6 @@ export class Hub<B extends Bindings> {
 	/** event fires whenever a controller changes ports. */
 	readonly on = sub()
 
-	/** special bindings for controllers to shimmy between ports. */
-	metaBindings = metaBindings()
-
 	/** all controllers known to this hub */
 	#connected = new MapG<Controller, ConnectedController>()
 
@@ -24,6 +21,9 @@ export class Hub<B extends Bindings> {
 
 		/** available ports that controllers can be assigned to. */
 		public readonly ports: Port<B>[],
+
+		/** special bindings for controllers to shimmy between ports. */
+		public metaBindings = makeMetaBindings(),
 	) {}
 
 	/** poll every controller, providing actions for each port, and internally handling meta actions. */

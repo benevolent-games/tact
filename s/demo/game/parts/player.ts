@@ -2,7 +2,7 @@
 import {RMap} from "@e280/strata"
 import {Agent} from "./agent.js"
 import {State} from "./state.js"
-import {GameBindings} from "./game-deck.js"
+import {GameBindings} from "./game-bindings.js"
 import {Hub} from "../../../core/hub/hub.js"
 import {Port} from "../../../core/hub/port.js"
 

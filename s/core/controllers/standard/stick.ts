@@ -1,23 +1,26 @@
 
 import {Vec2} from "@benev/math"
 import {signal} from "@e280/strata"
-import {Disposable} from "@e280/stz"
-import {SamplerController} from "../infra/sampler.js"
+import {Sample} from "../types.js"
+import {Controller} from "../controller.js"
 import {splitAxis} from "../../../utils/split-axis.js"
 
-export class StickController extends SamplerController implements Disposable {
+export class StickController extends Controller {
 	vector = signal(Vec2.zero())
-	dispose: () => void
 
 	constructor(public channel = "stick") {
 		super()
-		this.dispose = this.vector.on(() => {
-			const {up, down, left, right} = this.breakdown()
-			this.setSample(`${channel}.up`, up)
-			this.setSample(`${channel}.down`, down)
-			this.setSample(`${channel}.left`, left)
-			this.setSample(`${channel}.right`, right)
-		})
+	}
+
+	takeSamples() {
+		const {channel} = this
+		const {up, down, left, right} = this.breakdown()
+		return [
+			[`${channel}.up`, up],
+			[`${channel}.down`, down],
+			[`${channel}.left`, left],
+			[`${channel}.right`, right],
+		] as Sample[]
 	}
 
 	breakdown() {
