@@ -7,11 +7,11 @@ export const styleCss = css`
 }
 
 [view="nub-stick"] {
-	width: 3em;
+	width: 2em;
 }
 
 button {
-	font-size: 1em;
+	font-size: 0.8em;
 	margin: 0.1em;
 }
 

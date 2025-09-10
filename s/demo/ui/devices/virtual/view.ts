@@ -21,12 +21,10 @@ export const VirtualDeviceView = view(use => (hub: Hub<any>, device: VirtualDevi
 		</header>
 		<div class="box row">
 			${NubStick(device.stick)}
-			<div class=column>
-				<div class=row>
-					<button @click="${device.shimmyPrevious}">👈</button>
-					<button @click="${device.shimmyNext}">👉</button>
-				</div>
+			<div class=row>
+				<button @click="${device.shimmyPrevious}">👈</button>
 				<button @click="${unplug}">💀</button>
+				<button @click="${device.shimmyNext}">👉</button>
 			</div>
 		</div>
 	`

@@ -16,8 +16,9 @@ export class State {
 		"#f0a",
 	])
 
-	makeAgent() {
+	makeAgent(label: string) {
 		const agent = new Agent()
+		agent.label = label
 		agent.color = this.#colors.takeRandom()
 		agent.position
 			.set_(Math.random(), Math.random())

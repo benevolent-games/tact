@@ -28,6 +28,7 @@ canvas {
 .ports {
 	display: flex;
 	justify-content: center;
+	flex-wrap: wrap;
 
 	width: 100%;
 	gap: 0.4em;

@@ -56,6 +56,15 @@ export class Renderer {
 			ctx.lineWidth = this.percent(2)
 			ctx.strokeStyle = "#fff"
 			ctx.stroke()
+
+			// draw label
+			ctx.font = `${radius * 1.3}px sans-serif`
+			ctx.textAlign = "center"
+			ctx.textBaseline = "middle"
+			ctx.strokeStyle = "#0004"
+			ctx.strokeText(agent.label, x, y)
+			ctx.fillStyle = "#fff"
+			ctx.fillText(agent.label, x, y)
 		}
 	}
 }

@@ -15,8 +15,10 @@ export class Players {
 	#map = new RMap<GamePort, Player>()
 
 	constructor(hub: GameHub, state: State) {
-		for (const port of hub.ports)
-			this.#map.set(port, new Player(port, state.makeAgent()))
+		for (const [index, port] of hub.ports.entries()) {
+			const label = (index + 1).toString()
+			this.#map.set(port, new Player(port, state.makeAgent(label)))
+		}
 	}
 
 	;[Symbol.iterator]() {

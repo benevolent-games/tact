@@ -26,7 +26,7 @@ header {
 
 .box {
 	padding: 0.2em;
-	min-height: 5rem;
+	min-height: 3rem;
 }
 
 .row {

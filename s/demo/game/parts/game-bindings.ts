@@ -11,10 +11,10 @@ export type GameHub = Hub<GameBindings>
 
 export const gameBindings = asBindings({
 	gameplay: {
-		up: ["or", "KeyW", "stick.up"],
-		down: ["or", "KeyS", "stick.down"],
-		left: ["or", "KeyA", "stick.left"],
-		right: ["or", "KeyD", "stick.right"],
+		up: ["or", "KeyW", "ArrowUp", "stick.up"],
+		down: ["or", "KeyS", "ArrowDown", "stick.down"],
+		left: ["or", "KeyA", "ArrowLeft", "stick.left"],
+		right: ["or", "KeyD", "ArrowRight", "stick.right"],
 	},
 })
 
