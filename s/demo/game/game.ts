@@ -7,7 +7,7 @@ import {Renderer} from "./parts/renderer.js"
 import {Deck} from "../../core/deck/deck.js"
 import {gameBindings, GameDeck} from "./parts/game-bindings.js"
 import {localStorageKv} from "../../core/deck/parts/local-storage-kv.js"
-import {GameController, GameKeyboard, GameStick} from "./parts/controllers.js"
+import {Device, KeyboardDevice, VirtualDevice} from "./parts/devices.js"
 
 export class Game {
 	static async load() {
@@ -33,15 +33,13 @@ export class Game {
 			new Players(deck.hub, this.state),
 		)
 
-		this.plug(new GameKeyboard())
-		this.plug(new GameStick())
-		this.plug(new GameStick())
-		this.plug(new GameStick())
+		this.plug(new KeyboardDevice())
+		this.plug(new VirtualDevice(deck.hub))
 	}
 
-	plug(controller: GameController) {
+	plug(device: Device) {
 		const port = this.deck.hub.getLonelyPort()
-		this.deck.hub.plug(controller)
+		this.deck.hub.plug(device)
 		return this.logic.players.require(port)
 	}
 

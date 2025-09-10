@@ -50,6 +50,10 @@ export class Hub<B extends Bindings> {
 		}
 	}
 
+	getMetaActions(controller: Controller) {
+		return this.#connected.require(controller).metaResolver.actions
+	}
+
 	/** move a player's controller to the next or previous port */
 	shimmy(controller: Controller, indexDelta: 1 | -1) {
 		const oldIndex = this.ports.findIndex(port => port.controllers.has(controller))

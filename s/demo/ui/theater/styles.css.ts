@@ -1,5 +1,4 @@
 
-
 import {css} from "lit"
 import {cssReset} from "@e280/sly"
 export const styles = css`
@@ -38,9 +37,8 @@ canvas {
 		flex: 1 1 0;
 		display: flex;
 		flex-direction: column;
-		align-items: center;
 
-		gap: 1em;
+		gap: 0.4em;
 		min-height: 4em;
 		padding: 0.5em;
 
@@ -48,8 +46,23 @@ canvas {
 		background: color-mix(in lch, transparent, var(--color) 10%);
 		border-radius: 0.5em;
 
-		span { font-size: 3em; }
-		[view="nub-stick"] { width: 3em; }
+		.device {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			background: #0004;
+
+			.id {
+				font-family: monospace;
+				background: #0004;
+				align-self: stretch;
+				text-align: center;
+			}
+
+			[device] {
+				padding: 0.5em;
+			}
+		}
 	}
 
 }

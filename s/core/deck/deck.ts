@@ -13,7 +13,7 @@ export class Deck<B extends Bindings> {
 		}) {
 		const bindingsDepot = new BindingsDepot<B>(options.portCount, options.kv, options.bindings)
 		const bindingsList = await bindingsDepot.loadAll()
-		const ports = bindingsList.map(b => new Port(b))
+		const ports = bindingsList.map(b => new Port<B>(b))
 		const hub = new Hub<B>(ports)
 		return new this(hub, bindingsDepot)
 	}
