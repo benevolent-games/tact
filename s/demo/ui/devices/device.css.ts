@@ -1,14 +1,32 @@
 
 import {css} from "lit"
 import {cssReset} from "@e280/sly"
-export const styles = css`
+export const deviceCss = css`
 
 ${cssReset}
 
 :host {
 	display: flex;
 	flex-direction: column;
-	align-items: center;
+}
+
+header {
+	background: #fff2;
+	padding: 0.3em;
+
+	h1 {
+		font-size: 0.7em;
+	}
+
+	h2 {
+		font-size: 0.6em;
+		font-family: monospace;
+	}
+}
+
+.box {
+	padding: 0.2em;
+	min-height: 5rem;
 }
 
 .row {
@@ -24,13 +42,7 @@ ${cssReset}
 	justify-content: center;
 }
 
-[view="nub-stick"] {
-	width: 3em;
-}
-
-button {
-	font-size: 1em;
-}
 
 `
+
 

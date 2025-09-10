@@ -17,18 +17,10 @@ export const Theater = view(use => (game: Game) => {
 	const addVirtual = () => game.plug(new VirtualDevice(game.deck.hub))
 
 	function renderDevice(device: Device) {
-		return html`
-			<div class=device>
-				<h4 class=id>${device.id.slice(0, 8)}</h4>
-				${(() => {
-					if (device instanceof KeyboardDevice)
-						return KeyboardDeviceView(device)
-
-					else if (device instanceof VirtualDevice)
-						return VirtualDeviceView(game.deck.hub, device)
-				})()}
-			</div>
-		`
+		if (device instanceof KeyboardDevice)
+			return KeyboardDeviceView(device)
+		else if (device instanceof VirtualDevice)
+			return VirtualDeviceView(game.deck.hub, device)
 	}
 
 	return html`
@@ -37,7 +29,7 @@ export const Theater = view(use => (game: Game) => {
 		<div class=ports>
 			${[...game.logic.players].map((player, index) => html`
 				<div style="--color: ${player.agent.color};">
-					<h3>p${index + 1}</h3>
+					<header>p${index + 1}</header>
 					${repeat(
 						player.port.controllers.array() as Device[],
 						d => d.id,
@@ -48,8 +40,7 @@ export const Theater = view(use => (game: Game) => {
 		</div>
 
 		<div>
-			lol
-			<button @click="${addVirtual}">add virtual</button>
+			<button @click="${addVirtual}">✨</button>
 		</div>
 	`
 })

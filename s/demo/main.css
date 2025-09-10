@@ -48,7 +48,7 @@
 
 	html, body {
 		font-family: sans-serif;
-		font-size: 16px;
+		font-size: 12px;
 		color: var(--prime);
 		background: var(--bg);
 	}

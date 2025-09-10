@@ -30,8 +30,12 @@ canvas {
 	justify-content: center;
 
 	width: 100%;
-	gap: 1em;
-	padding: 0 2em;
+	gap: 0.4em;
+	padding: 0 1em;
+
+	header {
+		text-align: center;
+	}
 
 	> * {
 		flex: 1 1 0;
@@ -39,32 +43,22 @@ canvas {
 		flex-direction: column;
 
 		gap: 0.4em;
-		min-height: 4em;
-		padding: 0.5em;
+		padding: 0.4em;
 
 		color: var(--color);
-		background: color-mix(in lch, transparent, var(--color) 10%);
 		border-radius: 0.5em;
+		background: #0004;
 
-		.device {
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			background: #0004;
-
-			.id {
-				font-family: monospace;
-				background: #0004;
-				align-self: stretch;
-				text-align: center;
-			}
-
-			[device] {
-				padding: 0.5em;
+		> * {
+			overflow: hidden;
+			background: color-mix(in lch, transparent, var(--color) 20%);
+			border-radius: 0.5em;
+			box-shadow: .1em .2em .5em #0007;
+			&[device] {
+				color: color-mix(in lch, white, var(--color) 50%);
 			}
 		}
 	}
-
 }
 
 `
