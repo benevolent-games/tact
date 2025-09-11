@@ -15,12 +15,14 @@ export const lensAlgo = (
 		const {settings} = state
 		if (settings.range) {
 			const [bottom, top] = settings.range
-			value = Scalar.remap(
-				value,
-				bottom, top,
-				0, 1,
-				true,
-			)
+			value = Scalar.isBetween(value, bottom, top)
+				? Scalar.remap(
+					value,
+					bottom, top,
+					0, 1,
+					true,
+				)
+				: 0
 		}
 		if (settings.bottom) value = Math.max(settings.bottom, value)
 		if (settings.top) value = Math.min(settings.top, value)
