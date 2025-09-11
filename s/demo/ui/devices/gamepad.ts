@@ -2,8 +2,8 @@
 import {html} from "lit"
 import {view} from "@e280/sly"
 import {Thumbprint} from "@e280/stz"
-import {deviceCss} from "../device.css.js"
-import {GamepadDevice} from "../../../../core/devices/standard/gamepad.js"
+import {deviceCss} from "./device.css.js"
+import {GamepadDevice} from "../../../core/devices/standard/gamepad.js"
 
 export const GamepadDeviceView = view(use => (device: GamepadDevice) => {
 	use.styles(deviceCss)
