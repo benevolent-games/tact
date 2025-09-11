@@ -31,7 +31,7 @@ export const lensAlgo = (
 
 	function inversion(value) {
 		return state.settings.invert
-			? value * -1
+			? 1 - value
 			: value
 	},
 
