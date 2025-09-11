@@ -10,10 +10,10 @@ tact is a toolkit for handling user inputs on the web.
 it's good at user-customizable keybindings, multiple gamepad support, and mobile ui.  
 
 - 🛹 **[#deck](#deck)** full setup with localstorate persistence
-- 🎮 **[#controllers](#controllers)** produce user input samples
+- 🎮 **[#devices](#devices)** produce user input samples
 - 🧩 **[#bindings](#bindings)** describe how actions interpret samples
 - 🔌 **[#port](#port)** updates actions by interpreting samples
-- 🛞 **[#hub](#hub)** plugs controllers into ports (multi-gamepad couch co-op!)
+- 🛞 **[#hub](#hub)** plugs devices into ports (multi-gamepad couch co-op!)
 - 📱 **[#nubs](#nubs)** is mobile ui virtual gamepad stuff
 
 > [!CAUTION]
@@ -39,7 +39,7 @@ the deck is the heart of tact, tying all the pieces together and putting a bow o
     ```ts
     const deck = await tact.Deck.load({
 
-      // how many players ports are possible? 1 is fine..
+      // how many player ports are possible? 1 is fine..
       portCount: 4,
 
       // where to store the user-customized bindings
@@ -47,11 +47,7 @@ the deck is the heart of tact, tying all the pieces together and putting a bow o
 
       // default archetypal bindings for your game
       bindings: {
-        ...tact.hubBindings(),
-        walking: {
-          forward: "KeyW",
-          jump: "Space",
-        },
+        walking: {forward: "KeyW", jump: "Space"},
         gunning: {
           shoot: ["or", "pointer.button.left", "gamepad.trigger.right"],
         },
@@ -59,14 +55,14 @@ the deck is the heart of tact, tying all the pieces together and putting a bow o
     })
     ```
 
-### 🛹 plug controllers into the hub
+### 🛹 plug devices into the hub
 - **plug a keyboard/mouse player into the hub**
     ```ts
     deck.hub.plug(
-      new tact.GroupController(
-        new tact.KeyboardController(),
-        new tact.PointerController(),
-        new tact.VirtualGamepadController(),
+      new tact.GroupDevice(
+        new tact.KeyboardDevice(),
+        new tact.PointerDevice(),
+        new tact.VpadDevice(),
       )
     )
     ```
@@ -99,9 +95,9 @@ the deck is the heart of tact, tying all the pieces together and putting a bow o
 
 
 <br/><br/>
-<a id="controllers"></a>
+<a id="devices"></a>
 
-## 🍋 tact controllers
+## 🍋 tact devices
 > *sources of user input "samples"*
 
 ### 🎮 polling is good, actually
@@ -111,10 +107,10 @@ the deck is the heart of tact, tying all the pieces together and putting a bow o
 - the gift of polling is total control over *when* inputs are processed
 - i will elaborate no further 🗿
 
-### 🎮 basically how a controller works
-- make a controller
+### 🎮 basically how a device works
+- make a device
     ```ts
-    const keyboard = new tact.KeyboardController()
+    const keyboard = new tact.KeyboardDevice()
     ```
 - take samples each frame
     ```ts
@@ -124,7 +120,7 @@ the deck is the heart of tact, tying all the pieces together and putting a bow o
       //   ["Space", 0]
       // ]
     ```
-- some controllers have disposers to call when you're done with them
+- some devices have disposers to call when you're done with them
     ```ts
     keyboard.dispose()
     ```
@@ -143,13 +139,13 @@ the deck is the heart of tact, tying all the pieces together and putting a bow o
   - don't worry about sensitivity, deadzones, values like `0.00001` — actions will account for all that using bindings later on
 
 ### 🎮 sample code reference
-- **KeyboardController**
+- **KeyboardDevice**
     - any [standard keycode](https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_code_values)
         - `KeyA`
         - `Space`
         - `Digit2`
         - etc
-- **PointerController**
+- **PointerDevice**
     - mouse buttons
         - `pointer.button.left`
         - `pointer.button.right`
@@ -166,7 +162,7 @@ the deck is the heart of tact, tying all the pieces together and putting a bow o
         - `pointer.move.down`
         - `pointer.move.left`
         - `pointer.move.right`
-- **GamepadController**
+- **GamepadDevice**
     - gamepad buttons
         - `gamepad.a`
         - `gamepad.b`
@@ -207,10 +203,7 @@ the deck is the heart of tact, tying all the pieces together and putting a bow o
 - **let's start with a small example:**
     ```ts
     const bindings = tact.asBindings({
-      walking: {
-        forward: "KeyW",
-        jump: "Space",
-      },
+      walking: {forward: "KeyW", jump: "Space"},
       gunning: {
         shoot: ["or", "pointer.button.left", "gamepad.trigger.right"],
       },
@@ -237,7 +230,7 @@ the deck is the heart of tact, tying all the pieces together and putting a bow o
 - **you can get really weird**
     ```ts
     ["cond",
-      ["code", "gamepad.trigger.right", {deadzone: 0.5, timing: ["tap"]}],
+      ["code", "gamepad.trigger.right", {range: [0, 0.5], timing: ["tap"]}],
       ["and", "gamepad.bumper.left", ["not", "gamepad.trigger.left"]],
     ]
     ```
@@ -307,14 +300,14 @@ a port represents a single playable port, and you poll it each frame to resolve 
     ```ts
     const port = new tact.Port(bindings)
     ```
-- **attach some controllers to the port**
+- **attach some devices to the port**
     ```ts
-    port.controllers
-      .add(new tact.KeyboardController())
-      .add(new tact.PointerController())
-      .add(new tact.VirtualGamepadController())
+    port.devices
+      .add(new tact.KeyboardDevice())
+      .add(new tact.PointerDevice())
+      .add(new tact.VirtualGamepadDevice())
     ```
-    - you can add/delete controllers from the set any time
+    - you can add/delete devices from the set any time
 - **don't forget to enable modes!**
     ```ts
     port.modes.add("walking")
@@ -328,9 +321,9 @@ a port represents a single playable port, and you poll it each frame to resolve 
     ```
 - **wire up gamepad auto connect/disconnect**
     ```ts
-    tact.autoGamepads(controller => {
-      port.controllers.add(controller)
-      return () => port.controllers.delete(controller)
+    tact.autoGamepads(device => {
+      port.devices.add(device)
+      return () => port.devices.delete(device)
     })
     ```
 
@@ -362,7 +355,7 @@ a port represents a single playable port, and you poll it each frame to resolve 
 
 you know the way old-timey game consoles had four controller ports on the front?
 
-the hub embraces that analogy, helping you coordinate the plugging and unplugging of virtual controllers into its virtual ports.
+the hub embraces that analogy, helping you coordinate the plugging and unplugging of virtual controller devices into its virtual ports.
 
 ### 🛞 create a hub with ports
 - **adopt standard hub bindings**
@@ -374,7 +367,7 @@ the hub embraces that analogy, helping you coordinate the plugging and unpluggin
       ...tact.hubBindings(),
     }
     ```
-    - hub bindings let players shimmy what port their controller is plugged into
+    - hub bindings let players shimmy what port their device is plugged into
     - gamepad: hold gamma (middle button) and press bumpers
     - keyboard: left bracket or right bracket
 - **make hub with multiple ports at the ready**
@@ -388,18 +381,18 @@ the hub embraces that analogy, helping you coordinate the plugging and unpluggin
     ```
     - yes that's right — each player port gets its own bindings 🤯
 
-### 🛞 plug in some controllers
+### 🛞 plug in some devices
 - **let's plug in the keyboard/mouse player**
     ```ts
     hub.plug(
-      new tact.GroupController(
-        new tact.KeyboardController(),
-        new tact.PointerController(),
-        new tact.VirtualGamepadController(),
+      new tact.GroupDevice(
+        new tact.KeyboardDevice(),
+        new tact.PointerDevice(),
+        new tact.VirtualGamepadDevice(),
       )
     )
     ```
-    - the hub requires a single controller to represent a player, thus we can use a `GroupController` to combine multple controllers into one
+    - the hub requires a single device to represent a player, thus we can use a `GroupDevice` to combine multple devices into one
 - **wire up gamepad auto connect/disconnect**
     ```ts
     tact.autoGamepads(hub.plug)
