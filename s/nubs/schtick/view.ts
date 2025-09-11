@@ -2,6 +2,7 @@
 import {html} from "lit"
 import {Scalar} from "@benev/math"
 import {dom, view} from "@e280/sly"
+import {coalesce, nap} from "@e280/stz"
 
 import {style} from "./style.js"
 import {SchtickController} from "./controller.js"
@@ -30,29 +31,46 @@ export const Schtick = view(use => ({$vector}: SchtickController) => {
 		}
 
 		function release() {
-			if (pointerId !== undefined) {
+			if (pointerId === undefined) return
+			$vector.get().set_(0, 0)
+			$vector.publish()
+
+			// fix for ridiculous firefox bug,
+			// where our captured pointerup was clicking outside buttons
+			nap(0).then(() => {
+				if (pointerId === undefined) return
 				use.element.releasePointerCapture(pointerId)
 				pointerId = undefined
-				$vector.get().set_(0, 0)
-				$vector.publish()
-			}
+			})
 		}
 
-		return dom.events(use.element, {
-			pointerdown: (event: PointerEvent) => {
-				if (pointerId === undefined) {
-					pointerId = event.pointerId
-					use.element.setPointerCapture(pointerId)
-					recalc(event)
-				}
-			},
-			pointermove: [{}, (event: PointerEvent) => {
-				if (pointerId !== undefined)
-					recalc(event)
-			}],
-			pointerup: release,
-			pointercancel: release,
-		})
+		return coalesce(
+
+			// fix for ridiculous firefox bug
+			dom.events(document.body, {
+				click: [{capture: true}, (event: Event) => {
+					if (pointerId === undefined) return
+					event.preventDefault()
+					event.stopPropagation()
+				}],
+			}),
+
+			dom.events(use.element, {
+				pointerdown: (event: PointerEvent) => {
+					if (pointerId === undefined) {
+						pointerId = event.pointerId
+						use.element.setPointerCapture(pointerId)
+						recalc(event)
+					}
+				},
+				pointermove: [{}, (event: PointerEvent) => {
+					if (pointerId !== undefined)
+						recalc(event)
+				}],
+				pointerup: release,
+				pointercancel: release,
+			})
+		)
 	})
 
 	const vector = $vector.get()
