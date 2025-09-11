@@ -17,7 +17,7 @@ export const KeyboardDeviceView = view(use => (device: KeyboardDevice) => {
 		</header>
 		<div class="box row">
 			<div class=icon>⌨️</div>
-			<div class=text>wasd</div>
+			<div class=text>wasd [ ]</div>
 		</div>
 	`
 })

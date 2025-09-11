@@ -15,6 +15,7 @@ div {
 }
 
 .text {
+	font-size: 0.8em;
 	font-family: monospace;
 	opacity: 0.5;
 }
