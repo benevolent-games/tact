@@ -42,9 +42,9 @@ export default ssg.page(import.meta.url, async orb => ({
 		<section>
 			<h3>controls</h3>
 			<ul>
-				<li>keyboard controls, wasd, left-bracket, right-bracket.</li>
-				<li>gamepad controls, thumbsticks, hold beta/gamma and press bumpers or dpad left/right.</li>
-				<li>virtual controls, use your mouse to press the little buttons.</li>
+				<li><strong>keyboard</strong> wasd, left-bracket, right-bracket.</li>
+				<li><strong>gamepad</strong> thumbsticks, hold beta/gamma and press bumpers or dpad left/right.</li>
+				<li><strong>virtual</strong> use your mouse to press the little buttons.</li>
 			</ul>
 		</section>
 	`,

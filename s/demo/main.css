@@ -68,14 +68,17 @@
 			max-width: 42em;
 		}
 
-		header {
+		> header {
 			padding: 0 2em;
 			h1 small { font-size: 0.6em; font-weight: normal; }
 			* + * { margin-top: 0.5em; }
 		}
 
-		ul {
-			padding-left: 1em;
+		> section {
+			padding: 0 2em;
+			ul {
+				padding-left: 1em;
+			}
 		}
 	}
 }
