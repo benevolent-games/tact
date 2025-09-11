@@ -7,8 +7,10 @@ import {styles} from "./styles.css.js"
 import {Game} from "../../game/game.js"
 import {GamepadDeviceView} from "../devices/gamepad/view.js"
 import {VirtualDeviceView} from "../devices/virtual/view.js"
-import {KeyboardDeviceView} from "../devices/keyboard/view.js"
-import {Device, GamepadDevice, KeyboardDevice, VirtualDevice} from "../../game/parts/devices.js"
+import {CompositeDeviceView} from "../devices/composite/view.js"
+import {Controller} from "../../../core/controllers/controller.js"
+import {CompositeDevice, VirtualDevice} from "../../game/parts/devices.js"
+import {GamepadController} from "../../../core/controllers/standard/gamepad.js"
 
 export const Theater = view(use => (game: Game) => {
 	use.css(styles)
@@ -17,12 +19,12 @@ export const Theater = view(use => (game: Game) => {
 
 	const addVirtual = () => game.plug(new VirtualDevice(game.deck.hub))
 
-	function renderDevice(device: Device) {
-		if (device instanceof KeyboardDevice)
-			return KeyboardDeviceView(device)
+	function renderDevice(device: Controller) {
+		if (device instanceof CompositeDevice)
+			return CompositeDeviceView(device)
 		else if (device instanceof VirtualDevice)
 			return VirtualDeviceView(game.deck.hub, device)
-		else if (device instanceof GamepadDevice)
+		else if (device instanceof GamepadController)
 			return GamepadDeviceView(device)
 	}
 
@@ -39,7 +41,7 @@ export const Theater = view(use => (game: Game) => {
 					<header>port ${index + 1}</header>
 
 					${repeat(
-						player.port.controllers.array() as Device[],
+						player.port.controllers.array() as Controller[],
 						d => d.id,
 						renderDevice,
 					)}

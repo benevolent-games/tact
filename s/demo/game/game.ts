@@ -5,10 +5,11 @@ import {State} from "./parts/state.js"
 import {Players} from "./parts/player.js"
 import {Renderer} from "./parts/renderer.js"
 import {Deck} from "../../core/deck/deck.js"
-import {gamepads} from "../../utils/gamepads.js"
+import {Controller} from "../../core/controllers/controller.js"
 import {gameBindings, GameDeck} from "./parts/game-bindings.js"
+import {CompositeDevice, VirtualDevice} from "./parts/devices.js"
+import {autoGamepads} from "../../core/controllers/auto-gamepads.js"
 import {localStorageKv} from "../../core/deck/parts/local-storage-kv.js"
-import {Device, GamepadDevice, KeyboardDevice, VirtualDevice} from "./parts/devices.js"
 
 export class Game {
 	static async load() {
@@ -37,7 +38,7 @@ export class Game {
 		)
 
 		// plug in initial devices
-		this.plug(new KeyboardDevice())
+		this.plug(new CompositeDevice())
 		this.plug(new VirtualDevice(deck.hub))
 
 		// on hub update, set agent.alive based on port status
@@ -50,16 +51,16 @@ export class Game {
 
 		// dynamically plug in detected gamepads
 		this.dispose.schedule(
-			gamepads(pad => this.plug(new GamepadDevice(pad)))
+			autoGamepads(deck.hub.plug)
 		)
 	}
 
-	plug(device: Device) {
+	plug(device: Controller) {
 		this.deck.hub.plug(device)
 		return () => this.unplug(device)
 	}
 
-	unplug(device: Device) {
+	unplug(device: Controller) {
 		this.deck.hub.unplug(device)
 	}
 

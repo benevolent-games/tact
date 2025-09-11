@@ -1,10 +1,10 @@
 
-import { Scalar, Vec2 } from "@benev/math"
+import {Vec2} from "@benev/math"
 import {Pad} from "../../../utils/gamepads.js"
 import {tmax} from "../../../utils/quick-math.js"
-import {splitAxis, splitVector} from "../../../utils/split-axis.js"
 import {SamplerController} from "../infra/sampler.js"
-import { circularClamp } from "../../../utils/circular-clamp.js"
+import {splitVector} from "../../../utils/split-axis.js"
+import {circularClamp} from "../../../utils/circular-clamp.js"
 
 const gamepadButtonCodes = [
 	"gamepad.a",

@@ -1,8 +1,8 @@
 
 import {ev} from "@e280/stz"
 import {Vec2} from "@benev/math"
-import {splitAxis} from "../../../utils/split-axis.js"
 import {SamplerController} from "../infra/sampler.js"
+import {splitAxis} from "../../../utils/split-axis.js"
 
 export class PointerController extends SamplerController {
 	client = new Vec2(0, 0)
