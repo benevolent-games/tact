@@ -31,13 +31,22 @@ export default ssg.page(import.meta.url, async orb => ({
 				<p><em>"from keypress to couch co-op"</em></p>
 				<p>
 					tact is a user input toolkit for the web. it's good at customizable keybindings, and multiple gamepad support.
-					tact is on <a href="https://github.com/benevolent-games/tact">github</a>.
-					tact is by <a href="https://benevolent.games/">benevolent.games</a>.
+					see <a href="https://github.com/benevolent-games/tact">github</a>,
+					see <a href="https://benevolent.games/">benevolent.games</a>.
 				</p>
 			</div>
 		</header>
 
 		<tact-demo></tact-demo>
+
+		<section>
+			<h3>controls</h3>
+			<ul>
+				<li>keyboard controls, wasd, left-bracket, right-bracket.</li>
+				<li>gamepad controls, thumbsticks, hold beta/gamma and press bumpers or dpad left/right.</li>
+				<li>virtual controls, use your mouse to press the little buttons.</li>
+			</ul>
+		</section>
 	`,
 }))
 

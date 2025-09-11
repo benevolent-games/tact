@@ -5,9 +5,10 @@ import {repeat} from "lit/directives/repeat.js"
 
 import {styles} from "./styles.css.js"
 import {Game} from "../../game/game.js"
+import {GamepadDeviceView} from "../devices/gamepad/view.js"
 import {VirtualDeviceView} from "../devices/virtual/view.js"
 import {KeyboardDeviceView} from "../devices/keyboard/view.js"
-import {Device, KeyboardDevice, VirtualDevice} from "../../game/parts/devices.js"
+import {Device, GamepadDevice, KeyboardDevice, VirtualDevice} from "../../game/parts/devices.js"
 
 export const Theater = view(use => (game: Game) => {
 	use.css(styles)
@@ -21,6 +22,8 @@ export const Theater = view(use => (game: Game) => {
 			return KeyboardDeviceView(device)
 		else if (device instanceof VirtualDevice)
 			return VirtualDeviceView(game.deck.hub, device)
+		else if (device instanceof GamepadDevice)
+			return GamepadDeviceView(device)
 	}
 
 	return html`
@@ -33,7 +36,8 @@ export const Theater = view(use => (game: Game) => {
 					?data-active="${player.port.controllers.size > 0}"
 					style="--color: ${player.agent.color};">
 
-					<header>p${index + 1}</header>
+					<header>port ${index + 1}</header>
+
 					${repeat(
 						player.port.controllers.array() as Device[],
 						d => d.id,

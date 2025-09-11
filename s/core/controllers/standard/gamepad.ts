@@ -1,8 +1,10 @@
 
+import { Scalar, Vec2 } from "@benev/math"
 import {Pad} from "../../../utils/gamepads.js"
 import {tmax} from "../../../utils/quick-math.js"
-import {splitAxis} from "../../../utils/split-axis.js"
+import {splitAxis, splitVector} from "../../../utils/split-axis.js"
 import {SamplerController} from "../infra/sampler.js"
+import { circularClamp } from "../../../utils/circular-clamp.js"
 
 const gamepadButtonCodes = [
 	"gamepad.a",
@@ -25,6 +27,8 @@ const gamepadButtonCodes = [
 ]
 
 export class GamepadController extends SamplerController {
+	range = new Vec2(0.2, 0.9)
+
 	constructor(public pad: Pad) {
 		super()
 	}
@@ -57,21 +61,25 @@ export class GamepadController extends SamplerController {
 	}
 
 	#pollSticks(gamepad: Gamepad) {
-		const [leftY, leftX, rightY, rightX] = gamepad.axes
+		const [leftX, leftY, rightX, rightY] = gamepad.axes
 
-		const [leftUp, leftDown] = splitAxis(leftX)
-		const [leftLeft, leftRight] = splitAxis(leftY)
-		this.setSample("gamepad.stick.left.up", leftUp)
-		this.setSample("gamepad.stick.left.down", leftDown)
-		this.setSample("gamepad.stick.left.left", leftLeft)
-		this.setSample("gamepad.stick.left.right", leftRight)
+		const stickLeft = splitVector(
+			circularClamp(new Vec2(leftX, leftY), this.range)
+		)
 
-		const [rightUp, rightDown] = splitAxis(rightX)
-		const [rightLeft, rightRight] = splitAxis(rightY)
-		this.setSample("gamepad.stick.right.up", rightUp)
-		this.setSample("gamepad.stick.right.down", rightDown)
-		this.setSample("gamepad.stick.right.left", rightLeft)
-		this.setSample("gamepad.stick.right.right", rightRight)
+		const stickRight = splitVector(
+			circularClamp(new Vec2(rightX, rightY), this.range)
+		)
+
+		this.setSample("gamepad.stick.left.up", stickLeft.up)
+		this.setSample("gamepad.stick.left.down", stickLeft.down)
+		this.setSample("gamepad.stick.left.left", stickLeft.left)
+		this.setSample("gamepad.stick.left.right", stickLeft.right)
+
+		this.setSample("gamepad.stick.right.up", stickRight.up)
+		this.setSample("gamepad.stick.right.down", stickRight.down)
+		this.setSample("gamepad.stick.right.left", stickRight.left)
+		this.setSample("gamepad.stick.right.right", stickRight.right)
 	}
 }
 

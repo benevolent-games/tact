@@ -1,19 +1,13 @@
 
 import {Vec2} from "@benev/math"
 import {derived, signal} from "@e280/strata"
-import {splitAxis} from "../../utils/split-axis.js"
+import {splitVector} from "../../utils/split-axis.js"
 import {Sample} from "../../core/controllers/types.js"
 import {Controller} from "../../core/controllers/controller.js"
 
 export class SchtickController extends Controller {
 	$vector = signal(Vec2.zero())
-
-	$breakdown = derived(() => {
-		const {x, y} = this.$vector.get()
-		const [down, up] = splitAxis(y)
-		const [left, right] = splitAxis(x)
-		return {up, down, left, right}
-	})
+	$breakdown = derived(() => splitVector(this.$vector.get()))
 
 	constructor(public channel = "stick") {
 		super()

@@ -5,9 +5,10 @@ import {State} from "./parts/state.js"
 import {Players} from "./parts/player.js"
 import {Renderer} from "./parts/renderer.js"
 import {Deck} from "../../core/deck/deck.js"
+import {gamepads} from "../../utils/gamepads.js"
 import {gameBindings, GameDeck} from "./parts/game-bindings.js"
 import {localStorageKv} from "../../core/deck/parts/local-storage-kv.js"
-import {Device, KeyboardDevice, VirtualDevice} from "./parts/devices.js"
+import {Device, GamepadDevice, KeyboardDevice, VirtualDevice} from "./parts/devices.js"
 
 export class Game {
 	static async load() {
@@ -29,26 +30,37 @@ export class Game {
 		for (const port of this.deck.hub.ports)
 			port.modes.adds("gameplay")
 
+		// establish game logic
 		this.logic = new Logic(
 			this.state,
 			new Players(deck.hub, this.state),
 		)
 
+		// plug in initial devices
 		this.plug(new KeyboardDevice())
 		this.plug(new VirtualDevice(deck.hub))
 
+		// on hub update, set agent.alive based on port status
 		this.dispose.schedule(
 			this.deck.hub.on(() => {
 				for (const player of this.logic.players)
 					player.agent.alive = player.port.controllers.size > 0
 			})
 		)
+
+		// dynamically plug in detected gamepads
+		this.dispose.schedule(
+			gamepads(pad => this.plug(new GamepadDevice(pad)))
+		)
 	}
 
 	plug(device: Device) {
-		const port = this.deck.hub.getLonelyPort()
 		this.deck.hub.plug(device)
-		return this.logic.players.require(port)
+		return () => this.unplug(device)
+	}
+
+	unplug(device: Device) {
+		this.deck.hub.unplug(device)
 	}
 
 	loop(hz: number) {

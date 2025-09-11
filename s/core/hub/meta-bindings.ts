@@ -5,13 +5,13 @@ export const makeMetaBindings = (): MetaBindings => ({
 	[metaMode]: {
 		shimmyNext: ["or",
 			"BracketRight",
-			["and", "gamepad.gamma", "gamepad.right"],
-			["and", "gamepad.gamma", "gamepad.bumper.right"],
+			["and", ["or", "gamepad.beta", "gamepad.gamma"], "gamepad.right"],
+			["and", ["or", "gamepad.beta", "gamepad.gamma"], "gamepad.bumper.right"],
 		],
 		shimmyPrevious: ["or",
 			"BracketLeft",
-			["and", "gamepad.gamma", "gamepad.left"],
-			["and", "gamepad.gamma", "gamepad.bumper.left"],
+			["and", ["or", "gamepad.beta", "gamepad.gamma"], "gamepad.left"],
+			["and", ["or", "gamepad.beta", "gamepad.gamma"], "gamepad.bumper.left"],
 		],
 	},
 })

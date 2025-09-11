@@ -1,9 +1,11 @@
 
 import {Hex} from "@e280/stz"
 import {Hub} from "../../../core/hub/hub.js"
+import {Pad} from "../../../utils/gamepads.js"
 import {SchtickController} from "../../../nubs/schtick/controller.js"
 import {GroupController} from "../../../core/controllers/infra/group.js"
 import {PointerController} from "../../../core/controllers/standard/pointer.js"
+import {GamepadController} from "../../../core/controllers/standard/gamepad.js"
 import {KeyboardController} from "../../../core/controllers/standard/keyboard.js"
 
 export class Device extends GroupController {
@@ -30,5 +32,15 @@ export class VirtualDevice extends Device {
 
 	shimmyNext = () => this.hub.shimmy(this, 1)
 	shimmyPrevious = () => this.hub.shimmy(this, -1)
+}
+
+export class GamepadDevice extends Device {
+	gamepad: GamepadController
+
+	constructor(public pad: Pad) {
+		const gamepad = new GamepadController(pad)
+		super(gamepad)
+		this.gamepad = gamepad
+	}
 }
 

@@ -3,20 +3,20 @@ import {html} from "lit"
 import {view} from "@e280/sly"
 import {Thumbprint} from "@e280/stz"
 import {deviceCss} from "../device.css.js"
-import {KeyboardDevice} from "../../../game/parts/devices.js"
+import {GamepadDevice} from "../../../game/parts/devices.js"
 
-export const KeyboardDeviceView = view(use => (device: KeyboardDevice) => {
+export const GamepadDeviceView = view(use => (device: GamepadDevice) => {
 	use.styles(deviceCss)
-	use.attrs.string.device = "keyboard"
+	use.attrs.string.device = "gamepad"
 
 	return html`
 		<header>
-			<h1>Keyboard</h1>
+			<h1>Gamepad</h1>
 			<h2>${Thumbprint.sigil.fromHex(device.id)}</h2>
 		</header>
 
 		<div class="box row">
-			<div class=icon>⌨️</div>
+			<div class=icon>🎮</div>
 		</div>
 	`
 })

@@ -24,11 +24,6 @@ header {
 	}
 }
 
-.box {
-	padding: 0.2em;
-	min-height: 3rem;
-}
-
 .row {
 	display: flex;
 	align-items: center;
@@ -42,6 +37,30 @@ header {
 	justify-content: center;
 }
 
+.box {
+	gap: 0.5em;
+	padding: 0.2em;
+	min-height: 3rem;
+}
+
+[view="nub-stick"] {
+	width: 2em;
+}
+
+button {
+	font-size: 0.8em;
+	margin: 0.1em;
+}
+
+.icon {
+	font-size: 2.5em;
+}
+
+.text {
+	font-size: 0.8em;
+	font-family: monospace;
+	opacity: 0.5;
+}
 
 `
 

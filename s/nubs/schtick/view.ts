@@ -1,17 +1,18 @@
 
 import {html} from "lit"
-import {Scalar} from "@benev/math"
 import {dom, view} from "@e280/sly"
 import {coalesce, nap} from "@e280/stz"
+import {Scalar, Vec2} from "@benev/math"
 
 import {style} from "./style.js"
 import {SchtickController} from "./controller.js"
+import {circularClamp} from "../../utils/circular-clamp.js"
 
 export const Schtick = view(use => ({$vector}: SchtickController) => {
 	use.name("nub-stick")
 	use.css(style)
-	const outerThreshold = 0.2
-	const innerThreshold = 0.2
+
+	const range = new Vec2(0.2, 0.2)
 
 	use.mount(() => {
 		let pointerId: number | undefined
@@ -19,14 +20,9 @@ export const Schtick = view(use => ({$vector}: SchtickController) => {
 		function recalc(event: PointerEvent) {
 			const rect = use.element.getBoundingClientRect()
 			const vector = $vector.get()
-
 			vector.x = Scalar.remap(event.clientX, rect.left, rect.right, -1, 1)
-			vector.y = Scalar.remap(event.clientY, rect.top, rect.bottom, 1, -1)
-
-			const distance = vector.distance_(0, 0)
-			const acceptableDistance = Scalar.remap(distance, innerThreshold, 1 - outerThreshold, 0, 1, true)
-			vector.normalize().multiplyBy(acceptableDistance)
-
+			vector.y = Scalar.remap(event.clientY, rect.top, rect.bottom, -1, 1)
+			vector.set(circularClamp(vector, range))
 			$vector.publish()
 		}
 
@@ -74,13 +70,13 @@ export const Schtick = view(use => ({$vector}: SchtickController) => {
 	})
 
 	const vector = $vector.get()
-	const innerstyle = `width: ${innerThreshold * 100}%;`
-	const outerstyle = `width: ${100 - (outerThreshold * 100)}%;`
+	const innerstyle = `width: ${range.x * 100}%;`
+	const outerstyle = `width: ${100 - (range.y * 100)}%;`
 
 	const framestyle = (factor: number) => {
 		const f = factor * 0.5
 		const x = f * vector.x * 100
-		const y = f * vector.y * -100
+		const y = f * vector.y * 100
 		return `
 			transform-origin: center center;
 			transform: translate(${x}%, ${y}%);

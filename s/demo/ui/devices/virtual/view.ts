@@ -2,14 +2,13 @@
 import {html} from "lit"
 import {view} from "@e280/sly"
 import {Thumbprint} from "@e280/stz"
-import {styleCss} from "./style.css.js"
 import {deviceCss} from "../device.css.js"
 import {Hub} from "../../../../core/hub/hub.js"
 import {Schtick} from "../../../../nubs/schtick/view.js"
 import {VirtualDevice} from "../../../game/parts/devices.js"
 
 export const VirtualDeviceView = view(use => (hub: Hub<any>, device: VirtualDevice) => {
-	use.styles(deviceCss, styleCss)
+	use.styles(deviceCss)
 	use.attrs.string.device = "virtual"
 
 	const unplug = () => hub.unplug(device)
