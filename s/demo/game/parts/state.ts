@@ -8,20 +8,20 @@ export class State {
 	agents = new Set<Agent>()
 
 	#colors = new Dispenser(() => [
-		"#fa0",
 		"#0fa",
-		"#a0f",
-		"#af0",
 		"#0af",
+		"#a0f",
+		"#fa0",
+		"#af0",
 		"#f0a",
 	])
 
 	makeAgent(label: string) {
 		const agent = new Agent()
 		agent.label = label
-		agent.color = this.#colors.takeRandom()
+		agent.color = this.#colors.takeFirst()!
 		agent.position
-			.set_(Math.random(), Math.random())
+			.set_(0.5, 0.5)
 			.multiply(this.arenaSize)
 		this.agents.add(agent)
 		return agent

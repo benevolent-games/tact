@@ -37,10 +37,15 @@ export class Renderer {
 	render() {
 		const {state} = this
 		this.#renderBackground()
-		for (const agent of state.agents) {
-			if (agent.alive) this.#renderAgentAlive(agent)
-			else this.#renderAgentDead(agent)
-		}
+		const agents = [...state.agents].reverse()
+		const dead = agents.filter(a => !a.alive)
+		const alive = agents.filter(a => a.alive)
+
+		for (const agent of dead)
+			this.#renderDeadAgent(agent)
+
+		for (const agent of alive)
+			this.#renderAliveAgent(agent)
 	}
 
 	#getCleanCtx() {
@@ -62,7 +67,7 @@ export class Renderer {
 		ctx.fillRect(0, 0, canvas.width, canvas.height)
 	}
 
-	#renderAgentDead(agent: Agent) {
+	#renderDeadAgent(agent: Agent) {
 		const ctx = this.#getCleanCtx()
 
 		const radius = this.percent(10)
@@ -77,7 +82,7 @@ export class Renderer {
 		ctx.fillText(agent.label, x, y)
 	}
 
-	#renderAgentAlive(agent: Agent) {
+	#renderAliveAgent(agent: Agent) {
 		const ctx = this.#getCleanCtx()
 
 		const radius = this.percent(10)
