@@ -5,6 +5,7 @@ import {repeat} from "lit/directives/repeat.js"
 
 import {styles} from "./styles.css.js"
 import {Game} from "../../game/game.js"
+import {demoDeviceIcons} from "../devices/icons.js"
 import {Device} from "../../../core/devices/device.js"
 import {GamepadDeviceView} from "../devices/gamepad.js"
 import {VirtualDeviceView} from "../devices/virtual.js"
@@ -12,6 +13,7 @@ import {PrimaryDeviceView} from "../devices/primary.js"
 import {VirtualDevice} from "../../game/parts/virtual-device.js"
 import {GamepadDevice} from "../../../core/devices/standard/gamepad.js"
 import {PrimaryDevice} from "../../../core/devices/standard/primary.js"
+import {TactPorts} from "../../../ui/components/tact-ports/component.js"
 
 export const Theater = view(use => (game: Game) => {
 	use.css(styles)
@@ -30,7 +32,14 @@ export const Theater = view(use => (game: Game) => {
 	}
 
 	return html`
-		${game.renderer.canvas}
+		<div class=surface>
+			${game.renderer.canvas}
+			${TactPorts.view({
+				hub: game.deck.hub,
+				icons: demoDeviceIcons(),
+				autohide: {stickyTime: 2000},
+			})}
+		</div>
 
 		<div class=ports>
 			${[...game.logic.players].map((player, index) => html`
