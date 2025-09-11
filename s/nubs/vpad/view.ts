@@ -1,6 +1,6 @@
 
 import {html} from "lit"
-import {view} from "@e280/sly"
+import {BaseElement, view} from "@e280/sly"
 import {ev, MapG} from "@e280/stz"
 
 import stylesCss from "./styles.css.js"
@@ -11,7 +11,7 @@ import {touchTracking} from "./utils/touch-tracking.js"
 import {VpadDevice} from "../../core/devices/standard/vpad.js"
 import {preventDefaultTouchShenanigans} from "./utils/prevent-default-touch-shenanigans.js"
 
-export const NubVpad = view(use => (device: VpadDevice) => {
+const NubVpadView = view(use => (device: VpadDevice) => {
 	use.name("nub-vpad")
 	use.css(stylesCss)
 
@@ -121,7 +121,7 @@ export const NubVpad = view(use => (device: VpadDevice) => {
 			<div class="left side">
 				${renderLeftShoulder()}
 				${renderDPad()}
-				${NubStick
+				${NubStick.view
 					.props(device.stickLeft)
 					.attr("class", "stick")
 					.render()}
@@ -130,7 +130,7 @@ export const NubVpad = view(use => (device: VpadDevice) => {
 			<div class="right side">
 				${renderRightShoulder()}
 				${renderButtonPad()}
-				${NubStick
+				${NubStick.view
 					.props(device.stickRight)
 					.attr("class", "stick")
 					.render()}
@@ -138,4 +138,12 @@ export const NubVpad = view(use => (device: VpadDevice) => {
 		</div>
 	`
 })
+
+export class NubVpad extends (
+	NubVpadView
+		.component(class extends BaseElement {
+			readonly device = new VpadDevice()
+		})
+		.props(el => [el.device])
+) {}
 

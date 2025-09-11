@@ -1,32 +1,45 @@
 
-import {html} from "lit"
-import {view} from "@e280/sly"
-
+import {dom, view} from "@e280/sly"
 import {styles} from "./styles.js"
-import {lookpad_listeners} from "./utils/listeners.js"
 
-export const NubLookpad = view(use => () => {
+const NubLookpadView = view(use => () => {
 	use.name("nub-lookpad")
 	use.styles(styles)
 
-	const pad = use.life(() => {
-		const pad = document.createElement("div")
-		pad.className = "pad"
+	const $captured = use.signal<number | undefined>(undefined)
 
-		const listeners = lookpad_listeners({
-			getPointerCaptureElement: () => pad,
-			onPointerDrag: () => {},
-		})
+	use.mount(() => dom.events(use.element, {
+		pointerdown: (event: PointerEvent) => {
+			event.preventDefault()
+			if ($captured.value)
+				use.element.releasePointerCapture($captured.value)
 
-		for (const [event, {handleEvent, options}] of Object.entries(listeners))
-			pad.addEventListener(event as any, handleEvent, options)
+			use.element.setPointerCapture(event.pointerId)
+			$captured.value = event.pointerId
+			// onPointerDrag(event)
+		},
 
-		return [pad, () => {
-			for (const [event, {handleEvent}] of Object.entries(listeners))
-				pad.removeEventListener(event as any, handleEvent)
-		}]
-	})
+		pointermove: [{passive: false}, (event: PointerEvent) => {
+			event.preventDefault()
+			if (event.pointerId === $captured.value) {
+				// onPointerDrag(event)
+			}
+		}],
 
-	return html`${pad}`
+		pointerup: (event: PointerEvent) => {
+			event.preventDefault()
+			if (event.pointerId === $captured.value) {
+				use.element.releasePointerCapture($captured.value)
+				$captured.value = undefined
+				// onPointerDrag(event)
+			}
+		},
+	}))
 })
+
+export class NubLookpad extends (
+	NubLookpadView
+		.component()
+		.props(() => [])
+) {}
 

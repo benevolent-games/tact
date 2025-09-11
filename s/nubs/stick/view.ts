@@ -1,22 +1,21 @@
 
 import {html} from "lit"
-import {dom, view} from "@e280/sly"
 import {coalesce, nap} from "@e280/stz"
 import {Scalar, Vec2} from "@benev/math"
+import {BaseElement, dom, view} from "@e280/sly"
 
 import {style} from "./style.js"
-import {StickDevice} from "../../core/devices/standard/stick.js"
 import {circularClamp} from "../../utils/circular-clamp.js"
+import {StickDevice} from "../../core/devices/standard/stick.js"
 
-export const NubStick = view(use => ({$vector}: StickDevice) => {
+const NubStickView = view(use => ({$vector}: StickDevice) => {
 	use.name("nub-stick")
 	use.css(style)
 
-	const range = new Vec2(0.2, 0.8)
+	const range = use.once(() => new Vec2(0.2, 0.8))
+	const $captured = use.signal<number | undefined>(undefined)
 
 	use.mount(() => {
-		let pointerId: number | undefined
-
 		function recalc(event: PointerEvent) {
 			const rect = use.element.getBoundingClientRect()
 			const vector = $vector.get()
@@ -27,16 +26,16 @@ export const NubStick = view(use => ({$vector}: StickDevice) => {
 		}
 
 		function release() {
-			if (pointerId === undefined) return
+			if ($captured.value === undefined) return
 			$vector.get().set_(0, 0)
 			$vector.publish()
 
 			// fix for ridiculous firefox bug,
 			// where our captured pointerup was clicking outside buttons
 			nap(0).then(() => {
-				if (pointerId === undefined) return
-				use.element.releasePointerCapture(pointerId)
-				pointerId = undefined
+				if ($captured.value === undefined) return
+				use.element.releasePointerCapture($captured.value)
+				$captured.value = undefined
 			})
 		}
 
@@ -45,7 +44,7 @@ export const NubStick = view(use => ({$vector}: StickDevice) => {
 			// fix for ridiculous firefox bug
 			dom.events(document.body, {
 				click: [{capture: true}, (event: Event) => {
-					if (pointerId === undefined) return
+					if ($captured.value === undefined) return
 					event.preventDefault()
 					event.stopPropagation()
 				}],
@@ -53,14 +52,14 @@ export const NubStick = view(use => ({$vector}: StickDevice) => {
 
 			dom.events(use.element, {
 				pointerdown: (event: PointerEvent) => {
-					if (pointerId === undefined) {
-						pointerId = event.pointerId
-						use.element.setPointerCapture(pointerId)
+					if ($captured.value === undefined) {
+						$captured.value = event.pointerId
+						use.element.setPointerCapture($captured.value)
 						recalc(event)
 					}
 				},
 				pointermove: [{}, (event: PointerEvent) => {
-					if (pointerId !== undefined)
+					if ($captured.value !== undefined)
 						recalc(event)
 				}],
 				pointerup: release,
@@ -105,4 +104,12 @@ export const NubStick = view(use => ({$vector}: StickDevice) => {
  		</div>
 	`
 })
+
+export class NubStick extends (
+	NubStickView
+		.component(class extends BaseElement {
+			readonly device = new StickDevice()
+		})
+		.props(el => [el.device])
+) {}
 

@@ -19,7 +19,7 @@ export const VirtualDeviceView = view(use => (hub: Hub<any>, device: VirtualDevi
 			<h2>${Thumbprint.sigil.fromHex(device.id)}</h2>
 		</header>
 		<div class="box row">
-			${NubStick(device)}
+			${NubStick.view(device)}
 			<div class=row>
 				<button @click="${device.shimmyPrevious}">👈</button>
 				<button @click="${unplug}">💀</button>
