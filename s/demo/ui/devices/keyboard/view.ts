@@ -16,7 +16,8 @@ export const KeyboardDeviceView = view(use => (device: KeyboardDevice) => {
 			<h2>${Thumbprint.sigil.fromHex(device.id)}</h2>
 		</header>
 		<div class="box row">
-			⌨️
+			<div class=icon>⌨️</div>
+			<div class=text>wasd</div>
 		</div>
 	`
 })
