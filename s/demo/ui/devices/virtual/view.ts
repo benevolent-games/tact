@@ -4,7 +4,7 @@ import {view} from "@e280/sly"
 import {Thumbprint} from "@e280/stz"
 import {deviceCss} from "../device.css.js"
 import {Hub} from "../../../../core/hub/hub.js"
-import {Schtick} from "../../../../nubs/schtick/view.js"
+import {NubStick} from "../../../../nubs/stick/view.js"
 import {VirtualDevice} from "../../../game/parts/devices.js"
 
 export const VirtualDeviceView = view(use => (hub: Hub<any>, device: VirtualDevice) => {
@@ -19,7 +19,7 @@ export const VirtualDeviceView = view(use => (hub: Hub<any>, device: VirtualDevi
 			<h2>${Thumbprint.sigil.fromHex(device.id)}</h2>
 		</header>
 		<div class="box row">
-			${Schtick(device)}
+			${NubStick(device)}
 			<div class=row>
 				<button @click="${device.shimmyPrevious}">👈</button>
 				<button @click="${unplug}">💀</button>

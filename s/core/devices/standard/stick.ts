@@ -1,12 +1,13 @@
 
 import {Vec2} from "@benev/math"
-import {signal} from "@e280/strata"
+import {derived, signal} from "@e280/strata"
 import {Sample} from "../types.js"
 import {Device} from "../device.js"
-import {splitAxis} from "../../../utils/split-axis.js"
+import {splitVector} from "../../../utils/split-axis.js"
 
 export class StickDevice extends Device {
-	vector = signal(Vec2.zero())
+	$vector = signal(Vec2.zero())
+	$breakdown = derived(() => splitVector(this.$vector.get()))
 
 	constructor(public channel = "stick") {
 		super()
@@ -14,20 +15,13 @@ export class StickDevice extends Device {
 
 	takeSamples() {
 		const {channel} = this
-		const {up, down, left, right} = this.breakdown()
+		const {up, down, left, right} = this.$breakdown.get()
 		return [
 			[`${channel}.up`, up],
 			[`${channel}.down`, down],
 			[`${channel}.left`, left],
 			[`${channel}.right`, right],
 		] as Sample[]
-	}
-
-	breakdown() {
-		const {x, y} = this.vector.get()
-		const [down, up] = splitAxis(y)
-		const [left, right] = splitAxis(x)
-		return {up, down, left, right}
 	}
 }
 

@@ -11,8 +11,8 @@ import {touchTracking} from "./utils/touch-tracking.js"
 import {VpadDevice} from "../../core/devices/standard/vpad.js"
 import {preventDefaultTouchShenanigans} from "./utils/prevent-default-touch-shenanigans.js"
 
-export const VirtualGamepad = view(use => (device: VpadDevice) => {
-	use.name("virtual-gamepad")
+export const NubVpad = view(use => (device: VpadDevice) => {
+	use.name("nub-vpad")
 	use.css(stylesCss)
 
 	const buttons = use.once(() => new Set<HTMLButtonElement>())
@@ -121,17 +121,19 @@ export const VirtualGamepad = view(use => (device: VpadDevice) => {
 			<div class="left side">
 				${renderLeftShoulder()}
 				${renderDPad()}
-				${NubStick.props(device.stickLeft)
+				${NubStick
+					.props(device.stickLeft)
 					.attr("class", "stick")
-					.render}
+					.render()}
 			</div>
 
 			<div class="right side">
 				${renderRightShoulder()}
 				${renderButtonPad()}
-				${NubStick.props(device.stickRight)
+				${NubStick
+					.props(device.stickRight)
 					.attr("class", "stick")
-					.render}
+					.render()}
 			</div>
 		</div>
 	`
