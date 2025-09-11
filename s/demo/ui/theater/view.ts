@@ -5,12 +5,13 @@ import {repeat} from "lit/directives/repeat.js"
 
 import {styles} from "./styles.css.js"
 import {Game} from "../../game/game.js"
+import {Device} from "../../../core/devices/device.js"
+import {VirtualDevice} from "../../game/parts/virtual-device.js"
 import {GamepadDeviceView} from "../devices/gamepad/view.js"
 import {VirtualDeviceView} from "../devices/virtual/view.js"
-import {CompositeDeviceView} from "../devices/composite/view.js"
-import {Device} from "../../../core/devices/device.js"
-import {CompositeDevice, VirtualDevice} from "../../game/parts/devices.js"
+import {PrimaryDeviceView} from "../devices/primary/view.js"
 import {GamepadDevice} from "../../../core/devices/standard/gamepad.js"
+import {PrimaryDevice} from "../../../core/devices/standard/primary.js"
 
 export const Theater = view(use => (game: Game) => {
 	use.css(styles)
@@ -20,8 +21,8 @@ export const Theater = view(use => (game: Game) => {
 	const addVirtual = () => game.plug(new VirtualDevice(game.deck.hub))
 
 	function renderDevice(device: Device) {
-		if (device instanceof CompositeDevice)
-			return CompositeDeviceView(device)
+		if (device instanceof PrimaryDevice)
+			return PrimaryDeviceView(device)
 		else if (device instanceof VirtualDevice)
 			return VirtualDeviceView(game.deck.hub, device)
 		else if (device instanceof GamepadDevice)

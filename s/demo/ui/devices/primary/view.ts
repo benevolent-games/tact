@@ -3,9 +3,9 @@ import {html} from "lit"
 import {view} from "@e280/sly"
 import {Thumbprint} from "@e280/stz"
 import {deviceCss} from "../device.css.js"
-import {CompositeDevice} from "../../../game/parts/devices.js"
+import {PrimaryDevice} from "../../../../core/devices/standard/primary.js"
 
-export const CompositeDeviceView = view(use => (device: CompositeDevice) => {
+export const PrimaryDeviceView = view(use => (device: PrimaryDevice) => {
 	use.styles(deviceCss)
 	use.attrs.string.device = "keyboard"
 
