@@ -305,7 +305,7 @@ a port represents a single playable port, and you poll it each frame to resolve 
     port.devices
       .add(new tact.KeyboardDevice())
       .add(new tact.PointerDevice())
-      .add(new tact.VirtualGamepadDevice())
+      .add(new tact.VpadDevice())
     ```
     - you can add/delete devices from the set any time
 - **don't forget to enable modes!**
@@ -388,7 +388,7 @@ the hub embraces that analogy, helping you coordinate the plugging and unpluggin
       new tact.GroupDevice(
         new tact.KeyboardDevice(),
         new tact.PointerDevice(),
-        new tact.VirtualGamepadDevice(),
+        new tact.VpadDevice(),
       )
     )
     ```
