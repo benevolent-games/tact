@@ -7,9 +7,9 @@ import {BindingsDepot} from "./parts/bindings-depot.js"
 
 export class Deck<B extends Bindings> {
 	static async load<B extends Bindings>(options: {
-			portCount: number
 			kv: Kv
 			bindings: B
+			portCount: number
 		}) {
 		const bindingsDepot = new BindingsDepot<B>(options.portCount, options.kv, options.bindings)
 		const bindingsList = await bindingsDepot.loadAll()
