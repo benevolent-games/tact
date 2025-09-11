@@ -5,10 +5,10 @@ import {State} from "./parts/state.js"
 import {Players} from "./parts/player.js"
 import {Renderer} from "./parts/renderer.js"
 import {Deck} from "../../core/deck/deck.js"
-import {Controller} from "../../core/controllers/controller.js"
+import {Device} from "../../core/devices/device.js"
 import {gameBindings, GameDeck} from "./parts/game-bindings.js"
+import {autoGamepads} from "../../core/devices/auto-gamepads.js"
 import {CompositeDevice, VirtualDevice} from "./parts/devices.js"
-import {autoGamepads} from "../../core/controllers/auto-gamepads.js"
 import {localStorageKv} from "../../core/deck/parts/local-storage-kv.js"
 
 export class Game {
@@ -45,7 +45,7 @@ export class Game {
 		this.dispose.schedule(
 			this.deck.hub.on(() => {
 				for (const player of this.logic.players)
-					player.agent.alive = player.port.controllers.size > 0
+					player.agent.alive = player.port.devices.size > 0
 			})
 		)
 
@@ -55,12 +55,12 @@ export class Game {
 		)
 	}
 
-	plug(device: Controller) {
+	plug(device: Device) {
 		this.deck.hub.plug(device)
 		return () => this.unplug(device)
 	}
 
-	unplug(device: Controller) {
+	unplug(device: Device) {
 		this.deck.hub.unplug(device)
 	}
 

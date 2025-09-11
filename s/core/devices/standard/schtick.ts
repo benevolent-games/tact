@@ -1,11 +1,11 @@
 
 import {Vec2} from "@benev/math"
 import {derived, signal} from "@e280/strata"
-import {splitVector} from "../../utils/split-axis.js"
-import {Sample} from "../../core/controllers/types.js"
-import {Controller} from "../../core/controllers/controller.js"
+import {Sample} from "../types.js"
+import {Device} from "../device.js"
+import {splitVector} from "../../../utils/split-axis.js"
 
-export class SchtickController extends Controller {
+export class SchtickDevice extends Device {
 	$vector = signal(Vec2.zero())
 	$breakdown = derived(() => splitVector(this.$vector.get()))
 

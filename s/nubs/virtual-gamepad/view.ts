@@ -8,10 +8,10 @@ import stylesCss from "./styles.css.js"
 import {NubStick} from "../stick/view.js"
 import {GamepadInputs} from "./utils/gamepad-inputs.js"
 import {touchTracking} from "./utils/touch-tracking.js"
-import {VirtualGamepadController} from "../../core/controllers/standard/virtual-gamepad.js"
+import {VpadDevice} from "../../core/devices/standard/vpad.js"
 import {preventDefaultTouchShenanigans} from "./utils/prevent-default-touch-shenanigans.js"
 
-export const VirtualGamepad = view(use => (controller: VirtualGamepadController) => {
+export const VirtualGamepad = view(use => (device: VpadDevice) => {
 	use.name("virtual-gamepad")
 	use.css(stylesCss)
 
@@ -38,11 +38,11 @@ export const VirtualGamepad = view(use => (controller: VirtualGamepadController)
 		buttons,
 		touchdown: button => {
 			const code = codes.require(button)
-			controller.setSample(code, 1)
+			device.setSample(code, 1)
 		},
 		touchup: button => {
 			const code = codes.require(button)
-			controller.setSample(code, 0)
+			device.setSample(code, 0)
 		},
 	}))
 
@@ -121,7 +121,7 @@ export const VirtualGamepad = view(use => (controller: VirtualGamepadController)
 			<div class="left side">
 				${renderLeftShoulder()}
 				${renderDPad()}
-				${NubStick.props(controller.stickLeft)
+				${NubStick.props(device.stickLeft)
 					.attr("class", "stick")
 					.render}
 			</div>
@@ -129,7 +129,7 @@ export const VirtualGamepad = view(use => (controller: VirtualGamepadController)
 			<div class="right side">
 				${renderRightShoulder()}
 				${renderButtonPad()}
-				${NubStick.props(controller.stickRight)
+				${NubStick.props(device.stickRight)
 					.attr("class", "stick")
 					.render}
 			</div>

@@ -8,9 +8,9 @@ import {Game} from "../../game/game.js"
 import {GamepadDeviceView} from "../devices/gamepad/view.js"
 import {VirtualDeviceView} from "../devices/virtual/view.js"
 import {CompositeDeviceView} from "../devices/composite/view.js"
-import {Controller} from "../../../core/controllers/controller.js"
+import {Device} from "../../../core/devices/device.js"
 import {CompositeDevice, VirtualDevice} from "../../game/parts/devices.js"
-import {GamepadController} from "../../../core/controllers/standard/gamepad.js"
+import {GamepadDevice} from "../../../core/devices/standard/gamepad.js"
 
 export const Theater = view(use => (game: Game) => {
 	use.css(styles)
@@ -19,12 +19,12 @@ export const Theater = view(use => (game: Game) => {
 
 	const addVirtual = () => game.plug(new VirtualDevice(game.deck.hub))
 
-	function renderDevice(device: Controller) {
+	function renderDevice(device: Device) {
 		if (device instanceof CompositeDevice)
 			return CompositeDeviceView(device)
 		else if (device instanceof VirtualDevice)
 			return VirtualDeviceView(game.deck.hub, device)
-		else if (device instanceof GamepadController)
+		else if (device instanceof GamepadDevice)
 			return GamepadDeviceView(device)
 	}
 
@@ -35,13 +35,13 @@ export const Theater = view(use => (game: Game) => {
 			${[...game.logic.players].map((player, index) => html`
 				<div
 					class=port
-					?data-active="${player.port.controllers.size > 0}"
+					?data-active="${player.port.devices.size > 0}"
 					style="--color: ${player.agent.color};">
 
 					<header>port ${index + 1}</header>
 
 					${repeat(
-						player.port.controllers.array() as Controller[],
+						player.port.devices.array() as Device[],
 						d => d.id,
 						renderDevice,
 					)}

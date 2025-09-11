@@ -2,10 +2,10 @@
 import {Vec2} from "@benev/math"
 import {signal} from "@e280/strata"
 import {Sample} from "../types.js"
-import {Controller} from "../controller.js"
+import {Device} from "../device.js"
 import {splitAxis} from "../../../utils/split-axis.js"
 
-export class StickController extends Controller {
+export class StickDevice extends Device {
 	vector = signal(Vec2.zero())
 
 	constructor(public channel = "stick") {

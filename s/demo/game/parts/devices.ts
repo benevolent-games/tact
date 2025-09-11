@@ -1,20 +1,20 @@
 
 import {Hub} from "../../../core/hub/hub.js"
-import {SchtickController} from "../../../nubs/schtick/controller.js"
-import {GroupController} from "../../../core/controllers/infra/group.js"
-import {PointerController} from "../../../core/controllers/standard/pointer.js"
-import {KeyboardController} from "../../../core/controllers/standard/keyboard.js"
+import {SchtickDevice} from "../../../core/devices/standard/schtick.js"
+import {GroupDevice} from "../../../core/devices/infra/group.js"
+import {PointerDevice} from "../../../core/devices/standard/pointer.js"
+import {KeyboardDevice} from "../../../core/devices/standard/keyboard.js"
 
-export class CompositeDevice extends GroupController {
+export class CompositeDevice extends GroupDevice {
 	constructor() {
 		super(
-			new KeyboardController(),
-			new PointerController(),
+			new KeyboardDevice(),
+			new PointerDevice(),
 		)
 	}
 }
 
-export class VirtualDevice extends SchtickController {
+export class VirtualDevice extends SchtickDevice {
 	constructor(private hub: Hub<any>) {
 		super()
 	}

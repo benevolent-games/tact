@@ -1,6 +1,6 @@
 
 import {MapG} from "@e280/stz"
-import {Sample} from "../controllers/types.js"
+import {Sample} from "../devices/types.js"
 
 export class SampleMap extends MapG<string, number> {
 	static combine(...maps: SampleMap[]) {

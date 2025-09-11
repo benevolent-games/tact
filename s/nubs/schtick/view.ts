@@ -5,10 +5,10 @@ import {coalesce, nap} from "@e280/stz"
 import {Scalar, Vec2} from "@benev/math"
 
 import {style} from "./style.js"
-import {SchtickController} from "./controller.js"
+import {SchtickDevice} from "../../core/devices/standard/schtick.js"
 import {circularClamp} from "../../utils/circular-clamp.js"
 
-export const Schtick = view(use => ({$vector}: SchtickController) => {
+export const Schtick = view(use => ({$vector}: SchtickDevice) => {
 	use.name("nub-stick")
 	use.css(style)
 

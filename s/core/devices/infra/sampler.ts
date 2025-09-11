@@ -1,10 +1,10 @@
 
 import {sub} from "@e280/stz"
 import {Sample} from "../types.js"
-import {Controller} from "../controller.js"
+import {Device} from "../device.js"
 import {SampleMap} from "../../bindings/sample-map.js"
 
-export class SamplerController extends Controller {
+export class SamplerDevice extends Device {
 	on = sub<Sample>()
 	#map = new SampleMap()
 

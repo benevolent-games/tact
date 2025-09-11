@@ -2,7 +2,7 @@
 import {Vec2} from "@benev/math"
 import {Pad} from "../../../utils/gamepads.js"
 import {tmax} from "../../../utils/quick-math.js"
-import {SamplerController} from "../infra/sampler.js"
+import {SamplerDevice} from "../infra/sampler.js"
 import {splitVector} from "../../../utils/split-axis.js"
 import {circularClamp} from "../../../utils/circular-clamp.js"
 
@@ -26,7 +26,7 @@ const gamepadButtonCodes = [
 	"gamepad.gamma",
 ]
 
-export class GamepadController extends SamplerController {
+export class GamepadDevice extends SamplerDevice {
 	range = new Vec2(0.2, 0.9)
 
 	constructor(public pad: Pad) {
