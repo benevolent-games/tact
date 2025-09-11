@@ -21,6 +21,7 @@ ${cssReset}
 
 	background: #0008;
 	border-radius: 100%;
+	outline: 1px solid color-mix(in srgb, transparent, var(--nub-color) 10%);
 }
 
 :host * {
@@ -47,23 +48,24 @@ ${cssReset}
 	}
 }
 
-.frame.inner > div {
+.inner {
 	outline: 1px solid color-mix(in srgb, transparent, var(--nub-color) 10%);
 }
 
-.frame.outer > div {
+.outer {
 	outline: 1px solid color-mix(in srgb, transparent, var(--nub-color) 10%);
 }
 
-.frame.stickbase > div {
+.stickbase {
+	display: none;
 	background: color-mix(in srgb, transparent, var(--nub-color) 25%);
 }
 
-.frame.stickunder > div {
+.stickunder {
 	background: color-mix(in srgb, transparent, var(--nub-color) 50%);
 }
 
-.frame.stick > div {
+.stick {
 	background: #fff8;
 }
 

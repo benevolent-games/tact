@@ -61,8 +61,8 @@ canvas {
 		}
 
 		&:not([data-active]) {
-			color: #ccc;
-			> * { background: #5554; }
+			color: #ccc6;
+			> * { background: #5552; }
 		}
 	}
 }

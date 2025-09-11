@@ -48,7 +48,9 @@ export const Theater = view(use => (game: Game) => {
 		</div>
 
 		<div>
-			<button @click="${addVirtual}">✨</button>
+			<button @click="${addVirtual}">
+				✨ add virtual
+			</button>
 		</div>
 	`
 })

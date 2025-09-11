@@ -12,7 +12,7 @@ export const Schtick = view(use => ({$vector}: SchtickController) => {
 	use.name("nub-stick")
 	use.css(style)
 
-	const range = new Vec2(0.2, 0.2)
+	const range = new Vec2(0.2, 0.8)
 
 	use.mount(() => {
 		let pointerId: number | undefined
@@ -71,7 +71,7 @@ export const Schtick = view(use => ({$vector}: SchtickController) => {
 
 	const vector = $vector.get()
 	const innerstyle = `width: ${range.x * 100}%;`
-	const outerstyle = `width: ${100 - (range.y * 100)}%;`
+	const outerstyle = `width: ${range.y * 100}%;`
 
 	const framestyle = (factor: number) => {
 		const f = factor * 0.5
@@ -84,24 +84,24 @@ export const Schtick = view(use => ({$vector}: SchtickController) => {
 	}
 
 	return html`
- 		<div class="frame inner">
- 			<div style="${innerstyle}"></div>
+ 		<div class=frame>
+ 			<div class=inner style="${innerstyle}"></div>
  		</div>
 
- 		<div class="frame outer">
- 			<div style="${outerstyle}"></div>
+ 		<div class=frame>
+ 			<div class=outer style="${outerstyle}"></div>
  		</div>
 
- 		<div class="frame stickbase">
- 			<div></div>
+ 		<div class=frame>
+ 			<div class=stickbase></div>
  		</div>
 
- 		<div class="frame stickunder" style="${framestyle(0.5)}">
- 			<div></div>
+ 		<div class=frame style="${framestyle(0.5)}">
+ 			<div class=stickunder></div>
  		</div>
 
- 		<div class="frame stick" style="${framestyle(1.0)}">
- 			<div></div>
+ 		<div class=frame style="${framestyle(1.0)}">
+ 			<div class=stick></div>
  		</div>
 	`
 })
