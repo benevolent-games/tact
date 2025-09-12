@@ -88,12 +88,12 @@ export class Hub<B extends Bindings> {
 
 	/** returns an unplugged port (otherwise the last one) */
 	getLonelyPort() {
+		let smallest = this.ports.at(0)!
 		for (const port of this.ports) {
-			if (port.devices.size === 0)
-				return port
+			if (port.devices.size < smallest.devices.size)
+				smallest = port
 		}
-		const index = Math.max(0, this.ports.length - 1)
-		return this.portByIndex(index)
+		return smallest
 	}
 
 	#dispatchChange = debounce(0, () => this.on.publish())
