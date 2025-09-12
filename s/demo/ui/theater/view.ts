@@ -14,6 +14,7 @@ export const Theater = view(use => (game: Game) => {
 	use.mount(() => game.deck.hub.on(use.render))
 
 	const addVirtual = () => game.plug(new VirtualDevice(game.deck.hub))
+	const revealOverlay = () => game.deck.overlayVisibility.bump()
 
 	const virtualDevices = game.deck.hub.ports
 		.flatMap(port => port.devices.array())
@@ -40,7 +41,11 @@ export const Theater = view(use => (game: Game) => {
 			)}
 
 			<button @click="${addVirtual}">
-				✨ add virtual
+				✨
+			</button>
+
+			<button @click="${revealOverlay}">
+				👁️
 			</button>
 		</div>
 	`
