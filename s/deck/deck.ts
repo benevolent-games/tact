@@ -8,10 +8,10 @@ import {Port} from "../core/hub/port.js"
 import {MetaBindings} from "../core/hub/types.js"
 import {Bindings} from "../core/bindings/types.js"
 import {mergeBindings} from "./parts/merge-bindings.js"
+import {DeckOverlay} from "./views/deck-overlay/component.js"
 import {makeMetaBindings} from "../core/hub/meta-bindings.js"
 import {DeviceSkins} from "./parts/device-skins/device-skin.js"
 import {OverlayVisibility} from "./parts/overlay-visibility.js"
-import { DeckOverlay } from "./views/deck-overlay/component.js"
 
 export class Deck<B extends Bindings> {
 	static async load<B extends Bindings>(options: {
@@ -38,8 +38,8 @@ export class Deck<B extends Bindings> {
 		return new this(hub, db)
 	}
 
-	overlayVisibility: OverlayVisibility
 	deviceSkins = new DeviceSkins()
+	overlayVisibility: OverlayVisibility
 
 	views = ob({DeckOverlay}).map(fn => fn(this))
 	components = ob(this.views).map(v => v.component().props(_c => []))
