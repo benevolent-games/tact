@@ -5,7 +5,7 @@ import {repeat} from "lit/directives/repeat.js"
 
 import {styles} from "./styles.css.js"
 import {Game} from "../../game/game.js"
-import {VirtualDeviceView} from "../devices/virtual.js"
+import {VirtualDeviceView} from "./virtual/view.js"
 import {VirtualDevice} from "../../game/parts/virtual-device.js"
 import {TactPorts} from "../../../ui/components/tact-ports/component.js"
 

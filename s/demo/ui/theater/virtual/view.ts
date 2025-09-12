@@ -2,10 +2,10 @@
 import {html} from "lit"
 import {cssReset, view} from "@e280/sly"
 import styleCss from "./style.css.js"
-import {Hub} from "../../../core/hub/hub.js"
-import {NubStick} from "../../../nubs/stick/view.js"
-import {VirtualDevice} from "../../game/parts/virtual-device.js"
-import {DeviceSkin} from "../../../ui/commons/device-skins/device-skin.js"
+import {Hub} from "../../../../core/hub/hub.js"
+import {NubStick} from "../../../../nubs/stick/view.js"
+import {VirtualDevice} from "../../../game/parts/virtual-device.js"
+import {DeviceSkin} from "../../../../ui/commons/device-skins/device-skin.js"
 
 export const VirtualDeviceView = view(use => (
 		hub: Hub<any>,
