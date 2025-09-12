@@ -1,4 +1,17 @@
 
+
+> [!CAUTION]
+> ### 🚨🚨 TACT IS UNDER DEVELOPMENT!! 🚨🚨
+> *everything is half-broken right now.. just gimmie a minute to finish coding this, will ya?*
+
+<br></br>
+
+---
+
+---
+
+<br></br>
+
 # 🎮 @benev/tact
 > *web game input library, from keypress to couch co-op*
 
@@ -9,26 +22,21 @@ npm install @benev/tact
 tact is a toolkit for handling user inputs on the web.  
 it's good at user-customizable keybindings, multiple gamepad support, and mobile ui.  
 
-- 🛹 **[#deck](#deck)** full setup with localstorate persistence
+- 🛹 **[#deck](#deck)** full setup with localstorage persistence
 - 🎮 **[#devices](#devices)** produce user input samples
 - 🧩 **[#bindings](#bindings)** describe how actions interpret samples
 - 🔌 **[#port](#port)** updates actions by interpreting samples
 - 🛞 **[#hub](#hub)** plugs devices into ports (multi-gamepad couch co-op!)
 - 📱 **[#nubs](#nubs)** is mobile ui virtual gamepad stuff
 
-> [!CAUTION]
-> ### 🚨🚨 TACT IS UNDER DEVELOPMENT!! 🚨🚨
-> *everything is half-broken right now.. just gimmie a minute to finish coding this, will ya?*
-
-
 
 <br/><br/>
 <a id="deck"></a>
 
 ## 🍋 tact deck
-> *the full setup*
+> *full setup with ui, batteries included*
 
-the deck is the heart of tact, tying all the pieces together and putting a bow on it for you.
+the deck ties together all the important pieces of tact into a single user experience, complete with ui components.
 
 ### 🛹 deck setup
 - **import stuff from tact**
@@ -58,28 +66,17 @@ the deck is the heart of tact, tying all the pieces together and putting a bow o
 ### 🛹 plug devices into the hub
 - **plug a keyboard/mouse player into the hub**
     ```ts
-    deck.hub.plug(
-      new tact.GroupDevice(
-        new tact.KeyboardDevice(),
-        new tact.PointerDevice(),
-        new tact.VpadDevice(),
-      )
-    )
+    deck.hub.plug(new tact.PrimaryDevice())
     ```
-- **auto connect/disconnect gamepads as they come and go**
+- **automatically detect and plug gamepads**
     ```ts
     tact.autoGamepads(deck.hub.plug)
     ```
 
 ### 🛹 do your gameplay
-- **start with what modes you want enabled in your game**
+- **poll the deck, interrogate actions**
     ```ts
-    for (const port of deck.hub.ports)
-      port.modes.adds("walking", "gunning")
-    ```
-- **poll the deck, interrogate actions for your gameplay**
-    ```ts
-    onEachTickInYourGame(() => {
+    myGameLoop(() => {
 
       // do your polling
       const [p1, p2, p3, p4] = deck.hub.poll()
@@ -90,6 +87,16 @@ the deck is the heart of tact, tying all the pieces together and putting a bow o
       // check how hard the second player is pulling that trigger
       p2.gunning.shoot.value // 0.123
     })
+    ```
+
+### 🛹 deck ui: the overlay
+- **register the deck's web components to the dom**
+    ```ts
+    deck.registerComponents()
+    ```
+- **place the ui on top of your game canvas**
+    ```html
+    <deck-overlay></deck-overlay>
     ```
 
 
@@ -103,8 +110,7 @@ the deck is the heart of tact, tying all the pieces together and putting a bow o
 ### 🎮 polling is good, actually
 - tact operates on the basis of *polling*
 - *"but polling is bad"* says you — but no — you're wrong — polling is unironically *based,* and you *should* do it
-- in a game, we want to be processing our inputs *every frame*
-- the gift of polling is total control over *when* inputs are processed
+- the gift of polling is total control over *when* inputs are processed, this is good for games
 - i will elaborate no further 🗿
 
 ### 🎮 basically how a device works
@@ -112,13 +118,10 @@ the deck is the heart of tact, tying all the pieces together and putting a bow o
     ```ts
     const keyboard = new tact.KeyboardDevice()
     ```
-- take samples each frame
+- reading samples looks like this
     ```ts
-    const samples = keyboard.takeSamples()
-      // [
-      //   ["KeyA", 1],
-      //   ["Space", 0]
-      // ]
+    for (const sample of keyboard.samples())
+      console.log(sample) // ["KeyA", 1]
     ```
 - some devices have disposers to call when you're done with them
     ```ts
@@ -126,7 +129,7 @@ the deck is the heart of tact, tying all the pieces together and putting a bow o
     ```
 
 ### 🎮 samples explained
-- a sample is a raw input of type `[code: string, value: number]`
+- a sample is a raw input tuple of type `[code: string, value: number]`
 - a sample has a `code` string
   - it's either a [standard keycode](https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_code_values), like `KeyA`
   - or it's something we made up, like `pointer.button.left` or `gamepad.trigger.right`

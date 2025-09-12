@@ -8,7 +8,7 @@ import {Connected} from "./parts/connected.js"
 import {MetaBindings, metaMode} from "./types.js"
 import {makeMetaBindings} from "./meta-bindings.js"
 
-export class Hub<B extends Bindings, MB extends MetaBindings = MetaBindings> {
+export class Hub<B extends Bindings, MB extends MetaBindings = any> {
 
 	/** event fires whenever a device changes ports. */
 	readonly on = sub()

@@ -12,10 +12,10 @@ export class GroupDevice extends Device {
 		this.devices.adds(...devices)
 	}
 
-	;*getSamples() {
+	;*samples() {
 		this.#sampleMap.zero()
 		for (const device of this.devices) {
-			for (const sample of device.getSamples())
+			for (const sample of device.samples())
 				this.#sampleMap.mergeSample(sample)
 		}
 		yield* this.#sampleMap.entries()

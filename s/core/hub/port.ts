@@ -19,7 +19,7 @@ export class Port<B extends Bindings> extends Resolver<B> {
 	}
 
 	resolve(now = Date.now()) {
-		const sampleMap = new SampleMap(this.#group.getSamples())
+		const sampleMap = new SampleMap(this.#group.samples())
 		return super.resolve(now, this.modes, sampleMap)
 	}
 }

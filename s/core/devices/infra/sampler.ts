@@ -14,7 +14,7 @@ export class SamplerDevice extends Device {
 		return this
 	}
 
-	;*getSamples() {
+	;*samples() {
 		for (const sample of this.sampleMap)
 			yield sample as Sample
 	}

@@ -2,10 +2,11 @@
 import {Sample} from "./types.js"
 
 export abstract class Device {
-	abstract getSamples(): Iterable<Sample>
+	abstract samples(): Iterable<Sample>
 
-	;[Symbol.iterator]() {
-		return this.getSamples()
+	;*[Symbol.iterator]() {
+		for (const sample of this.samples())
+			yield sample
 	}
 }
 

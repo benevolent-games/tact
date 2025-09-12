@@ -36,10 +36,10 @@ export class GamepadDevice extends SamplerDevice {
 		return this.pad.gamepad
 	}
 
-	getSamples() {
+	samples() {
 		this.#pollButtons(this.pad.gamepad)
 		this.#pollSticks(this.pad.gamepad)
-		return super.getSamples()
+		return super.samples()
 	}
 
 	#pollButtons(gamepad: Gamepad) {

@@ -13,7 +13,7 @@ export class StickDevice extends Device {
 		super()
 	}
 
-	getSamples() {
+	samples() {
 		const {channel} = this
 		const {up, down, left, right} = this.$breakdown.get()
 		return [

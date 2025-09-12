@@ -8,19 +8,23 @@ import {Port} from "../core/hub/port.js"
 import {Bindings} from "../core/bindings/types.js"
 import {mergeBindings} from "./parts/merge-bindings.js"
 import {MetaBindings, metaMode} from "../core/hub/types.js"
+import {autoGamepads} from "../core/devices/auto-gamepads.js"
 import {DeckOverlay} from "./views/deck-overlay/component.js"
 import {makeMetaBindings} from "../core/hub/meta-bindings.js"
 import {DeviceSkins} from "./parts/device-skins/device-skin.js"
 import {OverlayVisibility} from "./parts/overlay-visibility.js"
+import {PrimaryDevice} from "../core/devices/standard/primary.js"
+import { dom } from "@e280/sly"
 
-export class Deck<B extends Bindings> {
-	static async load<B extends Bindings>(options: {
-			kv: Kv
-			bindings: B
-			portCount: number
-			metaBindings?: MetaBindings
-		}) {
+export type DeckOptions<B extends Bindings, MB extends MetaBindings = any> = {
+	kv: Kv
+	bindings: B
+	portCount: number
+	metaBindings?: MB
+}
 
+export class Deck<B extends Bindings, MB extends MetaBindings = any> {
+	static async load<B extends Bindings, MB extends MetaBindings = any>(options: DeckOptions<B, MB>) {
 		const db = await Db.load(options.kv.store("catalog"))
 
 		const ports = range(options.portCount)
@@ -41,17 +45,23 @@ export class Deck<B extends Bindings> {
 	dispose = disposer()
 	deviceSkins = new DeviceSkins()
 	overlayVisibility: OverlayVisibility
+	primaryDevice = new PrimaryDevice()
 
 	views = ob({DeckOverlay}).map(fn => fn(this))
 	components = ob(this.views).map(v => v.component().props(_c => []))
 
+	registerComponents() {
+		dom.register(this.components)
+	}
+
 	constructor(
-			public hub: Hub<B>,
+			public hub: Hub<B, MB>,
 			public db: Db,
 		) {
 
 		this.overlayVisibility = new OverlayVisibility(hub, this.deviceSkins)
 
+		// meta reveal overlay
 		this.dispose.schedule(
 			hub.metaPort.actions[metaMode].revealOverlay.on(action => {
 				if (action.pressed)

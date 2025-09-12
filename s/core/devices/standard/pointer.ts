@@ -64,9 +64,9 @@ export class PointerDevice extends SamplerDevice {
 		return movements
 	}
 
-	getSamples() {
+	samples() {
 		this.#specialPreProcessing()
-		return super.getSamples()
+		return super.samples()
 	}
 
 	#specialPreProcessing() {

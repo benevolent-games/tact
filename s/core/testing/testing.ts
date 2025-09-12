@@ -37,7 +37,7 @@ export function testSetupAlpha() {
 	const resolve = () => resolver.resolve(
 		time.now,
 		modes as any,
-		new SampleMap(device.getSamples())
+		new SampleMap(device.samples())
 	)
 	return {device, resolver, resolve, time}
 }
