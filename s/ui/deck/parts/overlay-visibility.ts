@@ -2,20 +2,20 @@
 import {signal} from "@e280/strata"
 import {debounce, disposer} from "@e280/stz"
 import {Hub} from "../../../core/hub/hub.js"
-import {DeviceSkins} from "../../commons/device-skins/device-skin.js"
+import {DeviceSkins} from "./device-skins/device-skin.js"
 
-export class PortsControl {
+export class OverlayVisibility {
 	autohide = true
 	dispose = disposer()
 	#created = Date.now()
 	#$auto = signal(false)
 
-	/** manual override for whether the prots view should be visible */
-	readonly $active = signal(false)
+	/** manual override for whether the ports view should be visible */
+	readonly $manual = signal(false)
 
 	/** derived signal about whether the ports view should be visible */
-	readonly $show = signal.derived(() => (
-		this.$active() || (this.autohide && this.#$auto())
+	readonly $visible = signal.derived(() => (
+		this.$manual() || (this.autohide && this.#$auto())
 	))
 
 	constructor(
@@ -38,8 +38,8 @@ export class PortsControl {
 		await this.#autoOff()
 	}
 
-	async toggle(active = !this.$active()) {
-		return this.$active.set(active)
+	async toggle(active = !this.$manual()) {
+		return this.$manual.set(active)
 	}
 }
 

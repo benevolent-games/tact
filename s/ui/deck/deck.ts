@@ -5,9 +5,11 @@ import {range} from "@e280/stz"
 import {Db} from "./parts/db.js"
 import {Hub} from "../../core/hub/hub.js"
 import {Port} from "../../core/hub/port.js"
+import {OverlayVisibility} from "./parts/overlay-visibility.js"
 import {MetaBindings} from "../../core/hub/types.js"
 import {Bindings} from "../../core/bindings/types.js"
 import {mergeBindings} from "./parts/merge-bindings.js"
+import {DeviceSkins} from "./parts/device-skins/device-skin.js"
 import {makeMetaBindings} from "../../core/hub/meta-bindings.js"
 
 export class Deck<B extends Bindings> {
@@ -35,10 +37,15 @@ export class Deck<B extends Bindings> {
 		return new this(hub, db)
 	}
 
+	overlayVisibility: OverlayVisibility
+	deviceSkins = new DeviceSkins()
+
 	constructor(
-		public hub: Hub<B>,
-		public db: Db,
-	) {}
+			public hub: Hub<B>,
+			public db: Db,
+		) {
+		this.overlayVisibility = new OverlayVisibility(hub, this.deviceSkins)
+	}
 
 	get catalog() {
 		return this.db.$catalog()

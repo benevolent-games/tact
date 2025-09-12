@@ -19,13 +19,13 @@ export const Theater = view(use => (game: Game) => {
 	const virtualDevices = game.deck.hub.ports
 		.flatMap(port => port.devices.array())
 		.filter(device => device instanceof VirtualDevice)
-		.map(device => ({device, skin: game.deviceSkins.get(device)}))
+		.map(device => ({device, skin: game.deck.deviceSkins.get(device)}))
 		.sort((a, b) => a.skin.label < b.skin.label ? -1 : 1)
 
 	return html`
 		<div class=surface>
 			${game.renderer.canvas}
-			${TactPorts.view(game.portsControl)}
+			${TactPorts.view(game.deck)}
 		</div>
 
 		<div class=dlist>
