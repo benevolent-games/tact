@@ -5,30 +5,28 @@ import styleCss from "./style.css.js"
 import {Hub} from "../../../core/hub/hub.js"
 import {autohiding} from "./parts/auto-hiding.js"
 import {Device} from "../../../core/devices/device.js"
-import {prepDeviceSkins} from "./parts/device-skin.js"
-import {DeviceIcons, standardDeviceIcons} from "./parts/device-icons.js"
+import {DeviceSkins} from "../../commons/device-skins/device-skin.js"
 
 export type TactPortsOptions = {
 	hub: Hub<any>
 	autohide?: {stickyTime: number}
-	icons?: DeviceIcons
+	deviceSkins?: DeviceSkins
 }
 
 export class TactPorts extends (view(use => ({
 		hub,
 		autohide,
-		icons = standardDeviceIcons(),
+		deviceSkins = new DeviceSkins(),
 	}: TactPortsOptions) => {
 
 	use.css(cssReset, styleCss)
 	use.attrs.string.tact = "ports"
-	const getDeviceSkin = use.once(prepDeviceSkins(icons))
 
 	const $active = use.signal(false)
 	use.mount(autohiding(autohide, hub, $active))
 
 	function renderDevice(device: Device) {
-		const skin = getDeviceSkin(device)
+		const skin = deviceSkins.get(device)
 		const style = `--color: ${skin.color};`
 		const next = () => hub.shimmy(device, 1)
 		const previous = () => hub.shimmy(device, -1)

@@ -5,14 +5,8 @@ import {repeat} from "lit/directives/repeat.js"
 
 import {styles} from "./styles.css.js"
 import {Game} from "../../game/game.js"
-import {demoDeviceIcons} from "../devices/icons.js"
-import {Device} from "../../../core/devices/device.js"
-import {GamepadDeviceView} from "../devices/gamepad.js"
 import {VirtualDeviceView} from "../devices/virtual.js"
-import {PrimaryDeviceView} from "../devices/primary.js"
 import {VirtualDevice} from "../../game/parts/virtual-device.js"
-import {GamepadDevice} from "../../../core/devices/standard/gamepad.js"
-import {PrimaryDevice} from "../../../core/devices/standard/primary.js"
 import {TactPorts} from "../../../ui/components/tact-ports/component.js"
 
 export const Theater = view(use => (game: Game) => {
@@ -22,44 +16,35 @@ export const Theater = view(use => (game: Game) => {
 
 	const addVirtual = () => game.plug(new VirtualDevice(game.deck.hub))
 
-	function renderDevice(device: Device) {
-		if (device instanceof PrimaryDevice)
-			return PrimaryDeviceView(device)
-		else if (device instanceof VirtualDevice)
-			return VirtualDeviceView(game.deck.hub, device)
-		else if (device instanceof GamepadDevice)
-			return GamepadDeviceView(device)
-	}
+	const virtualDevices = game.deck.hub.ports
+		.flatMap(port => port.devices.array())
+		.filter(device => device instanceof VirtualDevice)
+		.map(device => ({device, skin: game.deviceSkins.get(device)}))
+		.sort((a, b) => a.skin.label < b.skin.label ? -1 : 1)
 
 	return html`
 		<div class=surface>
 			${game.renderer.canvas}
+
 			${TactPorts.view({
 				hub: game.deck.hub,
-				icons: demoDeviceIcons(),
 				autohide: {stickyTime: 2000},
+				deviceSkins: game.deviceSkins,
 			})}
 		</div>
 
-		<div class=ports>
-			${[...game.logic.players].map((player, index) => html`
-				<div
-					class=port
-					?data-active="${player.port.devices.size > 0}"
-					style="--color: ${player.agent.color};">
+		<div class=dlist>
+			${repeat(
+				virtualDevices,
+				d => d.skin.label,
+				({device, skin}) => {
+					return VirtualDeviceView
+						.props(game.deck.hub, device, skin)
+						.attr("style", `--color: ${skin.color};`)
+						.render()
+				},
+			)}
 
-					<header>port ${index + 1}</header>
-
-					${repeat(
-						player.port.devices.array() as Device[],
-						d => d.id,
-						renderDevice,
-					)}
-				</div>
-			`)}
-		</div>
-
-		<div>
 			<button @click="${addVirtual}">
 				✨ add virtual
 			</button>

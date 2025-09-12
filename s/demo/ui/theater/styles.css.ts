@@ -46,46 +46,12 @@ ${cssReset}
 	}
 }
 
-.ports {
+.dlist {
 	display: flex;
-	justify-content: center;
 	flex-wrap: wrap;
-
-	width: 100%;
-	gap: 0.4em;
-	padding: 0 1em;
-
-	header {
-		text-align: center;
-	}
-
-	.port {
-		flex: 1 1 0;
-		display: flex;
-		flex-direction: column;
-
-		gap: 0.4em;
-		padding: 0.4em;
-
-		color: var(--color);
-		border-radius: 0.5em;
-		background: #0004;
-
-		> * {
-			overflow: hidden;
-			background: color-mix(in lch, transparent, var(--color) 20%);
-			border-radius: 0.5em;
-			box-shadow: .1em .2em .5em #0007;
-			&[device] {
-				color: color-mix(in lch, white, var(--color) 50%);
-			}
-		}
-
-		&:not([data-active]) {
-			color: #ccc6;
-			> * { background: #5552; }
-		}
-	}
+	justify-content: center;
+	align-items: center;
+	gap: 0.5em;
 }
 
 `
