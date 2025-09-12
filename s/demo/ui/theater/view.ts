@@ -1,6 +1,6 @@
 
 import {html} from "lit"
-import {view} from "@e280/sly"
+import {cssReset, view} from "@e280/sly"
 import {repeat} from "lit/directives/repeat.js"
 
 import {styles} from "./styles.css.js"
@@ -10,7 +10,7 @@ import {VirtualDevice} from "../../game/parts/virtual-device.js"
 import {TactPorts} from "../../../ui/components/tact-ports/component.js"
 
 export const Theater = view(use => (game: Game) => {
-	use.css(styles)
+	use.css(cssReset, styles)
 	use.mount(() => game.loop(60))
 	use.mount(() => game.deck.hub.on(use.render))
 
@@ -25,12 +25,7 @@ export const Theater = view(use => (game: Game) => {
 	return html`
 		<div class=surface>
 			${game.renderer.canvas}
-
-			${TactPorts.view({
-				hub: game.deck.hub,
-				autohide: {stickyTime: 2000},
-				deviceSkins: game.deviceSkins,
-			})}
+			${TactPorts.view(game.portsControl)}
 		</div>
 
 		<div class=dlist>

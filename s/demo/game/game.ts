@@ -10,6 +10,7 @@ import {VirtualDevice} from "./parts/virtual-device.js"
 import {gameBindings, GameDeck} from "./parts/game-bindings.js"
 import {autoGamepads} from "../../core/devices/auto-gamepads.js"
 import {PrimaryDevice} from "../../core/devices/standard/primary.js"
+import {PortsControl} from "../../ui/components/tact-ports/control.js"
 import {DeviceSkins} from "../../ui/commons/device-skins/device-skin.js"
 import {localStorageKv} from "../../core/deck/parts/local-storage-kv.js"
 
@@ -23,12 +24,16 @@ export class Game {
 	}
 
 	logic: Logic
+	portsControl: PortsControl
 	dispose = disposer()
 	state = new State()
 	renderer = new Renderer(this.state)
+
 	deviceSkins = new DeviceSkins()
 
 	constructor(public deck: GameDeck) {
+		this.portsControl = new PortsControl(deck.hub, this.deviceSkins)
+		this.dispose.schedule(this.portsControl.dispose)
 
 		// add an icon for our demo virtual device
 		this.deviceSkins.icons.add(

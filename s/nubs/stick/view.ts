@@ -2,15 +2,15 @@
 import {html} from "lit"
 import {coalesce, nap} from "@e280/stz"
 import {Scalar, Vec2} from "@benev/math"
-import {BaseElement, dom, view} from "@e280/sly"
+import {BaseElement, cssReset, dom, view} from "@e280/sly"
 
-import {style} from "./style.js"
+import styleCss from "./style.css.js"
 import {circularClamp} from "../../utils/circular-clamp.js"
 import {StickDevice} from "../../core/devices/standard/stick.js"
 
 const NubStickView = view(use => ({$vector}: StickDevice) => {
 	use.name("nub-stick")
-	use.css(style)
+	use.css(cssReset, styleCss)
 
 	const range = use.once(() => new Vec2(0.2, 0.8))
 	const $captured = use.signal<number | undefined>(undefined)

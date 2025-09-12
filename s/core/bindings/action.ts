@@ -1,7 +1,11 @@
 
+import {sub} from "@e280/stz"
 import {isPressed} from "./parts/is-pressed.js"
 
 export class Action {
+	on = sub<[Action]>()
+	onDown = sub<[Action]>()
+
 	#value = 0
 	#previous = 0
 
@@ -12,6 +16,9 @@ export class Action {
 	set value(v: number) {
 		this.#previous = this.#value
 		this.#value = v
+
+		this.on.publish(this)
+		if (this.down) this.onDown.publish(this)
 	}
 
 	get previous() { return this.#previous }

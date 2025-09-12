@@ -1,9 +1,6 @@
 
 import {css} from "lit"
-import {cssReset} from "@e280/sly"
-
-export const style = css`
-${cssReset}
+export default css`
 
 :host {
 	--nub-size: 60%;
