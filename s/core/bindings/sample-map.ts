@@ -12,9 +12,9 @@ export class SampleMap extends MapG<string, number> {
 		return samples
 	}
 
-	constructor(samples?: Sample[]) {
+	constructor(samples?: Iterable<Sample>) {
 		super()
-		if (samples) this.mergeEntries(samples)
+		if (samples) this.setSamples(samples)
 	}
 
 	zero() {
@@ -22,8 +22,9 @@ export class SampleMap extends MapG<string, number> {
 		return this
 	}
 
-	setSamples(samples: Sample[]) {
-		for (const [code, value] of samples) this.set(code, value)
+	setSamples(samples: Iterable<Sample>) {
+		for (const [code, value] of samples)
+			this.set(code, value)
 	}
 
 	mergeSample([code, value]: Sample) {
@@ -32,7 +33,7 @@ export class SampleMap extends MapG<string, number> {
 		return this
 	}
 
-	mergeEntries(samples: Sample[]) {
+	mergeSamples(samples: Iterable<Sample>) {
 		for (const sample of samples) this.mergeSample(sample)
 		return this
 	}

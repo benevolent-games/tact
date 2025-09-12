@@ -5,7 +5,7 @@ import {SampleMap} from "../../bindings/sample-map.js"
 
 export class GroupDevice extends Device {
 	devices = new SetG<Device>()
-	sampleMap = new SampleMap()
+	#sampleMap = new SampleMap()
 
 	constructor(...devices: Device[]) {
 		super()
@@ -13,12 +13,12 @@ export class GroupDevice extends Device {
 	}
 
 	;*getSamples() {
-		this.sampleMap.zero()
+		this.#sampleMap.zero()
 		for (const device of this.devices) {
 			for (const sample of device.getSamples())
-				this.sampleMap.mergeSample(sample)
+				this.#sampleMap.mergeSample(sample)
 		}
-		yield* this.sampleMap.entries()
+		yield* this.#sampleMap.entries()
 	}
 }
 

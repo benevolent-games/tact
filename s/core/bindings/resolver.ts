@@ -1,5 +1,5 @@
 
-import {MapG, pub, obMap, SetG} from "@e280/stz"
+import {MapG, pub, obMap} from "@e280/stz"
 import {Action} from "./action.js"
 import {SampleMap} from "./sample-map.js"
 import {lensAlgo} from "./parts/lens-algo.js"
@@ -9,9 +9,9 @@ import {Actions, Atom, Bindings, CodeSettings, CodeState} from "./types.js"
 
 export class Resolver<B extends Bindings> {
 	readonly actions: Actions<B>
-	modes = new SetG<keyof B>()
+	#modes = new Set<keyof B>()
+	#sampleMap = new SampleMap()
 	#now = 0
-	#samples = new SampleMap()
 	#codeStates = new MapG<number, CodeState>()
 	#update = pub()
 
@@ -19,7 +19,7 @@ export class Resolver<B extends Bindings> {
 		this.actions = obMap(bindings, (bracket, mode) => obMap(bracket, atom => {
 			const action = new Action()
 			this.#update.subscribe(() => {
-				action.value = this.modes.has(mode)
+				action.value = this.#modes.has(mode)
 					? this.#resolveAtom()(atom)
 					: 0
 			})
@@ -27,9 +27,10 @@ export class Resolver<B extends Bindings> {
 		})) as Actions<B>
 	}
 
-	resolve(now: number, samples: SampleMap) {
+	resolve(now: number, modes: Set<keyof B>, sampleMap: SampleMap) {
 		this.#now = now
-		this.#samples = samples
+		this.#modes = modes
+		this.#sampleMap = sampleMap
 		this.#update()
 		return this.actions
 	}
@@ -39,7 +40,7 @@ export class Resolver<B extends Bindings> {
 			count,
 			() => defaultCodeState(["code", code, settings]),
 		)
-		const value = this.#samples.get(code) ?? 0
+		const value = this.#sampleMap.get(code) ?? 0
 		return lensAlgo(this.#now, state, value)
 	}
 

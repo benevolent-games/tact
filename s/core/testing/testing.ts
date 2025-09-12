@@ -33,10 +33,11 @@ export function testSetupAlpha() {
 	const time = new TestTime()
 	const device = new SamplerDevice()
 	const resolver = new Resolver(testBindings())
-	resolver.modes.add("basic")
+	const modes = new Set(Object.keys(resolver.bindings))
 	const resolve = () => resolver.resolve(
 		time.now,
-		new SampleMap([...device.getSamples()]),
+		modes as any,
+		new SampleMap(device.getSamples())
 	)
 	return {device, resolver, resolve, time}
 }

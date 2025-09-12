@@ -35,10 +35,6 @@ export class Game {
 			[VirtualDevice, "🔘"],
 		)
 
-		// initialize port modes
-		for (const port of this.deck.hub.ports)
-			port.modes.adds("gameplay")
-
 		// establish game logic
 		this.logic = new Logic(
 			this.state,

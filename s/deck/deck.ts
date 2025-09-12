@@ -5,7 +5,7 @@ import {disposer, ob, range} from "@e280/stz"
 import {Db} from "./parts/db.js"
 import {Hub} from "../core/hub/hub.js"
 import {Port} from "../core/hub/port.js"
-import {MetaBindings} from "../core/hub/types.js"
+import {MetaBindings, metaMode} from "../core/hub/types.js"
 import {Bindings} from "../core/bindings/types.js"
 import {mergeBindings} from "./parts/merge-bindings.js"
 import {DeckOverlay} from "./views/deck-overlay/component.js"
@@ -49,7 +49,15 @@ export class Deck<B extends Bindings> {
 			public hub: Hub<B>,
 			public db: Db,
 		) {
+
 		this.overlayVisibility = new OverlayVisibility(hub, this.deviceSkins)
+
+		this.dispose.schedule(
+			hub.metaPort.actions[metaMode].revealOverlay.on(action => {
+				if (action.pressed)
+					this.overlayVisibility.bump()
+			})
+		)
 	}
 
 	get catalog() {

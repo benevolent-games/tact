@@ -1,5 +1,6 @@
 
 import {Science, test, expect} from "@e280/science"
+import {metaMode} from "./hub/types.js"
 import {SamplerDevice} from "./devices/infra/sampler.js"
 import {testPlug, testSetupAlpha, testSetupBravo} from "./testing/testing.js"
 
@@ -31,6 +32,15 @@ export default Science.suite({
 			const [p1, p2] = hub.poll(time.now)
 			expect(p1.basic.jump.value).is(1)
 			expect(p2.basic.jump.value).is(0)
+		}),
+
+		"reveal overlay works": test(async() => {
+			const {hub, time} = testSetupBravo()
+			const d1 = testPlug(hub, new SamplerDevice())
+			d1.setSample("Backslash", 1)
+			hub.poll(time.now)
+			expect(hub.metaPort.actions[metaMode].revealOverlay.value)
+				.is(1)
 		}),
 
 		"two devices playing on separate ports": test(async() => {
