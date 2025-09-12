@@ -45,17 +45,22 @@ export class Game {
 			new Players(deck.hub, this.state),
 		)
 
-		// plug in initial devices
-		this.plug(new PrimaryDevice())
-		this.plug(new VirtualDevice(deck.hub))
-
 		// on hub update, set agent.alive based on port status
 		this.dispose.schedule(
 			this.deck.hub.on(() => {
-				for (const player of this.logic.players)
+				for (const player of this.logic.players) {
 					player.agent.alive = player.port.devices.size > 0
+					const [firstDevice] = player.port.devices
+					player.agent.color = firstDevice
+						? this.deviceSkins.get(firstDevice).color
+						: "#444"
+				}
 			})
 		)
+
+		// plug in initial devices
+		this.plug(new PrimaryDevice())
+		this.plug(new VirtualDevice(deck.hub))
 
 		// dynamically plug in detected gamepads
 		this.dispose.schedule(

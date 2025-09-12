@@ -78,7 +78,7 @@ export class Renderer {
 		ctx.font = `${radius * 1.3}px sans-serif`
 		ctx.textAlign = "center"
 		ctx.textBaseline = "middle"
-		ctx.fillStyle = "#fff2"
+		ctx.fillStyle = "#fff4"
 		ctx.fillText(agent.label, x, y)
 	}
 
