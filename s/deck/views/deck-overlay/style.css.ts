@@ -4,25 +4,26 @@ export default css`
 
 :host {
 	--gap: 0.3em;
+	pointer-events: none;
 	cursor: default;
 	user-select: none;
-	pointer-events: none;
 }
 
 .portlist {
+	pointer-events: none;
+
 	display: flex;
+	align-items: start;
+
+	width: max-content;
 	gap: var(--gap);
 	padding: 0.5em;
 
-	width: max-content;
-	min-height: 10em;
-
 	color: #fff8;
-	background: #4448;
+	background: #222a;
 	border-radius: 1em;
 
 	opacity: 0;
-	pointer-events: none;
 	transition: opacity 500ms linear;
 
 	&[data-active] {
@@ -35,46 +36,67 @@ export default css`
 		display: flex;
 		flex-direction: column;
 
+		min-width: 6em;
 		gap: var(--gap);
-		min-width: 7em;
 
 		> * {
-			padding: 0.5em;
-			min-width: 5em;
-
 			color: white;
-			border-radius: 0.5em;
 			font-weight: bold;
 			text-shadow: 0.05em 0.05em 0.1em #0008;
-			box-shadow: 0.1em 0.2em 0.7em #0004;
-			border-top: 2px solid #fff8;
 			text-transform: uppercase;
 		}
 
 		header {
-			background: #aaa8;
 			text-align: center;
+			color: #fff8;
 		}
 
 		.device {
 			display: flex;
-			align-items: center;
-			justify-content: space-between;
+			flex-direction: column;
 			gap: var(--gap);
 
+			box-shadow: 0.1em 0.2em 0.7em #0004;
 			background: color-mix(in srgb, #fffa, var(--color) 50%);
+			border-top: 2px solid #fff8;
+			border-bottom: 2px solid #0004;
+			border-radius: 0.5em;
 
-			> * {
-				font-size: 1.1em;
+			.row {
+				display: flex;
+				align-items: center;
+
+				&.primary {
+					justify-content: space-between;
+				}
+
+				&.secondary {
+					justify-content: center;
+				}
+			}
+
+			.icon {
+				font-size: 1.5em;
+			}
+
+			.label {
+				font-family: monospace;
+				font-size: 0.8em;
+				opacity: 0.5;
+				line-height: 0.9em;
 			}
 
 			button {
-				opacity: 0.5;
+				opacity: 0.2;
 				cursor: pointer;
 				padding: 0 0.2em;
+				font-family: monospace;
+				font-size: 1.5em;
+				font-weight: bold;
 
 				background: transparent;
 				border: 1px solid transparent;
+				text-shadow: inherit;
 
 				&:is(:hover, :focus-visible) {
 					opacity: 1;

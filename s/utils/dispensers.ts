@@ -1,16 +1,14 @@
 
-import {Dispenser} from "@e280/stz"
+import {Dispenser, range} from "@e280/stz"
+
+const palette = (n: number) => range(n).map(i => {
+	const d = (i * (360 / n)) + 180
+	return `hsl(${d % 360}deg, 100%, 50%)`
+})
 
 export class ColorDispenser extends Dispenser<string> {
 	constructor() {
-		super(() => [
-			"#0fa",
-			"#0af",
-			"#a0f",
-			"#fa0",
-			"#af0",
-			"#f0a",
-		])
+		super(() => palette(12))
 	}
 }
 

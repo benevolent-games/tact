@@ -10,7 +10,7 @@ import {DeviceSkin} from "../../../../deck/parts/device-skins/device-skin.js"
 export const VirtualDeviceView = view(use => (
 		hub: Hub<any>,
 		device: VirtualDevice,
-		deviceSkin: DeviceSkin,
+		_deviceSkin: DeviceSkin,
 	) => {
 
 	use.styles(cssReset, styleCss)
@@ -21,8 +21,6 @@ export const VirtualDeviceView = view(use => (
 	return html`
 		<div class=box>
 			${NubStick.view(device)}
-
-			<div class=label>${deviceSkin.label}</div>
 
 			<button @click="${device.shimmyPrevious}">👈</button>
 			<button @click="${unplug}">💀</button>

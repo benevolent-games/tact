@@ -10,7 +10,7 @@ export const DeckOverlay = deckView(deck => use => {
 	use.css(cssReset, styleCss)
 	use.attrs.string.deck = "overlay"
 
-	const {hub, deviceSkins, overlayVisibility: {$visible}} = deck
+	const {hub, deviceSkins, overlayVisibility: {$visible, $showLabels}} = deck
 
 	function renderDevice(device: Device) {
 		const skin = deviceSkins.get(device)
@@ -19,10 +19,16 @@ export const DeckOverlay = deckView(deck => use => {
 		const previous = () => hub.shimmy(device, -1)
 		return html`
 			<div class=device style="${style}">
-				<button @click="${previous}">&lt;</button>
-				<div class=icon>${skin.icon}</div>
-				<div class=label>${skin.label}</div>
-				<button @click="${next}">&gt;</button>
+				<div class="primary row">
+					<button @click="${previous}">&lt;</button>
+					<div class=icon>${skin.icon}</div>
+					<button @click="${next}">&gt;</button>
+				</div>
+				${$showLabels() ? html`
+					<div class="secondary row">
+						<div class=label>${skin.label}</div>
+					</div>
+				` : null}
 			</div>
 		`
 	}
@@ -31,7 +37,7 @@ export const DeckOverlay = deckView(deck => use => {
 		<div class=portlist ?data-active="${$visible()}">
 			${hub.ports.map((port, index) => html`
 				<div class=port>
-					<header>Port ${index + 1}</header>
+					<header>P${index + 1}</header>
 					${port.devices.array().map(renderDevice)}
 				</div>
 			`)}

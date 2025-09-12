@@ -13,6 +13,7 @@ export default css`
 
 	gap: 0em;
 	padding: 0.2em;
+	padding-right: 0.5em;
 
 	border-radius: 2em;
 	background: color-mix(in srgb, #fff4, var(--color));

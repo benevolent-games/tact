@@ -5,8 +5,9 @@ import {Hub} from "../../core/hub/hub.js"
 import {DeviceSkins} from "./device-skins/device-skin.js"
 
 export class OverlayVisibility {
-	autohide = true
+	auto = true
 	dispose = disposer()
+
 	#created = Date.now()
 	#$auto = signal(false)
 
@@ -15,8 +16,11 @@ export class OverlayVisibility {
 
 	/** derived signal about whether the ports view should be visible */
 	readonly $visible = signal.derived(() => (
-		this.$manual() || (this.autohide && this.#$auto())
+		this.$manual() || (this.auto && this.#$auto())
 	))
+
+	/** whether or not to show labels in the overlay ui */
+	readonly $showLabels = signal(false)
 
 	constructor(
 			public hub: Hub<any>,
@@ -31,7 +35,7 @@ export class OverlayVisibility {
 		)
 	}
 
-	#autoOff = debounce(3000, () => this.#$auto(false))
+	#autoOff = debounce(1500, () => this.#$auto(false))
 
 	async bump() {
 		await this.#$auto(true)

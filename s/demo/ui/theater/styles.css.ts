@@ -35,7 +35,9 @@ export const styles = css`
 
 	[deck="overlay"] {
 		position: absolute;
-		inset: 0;
+		top: 10%;
+		left: 0;
+		right: 0;
 
 		display: flex;
 		justify-content: center;
