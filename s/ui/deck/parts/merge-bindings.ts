@@ -1,6 +1,6 @@
 
 import {deep} from "@e280/stz"
-import {Bindings} from "../../bindings/types.js"
+import {Bindings} from "../../../core/bindings/types.js"
 
 export function mergeBindings<B extends Bindings>(normative: B, sus?: B) {
 	const bindings = deep.clone(normative)

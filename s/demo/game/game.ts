@@ -4,7 +4,7 @@ import {Logic} from "./parts/logic.js"
 import {State} from "./parts/state.js"
 import {Players} from "./parts/player.js"
 import {Renderer} from "./parts/renderer.js"
-import {Deck} from "../../core/deck/deck.js"
+import {Deck} from "../../ui/deck/deck.js"
 import {Device} from "../../core/devices/device.js"
 import {VirtualDevice} from "./parts/virtual-device.js"
 import {gameBindings, GameDeck} from "./parts/game-bindings.js"
@@ -12,7 +12,7 @@ import {autoGamepads} from "../../core/devices/auto-gamepads.js"
 import {PrimaryDevice} from "../../core/devices/standard/primary.js"
 import {PortsControl} from "../../ui/components/tact-ports/control.js"
 import {DeviceSkins} from "../../ui/commons/device-skins/device-skin.js"
-import {localStorageKv} from "../../core/deck/parts/local-storage-kv.js"
+import {localStorageKv} from "../../ui/deck/parts/local-storage-kv.js"
 
 export class Game {
 	static async load() {

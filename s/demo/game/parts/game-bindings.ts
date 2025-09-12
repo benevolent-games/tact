@@ -1,7 +1,7 @@
 
 import {Hub} from "../../../core/hub/hub.js"
 import {Port} from "../../../core/hub/port.js"
-import {Deck} from "../../../core/deck/deck.js"
+import {Deck} from "../../../ui/deck/deck.js"
 import {asBindings} from "../../../core/bindings/types.js"
 
 export type GameBindings = typeof gameBindings
