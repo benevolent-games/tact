@@ -1,7 +1,6 @@
 
 import {Vec2} from "@benev/math"
 import {Pad} from "../../../utils/gamepads.js"
-import {tmax} from "../../../utils/quick-math.js"
 import {SamplerDevice} from "../infra/sampler.js"
 import {splitVector} from "../../../utils/split-axis.js"
 import {circularClamp} from "../../../utils/circular-clamp.js"
@@ -37,18 +36,17 @@ export class GamepadDevice extends SamplerDevice {
 		return this.pad.gamepad
 	}
 
-	takeSamples() {
-		const {gamepad} = this.pad
-		this.#pollButtons(gamepad)
-		this.#pollSticks(gamepad)
-		return super.takeSamples()
+	getSamples() {
+		this.#pollButtons(this.pad.gamepad)
+		this.#pollSticks(this.pad.gamepad)
+		return super.getSamples()
 	}
 
 	#pollButtons(gamepad: Gamepad) {
 		let anyButtonValue = 0
 
 		const recordAny = (value: number) => {
-			anyButtonValue = tmax([anyButtonValue, value])
+			anyButtonValue = Math.max(anyButtonValue, value)
 		}
 
 		for (const [index, code] of gamepadButtonCodes.entries()) {

@@ -1,18 +1,18 @@
 
-import {ev} from "@e280/stz"
 import {Vec2} from "@benev/math"
+import {disposer, ev} from "@e280/stz"
 import {SamplerDevice} from "../infra/sampler.js"
 import {splitAxis} from "../../../utils/split-axis.js"
 
 export class PointerDevice extends SamplerDevice {
 	client = new Vec2(0, 0)
 	movement = new Vec2(0, 0)
-	dispose: () => void
+	dispose = disposer()
 
 	constructor(target: EventTarget = window) {
 		super()
 
-		this.dispose = ev(target, {
+		this.dispose.schedule(ev(target, {
 			pointerdown: (event: PointerEvent) => {
 				const code = PointerDevice.buttonCode(event)
 				this.setSample(code, 1)
@@ -34,7 +34,7 @@ export class PointerDevice extends SamplerDevice {
 				for (const [code, value] of PointerDevice.wheelCodes(event))
 					this.setSample(code, value)
 			},
-		})
+		}))
 	}
 
 	static buttonCode(event: PointerEvent) {
@@ -64,7 +64,12 @@ export class PointerDevice extends SamplerDevice {
 		return movements
 	}
 
-	takeSamples() {
+	getSamples() {
+		this.#specialPreProcessing()
+		return super.getSamples()
+	}
+
+	#specialPreProcessing() {
 		const [x, y] = this.movement
 		const [left, right] = splitAxis(x)
 		const [down, up] = splitAxis(y)
@@ -83,7 +88,6 @@ export class PointerDevice extends SamplerDevice {
 		}
 
 		this.movement.set_(0, 0)
-		return super.takeSamples()
 	}
 }
 

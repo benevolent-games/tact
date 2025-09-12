@@ -5,6 +5,7 @@ export const metaMode = "meta" as const
 
 export type MetaBindings = AsBindings<{
 	[metaMode]: {
+		revealOverlay: Atom
 		shimmyNext: Atom
 		shimmyPrevious: Atom
 	}

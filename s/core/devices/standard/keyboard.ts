@@ -1,50 +1,31 @@
 
-import {coalesce, ev, sub} from "@e280/stz"
-import {Sample} from "../types.js"
-import {Device} from "../device.js"
+import {disposer, ev} from "@e280/stz"
+import {SamplerDevice} from "../infra/sampler.js"
 
-export class KeyboardDevice extends Device {
-	on = sub<Sample>()
-	dispose: () => void
-	#held = new Set<string>()
+export class KeyboardDevice extends SamplerDevice {
+	dispose = disposer()
 
 	constructor(target: EventTarget = window) {
 		super()
-
-		const down = (code: string) => {
-			this.#held.add(code)
-			this.on.pub(code, 1)
-		}
-
-		const up = (code: string) => {
-			this.#held.delete(code)
-			this.on.pub(code, 0)
-		}
-
-		this.dispose = coalesce(
-			ev(target, {
-				keydown: (event: KeyboardEvent) => {
-					if (event.repeat) return
-					down(event.code)
-				},
-				keyup: (event: KeyboardEvent) => {
-					up(event.code)
-				},
-			}),
-
-			ev(window, {
-				blur: () => {
-					for (const code of this.#held)
-						this.on.pub(code, 0)
-					this.#held.clear()
-				},
-			})
-		)
+		this.dispose.schedule(ev(target, this.#targetListeners))
+		this.dispose.schedule(ev(window, this.#windowListeners))
 	}
 
-	takeSamples() {
-		return [...this.#held]
-			.map(code => [code, 1] as Sample)
+	#targetListeners = {
+		keydown: (event: KeyboardEvent) => {
+			if (event.repeat) return null
+			this.setSample(event.code, 1)
+		},
+		keyup: (event: KeyboardEvent) => {
+			if (event.repeat) return null
+			this.setSample(event.code, 0)
+		},
+	}
+
+	#windowListeners = {
+		blur: () => {
+			this.sampleMap.zero()
+		},
 	}
 }
 

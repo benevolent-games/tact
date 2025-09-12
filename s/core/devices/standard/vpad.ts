@@ -6,7 +6,7 @@ export class VpadDevice extends SamplerDevice {
 	stickLeft = new StickDevice()
 	stickRight = new StickDevice()
 
-	takeSamples() {
+	getSamples() {
 		const left = this.stickLeft.$breakdown()
 		this.setSample("gamepad.stick.left.up", left.up)
 		this.setSample("gamepad.stick.left.down", left.down)
@@ -19,7 +19,7 @@ export class VpadDevice extends SamplerDevice {
 		this.setSample("gamepad.stick.right.left", right.left)
 		this.setSample("gamepad.stick.right.right", right.right)
 
-		return super.takeSamples()
+		return super.getSamples()
 	}
 }
 

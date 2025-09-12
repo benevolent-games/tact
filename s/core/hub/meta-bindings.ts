@@ -3,6 +3,11 @@ import {MetaBindings, metaMode} from "./types.js"
 
 export const makeMetaBindings = (): MetaBindings => ({
 	[metaMode]: {
+		revealOverlay: ["or",
+			"Backslash",
+			"gamepad.beta",
+			"gamepad.gamma",
+		],
 		shimmyNext: ["or",
 			"BracketRight",
 			["and", ["or", "gamepad.beta", "gamepad.gamma"], "gamepad.right"],

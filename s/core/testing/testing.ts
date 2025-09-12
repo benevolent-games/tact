@@ -24,8 +24,8 @@ export function testBindings() {
 	})
 }
 
-export function testConnect<C extends Device>(switchboard: Hub<any>, device: C) {
-	switchboard.plug(device)
+export function testPlug<C extends Device>(hub: Hub<any>, device: C) {
+	hub.plug(device)
 	return device
 }
 
@@ -36,7 +36,7 @@ export function testSetupAlpha() {
 	resolver.modes.add("basic")
 	const resolve = () => resolver.resolve(
 		time.now,
-		new SampleMap(device.takeSamples()),
+		new SampleMap([...device.getSamples()]),
 	)
 	return {device, resolver, resolve, time}
 }

@@ -13,15 +13,13 @@ export class StickDevice extends Device {
 		super()
 	}
 
-	takeSamples() {
+	;*getSamples() {
 		const {channel} = this
 		const {up, down, left, right} = this.$breakdown.get()
-		return [
-			[`${channel}.up`, up],
-			[`${channel}.down`, down],
-			[`${channel}.left`, left],
-			[`${channel}.right`, right],
-		] as Sample[]
+		yield [`${channel}.up`, up] as Sample
+		yield [`${channel}.down`, down] as Sample
+		yield [`${channel}.left`, left] as Sample
+		yield [`${channel}.right`, right] as Sample
 	}
 }
 

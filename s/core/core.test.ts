@@ -1,7 +1,7 @@
 
 import {Science, test, expect} from "@e280/science"
 import {SamplerDevice} from "./devices/infra/sampler.js"
-import {testConnect, testSetupAlpha, testSetupBravo} from "./testing/testing.js"
+import {testPlug, testSetupAlpha, testSetupBravo} from "./testing/testing.js"
 
 export default Science.suite({
 	"sample to action value": test(async() => {
@@ -26,8 +26,8 @@ export default Science.suite({
 	"hub": Science.suite({
 		"device inputs work": test(async() => {
 			const {hub, time} = testSetupBravo()
-			const c1 = testConnect(hub, new SamplerDevice())
-			c1.setSample("Space", 1)
+			const d1 = testPlug(hub, new SamplerDevice())
+			d1.setSample("Space", 1)
 			const [p1, p2] = hub.poll(time.now)
 			expect(p1.basic.jump.value).is(1)
 			expect(p2.basic.jump.value).is(0)
@@ -35,8 +35,8 @@ export default Science.suite({
 
 		"two devices playing on separate ports": test(async() => {
 			const {hub, time} = testSetupBravo()
-			const c1 = testConnect(hub, new SamplerDevice())
-			const c2 = testConnect(hub, new SamplerDevice())
+			const c1 = testPlug(hub, new SamplerDevice())
+			const c2 = testPlug(hub, new SamplerDevice())
 			c1.setSample("Space", 1)
 			c2.setSample("Space", 2)
 			const [p1, p2] = hub.poll(time.now)
@@ -46,7 +46,7 @@ export default Science.suite({
 
 		"device can shimmy": test(async() => {
 			const {hub, time} = testSetupBravo()
-			const c1 = testConnect(hub, new SamplerDevice())
+			const c1 = testPlug(hub, new SamplerDevice())
 			hub.shimmy(c1, 1)
 			c1.setSample("Space", 1)
 			const [p1, p2] = hub.poll(time.now)
@@ -56,8 +56,8 @@ export default Science.suite({
 
 		"two devices can share a port": test(async() => {
 			const {hub, time} = testSetupBravo()
-			const c1 = testConnect(hub, new SamplerDevice())
-			const c2 = testConnect(hub, new SamplerDevice())
+			const c1 = testPlug(hub, new SamplerDevice())
+			const c2 = testPlug(hub, new SamplerDevice())
 			hub.shimmy(c2, -1)
 			expect(hub.portByDevice(c1)).is(hub.portByDevice(c2))
 			{

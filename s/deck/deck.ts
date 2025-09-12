@@ -1,6 +1,6 @@
 
 import {Kv} from "@e280/kv"
-import {ob, range} from "@e280/stz"
+import {disposer, ob, range} from "@e280/stz"
 
 import {Db} from "./parts/db.js"
 import {Hub} from "../core/hub/hub.js"
@@ -38,6 +38,7 @@ export class Deck<B extends Bindings> {
 		return new this(hub, db)
 	}
 
+	dispose = disposer()
 	deviceSkins = new DeviceSkins()
 	overlayVisibility: OverlayVisibility
 

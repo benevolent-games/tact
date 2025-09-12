@@ -29,9 +29,6 @@ export class Hub<B extends Bindings> {
 	/** poll every device, providing actions for each port, and internally handling meta actions. */
 	poll(now = Date.now()) {
 		for (const connected of this.#connected.values())
-			connected.refreshSamples()
-
-		for (const connected of this.#connected.values())
 			this.#actuateMetaActions(now, connected)
 
 		return this.#resolvePortActions(now)
@@ -99,17 +96,19 @@ export class Hub<B extends Bindings> {
 	#dispatchChange = debounce(0, () => this.on.publish())
 
 	#actuateMetaActions(now: number, connected: Connected) {
-		const metaActions = connected.metaResolver.resolve(now, connected.samples)
+		const samples = new SampleMap([...connected.device.getSamples()])
+		const metaActions = connected.metaResolver.resolve(now, samples)
 		if (metaActions[metaMode].shimmyNext.down) this.shimmy(connected.device, 1)
 		if (metaActions[metaMode].shimmyPrevious.down) this.shimmy(connected.device, -1)
 	}
 
 	#resolvePortActions(now: number) {
 		return this.ports.map(port => {
-			const samples = SampleMap.combine(
-				...port.devices.array()
-					.map(device => this.#connected.require(device).samples)
-			)
+			const samples = new SampleMap()
+			for (const device of port.devices) {
+				for (const sample of device.getSamples())
+					samples.mergeSample(sample)
+			}
 			return port.resolve(now, samples)
 		})
 	}
