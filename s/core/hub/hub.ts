@@ -109,7 +109,10 @@ export class Hub<B extends Bindings, MB extends MetaBindings = any> {
 	}
 
 	#resolvePorts(now: number) {
-		return this.ports.map(port => port.resolve(now))
+		return this.ports.map(port => {
+			port.resolve(now)
+			return port
+		})
 	}
 }
 

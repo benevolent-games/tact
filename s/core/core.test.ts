@@ -30,8 +30,8 @@ export default Science.suite({
 			const d1 = testPlug(hub, new SamplerDevice())
 			d1.setSample("Space", 1)
 			const [p1, p2] = hub.poll(time.now)
-			expect(p1.basic.jump.value).is(1)
-			expect(p2.basic.jump.value).is(0)
+			expect(p1.actions.basic.jump.value).is(1)
+			expect(p2.actions.basic.jump.value).is(0)
 		}),
 
 		"reveal overlay works": test(async() => {
@@ -50,8 +50,8 @@ export default Science.suite({
 			c1.setSample("Space", 1)
 			c2.setSample("Space", 2)
 			const [p1, p2] = hub.poll(time.now)
-			expect(p1.basic.jump.value).is(1)
-			expect(p2.basic.jump.value).is(2)
+			expect(p1.actions.basic.jump.value).is(1)
+			expect(p2.actions.basic.jump.value).is(2)
 		}),
 
 		"device can shimmy": test(async() => {
@@ -60,8 +60,8 @@ export default Science.suite({
 			hub.shimmy(c1, 1)
 			c1.setSample("Space", 1)
 			const [p1, p2] = hub.poll(time.now)
-			expect(p1.basic.jump.value).is(0)
-			expect(p2.basic.jump.value).is(1)
+			expect(p1.actions.basic.jump.value).is(0)
+			expect(p2.actions.basic.jump.value).is(1)
 		}),
 
 		"two devices can share a port": test(async() => {
@@ -73,28 +73,28 @@ export default Science.suite({
 			{
 				c1.setSample("Space", 1)
 				const [p1, p2] = hub.poll(time.now)
-				expect(p1.basic.jump.value).is(1)
-				expect(p2.basic.jump.value).is(0)
+				expect(p1.actions.basic.jump.value).is(1)
+				expect(p2.actions.basic.jump.value).is(0)
 			}
 			{
 				c2.setSample("Space", 1)
 				const [p1, p2] = hub.poll(time.now)
-				expect(p1.basic.jump.value).is(1)
-				expect(p2.basic.jump.value).is(0)
+				expect(p1.actions.basic.jump.value).is(1)
+				expect(p2.actions.basic.jump.value).is(0)
 			}
 			{
 				c1.setSample("Space", 1)
 				c2.setSample("Space", 2)
 				const [p1, p2] = hub.poll(time.now)
-				expect(p1.basic.jump.value).is(2)
-				expect(p2.basic.jump.value).is(0)
+				expect(p1.actions.basic.jump.value).is(2)
+				expect(p2.actions.basic.jump.value).is(0)
 			}
 			{
 				c1.setSample("Space", 2)
 				c2.setSample("Space", 1)
 				const [p1, p2] = hub.poll(time.now)
-				expect(p1.basic.jump.value).is(2)
-				expect(p2.basic.jump.value).is(0)
+				expect(p1.actions.basic.jump.value).is(2)
+				expect(p2.actions.basic.jump.value).is(0)
 			}
 		}),
 	}),

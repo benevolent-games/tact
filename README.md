@@ -82,10 +82,10 @@ the deck ties together all the important pieces of tact into a single user exper
       const [p1, p2, p3, p4] = deck.hub.poll()
 
       // check if the first player is pressing "forward" action
-      p1.walking.forward.pressed // true
+      p1.actions.walking.forward.pressed // true
 
       // check how hard the second player is pulling that trigger
-      p2.gunning.shoot.value // 0.123
+      p2.actions.gunning.shoot.value // 0.123
     })
     ```
 
@@ -406,8 +406,8 @@ the hub embraces that analogy, helping you coordinate the plugging and unpluggin
     ```ts
     const [p1, p2, p3, p4] = hub.poll()
 
-    p1.walking.jump.value // 1
-    p2.walking.jump.value // 0
+    p1.actions.walking.jump.value // 1
+    p2.actions.walking.jump.value // 0
     ```
 
 
