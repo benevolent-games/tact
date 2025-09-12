@@ -38,12 +38,8 @@ export class PortsControl {
 		await this.#autoOff()
 	}
 
-	async activate() {
-		return this.$active.set(true)
-	}
-
-	async deactivate() {
-		return this.$active.set(true)
+	async toggle(active = !this.$active()) {
+		return this.$active.set(active)
 	}
 }
 
