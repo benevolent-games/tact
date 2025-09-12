@@ -1,5 +1,5 @@
 
-import {RMap} from "@e280/strata"
+import {MapG} from "@e280/stz"
 import {Agent} from "./agent.js"
 import {State} from "./state.js"
 import {GameHub, GamePort} from "./game-bindings.js"
@@ -12,7 +12,7 @@ export class Player {
 }
 
 export class Players {
-	#map = new RMap<GamePort, Player>()
+	#map = new MapG<GamePort, Player>()
 
 	constructor(hub: GameHub, state: State) {
 		for (const [index, port] of hub.ports.entries()) {

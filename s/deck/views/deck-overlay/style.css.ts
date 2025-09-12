@@ -24,7 +24,7 @@ export default css`
 	border-radius: 1em;
 
 	opacity: 0;
-	transition: opacity 500ms linear;
+	transition: opacity 300ms linear;
 
 	&[data-active] {
 		opacity: 1;

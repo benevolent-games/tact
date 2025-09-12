@@ -11,7 +11,7 @@ export default css`
 	align-items: center;
 	justify-content: center;
 
-	gap: 0em;
+	gap: 0.2em;
 	padding: 0.2em;
 	padding-right: 0.5em;
 
