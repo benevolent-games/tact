@@ -1,7 +1,7 @@
 
 import {deep, MapG} from "@e280/stz"
-import {MetaBindings} from "../../../core/hub/types.js"
-import {Bindings} from "../../../core/bindings/types.js"
+import {MetaBindings} from "../../core/hub/types.js"
+import {Bindings} from "../../core/bindings/types.js"
 
 export type Profile = {
 	id: string

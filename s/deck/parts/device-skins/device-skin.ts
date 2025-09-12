@@ -2,8 +2,8 @@
 import {Content} from "@e280/sly"
 import {WeakMapG} from "@e280/stz"
 import {DeviceIcons} from "./device-icons.js"
-import {Device} from "../../../../core/devices/device.js"
-import {ColorDispenser, LetterDispenser} from "../../../../utils/dispensers.js"
+import {Device} from "../../../core/devices/device.js"
+import {ColorDispenser, LetterDispenser} from "../../../utils/dispensers.js"
 
 export class DeviceSkin {
 	constructor(

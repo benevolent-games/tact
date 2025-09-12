@@ -33,7 +33,7 @@ export const styles = css`
 		outline: 1px solid red;
 	}
 
-	[tact="ports"] {
+	[deck="overlay"] {
 		position: absolute;
 		inset: 0;
 

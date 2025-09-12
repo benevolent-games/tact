@@ -2,15 +2,15 @@
 import {disposer, nap, repeat} from "@e280/stz"
 import {Logic} from "./parts/logic.js"
 import {State} from "./parts/state.js"
+import {Deck} from "../../deck/deck.js"
 import {Players} from "./parts/player.js"
 import {Renderer} from "./parts/renderer.js"
-import {Deck} from "../../ui/deck/deck.js"
 import {Device} from "../../core/devices/device.js"
 import {VirtualDevice} from "./parts/virtual-device.js"
 import {gameBindings, GameDeck} from "./parts/game-bindings.js"
 import {autoGamepads} from "../../core/devices/auto-gamepads.js"
+import {localStorageKv} from "../../deck/parts/local-storage-kv.js"
 import {PrimaryDevice} from "../../core/devices/standard/primary.js"
-import {localStorageKv} from "../../ui/deck/parts/local-storage-kv.js"
 
 export class Game {
 	static async load() {

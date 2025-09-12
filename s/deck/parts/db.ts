@@ -3,7 +3,7 @@ import {disposer, Hex} from "@e280/stz"
 import {signal, SignalFn} from "@e280/strata"
 import {StorageDriver, Store} from "@e280/kv"
 
-import {Bindings} from "../../../core/bindings/types.js"
+import {Bindings} from "../../core/bindings/types.js"
 import {Catalog, CatalogData, Profile} from "./catalog.js"
 
 export class Db {

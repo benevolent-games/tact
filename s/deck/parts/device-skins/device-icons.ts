@@ -1,10 +1,10 @@
 
 import {Content} from "@e280/sly"
 import {Constructor} from "@e280/stz"
-import {Device} from "../../../../core/devices/device.js"
-import {VpadDevice} from "../../../../core/devices/standard/vpad.js"
-import {PrimaryDevice} from "../../../../core/devices/standard/primary.js"
-import {GamepadDevice} from "../../../../core/devices/standard/gamepad.js"
+import {Device} from "../../../core/devices/device.js"
+import {VpadDevice} from "../../../core/devices/standard/vpad.js"
+import {PrimaryDevice} from "../../../core/devices/standard/primary.js"
+import {GamepadDevice} from "../../../core/devices/standard/gamepad.js"
 
 export type DeviceIconEntry = [DeviceClass: Constructor<Device>, icon: Content]
 

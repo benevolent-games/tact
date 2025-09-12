@@ -1,7 +1,7 @@
 
 import {signal} from "@e280/strata"
 import {debounce, disposer} from "@e280/stz"
-import {Hub} from "../../../core/hub/hub.js"
+import {Hub} from "../../core/hub/hub.js"
 import {DeviceSkins} from "./device-skins/device-skin.js"
 
 export class OverlayVisibility {

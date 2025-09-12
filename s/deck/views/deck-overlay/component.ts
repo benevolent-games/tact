@@ -1,13 +1,14 @@
 
 import {html} from "lit"
-import {BaseElement, cssReset, view} from "@e280/sly"
+import {cssReset} from "@e280/sly"
+import {Deck} from "../../deck.js"
 import styleCss from "./style.css.js"
-import {Deck} from "../../deck/deck.js"
+import {deckView} from "../framework.js"
 import {Device} from "../../../core/devices/device.js"
 
-export class TactPorts extends (view(use => (deck: Deck<any>) => {
+export const DeckOverlay = deckView(deck => use => {
 	use.css(cssReset, styleCss)
-	use.attrs.string.tact = "ports"
+	use.attrs.string.deck = "overlay"
 
 	const {hub, deviceSkins, overlayVisibility: {$visible}} = deck
 
@@ -36,12 +37,6 @@ export class TactPorts extends (view(use => (deck: Deck<any>) => {
 			`)}
 		</div>
 	`
+
 })
-.component(class extends BaseElement {
-	deck!: Deck<any>
-})
-.props(el => {
-	if (!el.deck) throw new Error("TactPorts element requires tact deck")
-	return [el.deck]
-})) {}
 

@@ -7,7 +7,6 @@ import {styles} from "./styles.css.js"
 import {Game} from "../../game/game.js"
 import {VirtualDeviceView} from "./virtual/view.js"
 import {VirtualDevice} from "../../game/parts/virtual-device.js"
-import {TactPorts} from "../../../ui/components/tact-ports/component.js"
 
 export const Theater = view(use => (game: Game) => {
 	use.css(cssReset, styles)
@@ -25,7 +24,7 @@ export const Theater = view(use => (game: Game) => {
 	return html`
 		<div class=surface>
 			${game.renderer.canvas}
-			${TactPorts.view(game.deck)}
+			${game.deck.views.DeckOverlay()}
 		</div>
 
 		<div class=dlist>
