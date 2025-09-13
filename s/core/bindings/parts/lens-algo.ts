@@ -13,6 +13,10 @@ export const lensAlgo = (
 
 	function clippings(value) {
 		const {settings} = state
+		if (settings.clamp) {
+			const [bottom, top] = settings.clamp
+			value = Scalar.clamp(value, bottom, top)
+		}
 		if (settings.range) {
 			const [bottom, top] = settings.range
 			value = Scalar.isBetween(value, bottom, top)
@@ -24,7 +28,7 @@ export const lensAlgo = (
 				)
 				: 0
 		}
-		if (settings.bottom) value = Math.max(settings.bottom, value)
+		if (settings.bottom) value = (value < settings.bottom) ? 0 : value
 		if (settings.top) value = Math.min(settings.top, value)
 		return value
 	},

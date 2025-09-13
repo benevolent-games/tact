@@ -34,6 +34,7 @@ export type Atom = string | (
 export type CodeSettings = {
 	scale: number
 	invert: boolean
+	clamp: null | [number, number]
 	range: null | [number, number]
 	bottom: null | number
 	top: null | number

@@ -15,6 +15,7 @@ function defaultCodeSettings(): CodeSettings {
 	return {
 		scale: 1,
 		invert: false,
+		clamp: null,
 		range: null,
 		bottom: null,
 		top: null,

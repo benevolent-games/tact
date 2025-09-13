@@ -246,14 +246,16 @@ the deck ties together all the important pieces of tact into a single user exper
     ["code", "KeyA", {
 		  scale: 1,
 		  invert: false,
-		  deadzone: 0,
 		  timing: ["direct"],
     }]
     ```
     - defaults shown
     - `scale` is sensitivity, the value gets multiplied by this
     - `invert` will invert a value by subtracting it from 1
-    - `deadzone` ignores values below the threshold (and remaps to preserve the range)
+    - `clamp` clamps the value with a lower and upper bound
+    - `range` restricts value to the given range, and remaps that range 0 to 1
+    - `bottom` zeroes the value if it's less than the given bottom value
+    - `top` clamps the value to an upper bound
     - `timing` lets you specify special timing considerations
       - `["direct"]` ignores timing considerations
       - `["tap", 250]` only fires for taps under 250ms
