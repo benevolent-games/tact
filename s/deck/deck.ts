@@ -1,19 +1,19 @@
 
 import {Kv} from "@e280/kv"
 import {dom} from "@e280/sly"
-import {disposer, range} from "@e280/stz"
+import {disposer, ob, range} from "@e280/stz"
 
 import {Db} from "./parts/db.js"
 import {Hub} from "../core/hub/hub.js"
 import {Port} from "../core/hub/port.js"
 import {Bindings} from "../core/bindings/types.js"
 import {mergeBindings} from "./parts/merge-bindings.js"
-import {deckComponents} from "./components/components.js"
 import {MetaBindings, metaMode} from "../core/hub/types.js"
 import {makeMetaBindings} from "../core/hub/meta-bindings.js"
 import {DeviceSkins} from "./parts/device-skins/device-skin.js"
 import {OverlayVisibility} from "./parts/overlay-visibility.js"
 import {PrimaryDevice} from "../core/devices/standard/primary.js"
+import {deckComponents, DeckViews} from "./components/components.js"
 
 export type DeckOptions<B extends Bindings, MB extends MetaBindings = any> = {
 	kv: Kv
@@ -47,6 +47,11 @@ export class Deck<B extends Bindings, MB extends MetaBindings = any> {
 	overlayVisibility: OverlayVisibility
 
 	components = deckComponents(this)
+
+	views = (
+		ob(this.components as any)
+			.map(c => (...a: any[]) => c.view(this, ...a))
+	) as DeckViews
 
 	registerComponents() {
 		dom.register(this.components)
