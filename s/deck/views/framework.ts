@@ -1,14 +1,11 @@
 
-import {Content, Use, view} from "@e280/sly"
+import {BaseElement} from "@e280/sly"
+import {Constructor} from "@e280/stz"
 import {Deck} from "../deck.js"
 
-export function deckView(
-		fn: (deck: Deck<any>) => (use: Use) => Content
+export function dc<C extends Constructor<BaseElement>>(
+		fn: (deck: Deck<any>) => C
 	) {
-
-	return (deck: Deck<any>) => {
-		const fn2 = fn(deck)
-		return view(use => () => fn2(use))
-	}
+	return fn
 }
 

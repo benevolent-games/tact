@@ -25,7 +25,7 @@ export const Theater = view(use => (game: Game) => {
 	return html`
 		<div class=surface>
 			${game.renderer.canvas}
-			${game.deck.views.DeckOverlay()}
+			${game.deck.components.DeckOverlay.view()}
 		</div>
 
 		<div class=dlist>
