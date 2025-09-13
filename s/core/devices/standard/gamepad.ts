@@ -59,7 +59,7 @@ export class GamepadDevice extends SamplerDevice {
 	}
 
 	#pollSticks(gamepad: Gamepad) {
-		const [leftX, leftY, rightX, rightY] = gamepad.axes
+		const [leftX = 0, leftY = 0, rightX = 0, rightY = 0] = gamepad.axes
 
 		const stickLeft = splitVector(
 			circularClamp(new Vec2(leftX, leftY), this.range)
