@@ -85,11 +85,11 @@ button {
 	flex-direction: row-reverse;
 }
 
-[x-code^="g.trigger"] {
+[x-code^="gamepad.trigger"] {
 	width: 6em;
 }
 
-[x-code^="g.bumper"] {
+[x-code^="gamepad.bumper"] {
 	width: 4em;
 }
 
@@ -121,11 +121,11 @@ button {
 		width: max(15cqw, 15cqh);
 	}
 
-	[x-code^="g.trigger"] {
+	[x-code^="gamepad.trigger"] {
 		width: 9cqw;
 	}
 
-	[x-code^="g.bumper"] {
+	[x-code^="gamepad.bumper"] {
 		width: 7cqw;
 	}
 }
