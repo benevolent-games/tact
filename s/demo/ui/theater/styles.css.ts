@@ -40,6 +40,7 @@ export const styles = css`
 		right: 0;
 
 		display: flex;
+		flex-direction: column;
 		justify-content: center;
 		align-items: center;
 	}
