@@ -6,8 +6,10 @@ import {DeckOverlay} from "./deck-overlay/component.js"
 
 const components = {DeckOverlay}
 
-export const deckComponents = (deck: Deck<any>) => ob(components)
-	.map(C => class extends C { deck = deck }) as DeckComponents
+export const deckComponents = (deck: Deck<any>) => (
+	ob(components)
+		.map(C => class extends C { deck = deck })
+) as DeckComponents
 
 export type DeckComponents = typeof components
 

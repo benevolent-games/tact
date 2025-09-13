@@ -1,13 +1,15 @@
 
-export type DropFirst<T extends any[]> = (
-	T extends [any, ...infer Rest]
-		? Rest
+// TODO replace these types when they're available in stz
+
+export type First<A extends any[]> = (
+	A extends [infer X, ...any[]]
+		? X
 		: never
 )
 
-export type First<T extends any[]> = (
-	T extends [infer First, ...any[]]
-		? First
+export type DropFirst<A extends any[]> = (
+	A extends [any, ...infer X]
+		? X
 		: never
 )
 
