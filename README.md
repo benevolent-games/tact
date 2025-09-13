@@ -298,7 +298,7 @@ the deck ties together all the important pieces of tact into a single user exper
 
 a port represents a single playable port, and you poll it each frame to resolve actions for you to read.
 
-### 🔌 port basics
+### 🔌 port setup
 - **make a port**
     ```ts
     const port = new tact.Port(bindings)
@@ -311,11 +311,11 @@ a port represents a single playable port, and you poll it each frame to resolve 
       .add(new tact.VpadDevice())
     ```
     - you can add/delete devices from the set any time
-- **don't forget to enable modes!**
+- **manipulate modes**
     ```ts
+    port.modes.clear()
     port.modes.add("walking")
     ```
-    - if you don't enable any modes, no actions will happen
     - actions only happen for enabled modes
     - you can toggle modes on and off by adding/deleting them from the modes set
 - **you can update the bindings any time**
@@ -333,11 +333,11 @@ a port represents a single playable port, and you poll it each frame to resolve 
 ### 🔌 interrogating actions
 - **poll the port every frame**
     ```ts
-    const actions = port.poll()
+    port.poll()
     ```
 - **now you can inspect the `actions`**
     ```ts
-    actions.walking.forward.value // 1
+    port.actions.walking.forward.value // 1
     ```
     - `walking` is a `mode`
     - `forward` is an `action`
@@ -361,25 +361,13 @@ you know the way old-timey game consoles had four controller ports on the front?
 the hub embraces that analogy, helping you coordinate the plugging and unplugging of virtual controller devices into its virtual ports.
 
 ### 🛞 create a hub with ports
-- **adopt standard hub bindings**
-    ```ts
-    const hubBindings = {
-      ...yourBindings,
-
-      // mixin standard hub bindings
-      ...tact.hubBindings(),
-    }
-    ```
-    - hub bindings let players shimmy what port their device is plugged into
-    - gamepad: hold gamma (middle button) and press bumpers
-    - keyboard: left bracket or right bracket
 - **make hub with multiple ports at the ready**
     ```ts
     const hub = new tact.Hub([
-      new tact.Port(hubBindings),
-      new tact.Port(hubBindings),
-      new tact.Port(hubBindings),
-      new tact.Port(hubBindings),
+      new tact.Port(bindings),
+      new tact.Port(bindings),
+      new tact.Port(bindings),
+      new tact.Port(bindings),
     ])
     ```
     - yes that's right — each player port gets its own bindings 🤯
@@ -387,21 +375,15 @@ the hub embraces that analogy, helping you coordinate the plugging and unpluggin
 ### 🛞 plug in some devices
 - **let's plug in the keyboard/mouse player**
     ```ts
-    hub.plug(
-      new tact.GroupDevice(
-        new tact.KeyboardDevice(),
-        new tact.PointerDevice(),
-        new tact.VpadDevice(),
-      )
-    )
+    hub.plug(new tact.PrimaryDevice())
     ```
-    - the hub requires a single device to represent a player, thus we can use a `GroupDevice` to combine multple devices into one
+    - the hub requires a single device to represent a player, so you can use a `GroupDevice` to combine multple devices into one
 - **wire up gamepad auto connect/disconnect**
     ```ts
     tact.autoGamepads(hub.plug)
     ```
 
-### 🛞 it's gaming time
+### 🛞 now we're gaming
 - **do your polling, interrogate those actions**
     ```ts
     const [p1, p2, p3, p4] = hub.poll()
@@ -418,11 +400,27 @@ the hub embraces that analogy, helping you coordinate the plugging and unpluggin
 ## 🍋 tact nubs
 > *mobile ui like virtual thumbsticks and buttons*
 
-### 📱 nub stick
-> TODO lol need to write docs
+### 📱 nubs setup
+- **register nub components to dom**
+    ```ts
+    tact.registerNubs()
+    ```
+- **place nub components onto your html page**
+    ```html
+    <nub-stick></nub-stick>
+    ```
 
-### 📱 nub virtual gamepad
-> TODO lol need to write docs
+### 📱 nub stick
+- **place a nub-stick onto your page**
+    ```html
+    <nub-stick></nub-stick>
+    ```
+- **get the stick device, plug it into your hub or whatever**
+    ```ts
+    const nubStick = document.queryElement<tact.NubStick>("nub-stick")!
+
+    deck.hub.plug(nubStick.device)
+    ```
 
 
 
