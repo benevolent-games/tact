@@ -31,6 +31,10 @@ export class PointerDevice extends SamplerDevice {
 			},
 
 			wheel: (event: WheelEvent) => {
+				this.sampleMap.set("pointer.wheel.right", 0)
+				this.sampleMap.set("pointer.wheel.left", 0)
+				this.sampleMap.set("pointer.wheel.up", 0)
+				this.sampleMap.set("pointer.wheel.down", 0)
 				for (const [code, value] of PointerDevice.wheelCodes(event))
 					this.setSample(code, value)
 			},
