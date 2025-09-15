@@ -3,8 +3,9 @@ import {ob} from "@e280/stz"
 import {Deck} from "../deck.js"
 import {DropFirstParam} from "../../utils/types.js"
 import {DeckOverlay} from "./deck-overlay/component.js"
+import {DeckBindings} from "./deck-bindings/component.js"
 
-const components = {DeckOverlay}
+const components = {DeckOverlay, DeckBindings}
 
 export const deckComponents = (deck: Deck<any>) => (
 	ob(components)
