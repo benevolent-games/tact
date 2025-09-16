@@ -1,12 +1,13 @@
 
 import {html} from "lit"
-import {BaseElement, cssReset, view} from "@e280/sly"
 import {repeat} from "lit/directives/repeat.js"
+import {BaseElement, cssReset, view} from "@e280/sly"
 
 import {styles} from "./styles.css.js"
 import {Game} from "../../game/game.js"
 import {VirtualDeviceView} from "./virtual/view.js"
 import {VirtualDevice} from "../../game/parts/virtual-device.js"
+import {DeckBindings} from "../../../deck/components/deck-bindings/component.js"
 
 export class DemoTheater extends (
 	view(use => (game: Game) => {
@@ -49,6 +50,8 @@ export class DemoTheater extends (
 					👁️
 				</button>
 			</div>
+
+			${DeckBindings.view(game.deck)}
 		`
 	})
 	.component(class extends BaseElement { game!: Game })

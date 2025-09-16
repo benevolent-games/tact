@@ -38,7 +38,6 @@ export default ssg.page(import.meta.url, async orb => ({
 		</header>
 
 		<demo-theater></demo-theater>
-		<deck-bindings></deck-bindings>
 
 		<section>
 			<h3>controls</h3>
