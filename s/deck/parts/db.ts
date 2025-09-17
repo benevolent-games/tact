@@ -57,7 +57,7 @@ export class Db {
 		})
 	}
 
-	async assignPortToProfile(index: number, profileId: string | null) {
+	async assignPortProfile(index: number, profileId: string | null) {
 		return this.#mutateAndSave(catalog => {
 			catalog.portProfiles[index] = profileId
 		})

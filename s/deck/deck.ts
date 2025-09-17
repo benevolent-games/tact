@@ -38,7 +38,7 @@ export class Deck<B extends Bindings, MB extends MetaBindings = any> {
 				?? makeMetaBindings(),
 		)
 
-		return new this(hub, db)
+		return new this(options.bindings, options.metaBindings, hub, db)
 	}
 
 	dispose = disposer()
@@ -58,6 +58,8 @@ export class Deck<B extends Bindings, MB extends MetaBindings = any> {
 	}
 
 	constructor(
+			public baseBindings: B,
+			public baseMetaBindings: MB,
 			public hub: Hub<B, MB>,
 			public db: Db,
 		) {
