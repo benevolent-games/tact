@@ -9,7 +9,7 @@ import {Device} from "../../../core/devices/device.js"
 export class DeckOverlay extends (
 	view(use => (deck: Deck<any>) => {
 		use.css(cssReset, styleCss)
-		use.attrs.string.deck = "overlay"
+		use.attrs.strings.deck = "overlay"
 		const {hub, deviceSkins, overlayVisibility: {$visible, $showLabels}} = deck
 
 		function renderDevice(device: Device) {

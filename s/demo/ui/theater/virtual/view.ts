@@ -14,7 +14,7 @@ export const VirtualDeviceView = view(use => (
 	) => {
 
 	use.styles(cssReset, styleCss)
-	use.attrs.string.device = "virtual"
+	use.attrs.strings.device = "virtual"
 
 	const unplug = () => hub.unplug(device)
 

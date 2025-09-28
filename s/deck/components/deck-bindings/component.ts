@@ -13,7 +13,7 @@ import {Atom, Bindings, Bracket} from "../../../core/bindings/types.js"
 export class DeckBindings extends (
 	view(use => (deck: Deck<any>) => {
 		use.css(cssReset, styleCss)
-		use.attrs.string.deck = "bindings"
+		use.attrs.strings.deck = "bindings"
 		const {db, hub} = deck
 
 		const catalog = db.$catalog()
