@@ -53,14 +53,37 @@ export default Science.suite({
 		let count = 0
 		actions.basic.grenade.onDown(() => { count++ })
 
+		// start doing nothing
 		proceed({time: 0, value: 0})
 		expect(count).is(0)
 
+		// start holding
 		proceed({time: 10, value: 1})
 		expect(count).is(0)
 
+		// keep holding
+		proceed({time: 20, value: 1})
+		expect(count).is(0)
+
+		// held long enough to trigger down
 		proceed({time: 210, value: 1})
 		expect(count).is(1)
+
+		// release, shouldn't trigger new down
+		proceed({time: 220, value: 0})
+		expect(count).is(1)
+
+		// ❌ start holding again
+		proceed({time: 230, value: 1})
+		expect(count).is(1)
+
+		// keep holding again
+		proceed({time: 330, value: 1})
+		expect(count).is(1)
+
+		// held long enough again to trigger down
+		proceed({time: 430, value: 1})
+		expect(count).is(2)
 	}),
 
 	"hub": Science.suite({
