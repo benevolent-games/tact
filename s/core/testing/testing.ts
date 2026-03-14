@@ -2,7 +2,7 @@
 import {Hub} from "../hub/hub.js"
 import {Port} from "../hub/port.js"
 import {Device} from "../devices/device.js"
-import {asBindings} from "../bindings/types.js"
+import {asBindings, Code} from "../bindings/types.js"
 import {Resolver} from "../bindings/resolver.js"
 import {SampleMap} from "../bindings/sample-map.js"
 import {SamplerDevice} from "../devices/infra/sampler.js"
@@ -20,6 +20,7 @@ export function testBindings() {
 		basic: {
 			jump: "Space",
 			shoot: "pointer.button.left",
+			grenade: <Code>["code", "KeyG", {timing: ["hold", 200]}]
 		},
 	})
 }

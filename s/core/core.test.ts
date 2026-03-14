@@ -24,6 +24,28 @@ export default Science.suite({
 		}
 	}),
 
+	"hold timing": test(async() => {
+		const {time, device, resolve} = testSetupAlpha()
+		{
+			time.frame = 1
+			device.setSample("KeyG", 0)
+			const actions = resolve()
+			expect(actions.basic.grenade.value).is(0)
+		}
+		{
+			time.frame = 2
+			device.setSample("KeyG", 1)
+			const actions = resolve()
+			expect(actions.basic.grenade.value).is(0)
+		}
+		{
+			time.frame = 15
+			device.setSample("KeyG", 1)
+			const actions = resolve()
+			expect(actions.basic.grenade.value).is(1)
+		}
+	}),
+
 	"hub": Science.suite({
 		"device inputs work": test(async() => {
 			const {hub, time} = testSetupBravo()
