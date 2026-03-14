@@ -1,5 +1,5 @@
 
-import {MapG, pub, obMap} from "@e280/stz"
+import {pub, obMap, GMap} from "@e280/stz"
 import {Action} from "./action.js"
 import {SampleMap} from "./sample-map.js"
 import {lensAlgo} from "./parts/lens-algo.js"
@@ -12,7 +12,7 @@ export class Resolver<B extends Bindings> {
 	#modes = new Set<keyof B>()
 	#sampleMap = new SampleMap()
 	#now = 0
-	#codeStates = new MapG<number, CodeState>()
+	#codeStates = new GMap<string, CodeState>()
 	#update = pub()
 
 	constructor(public bindings: B) {
@@ -20,7 +20,7 @@ export class Resolver<B extends Bindings> {
 			const action = new Action()
 			this.#update.subscribe(() => {
 				action.value = this.#modes.has(mode)
-					? this.#resolveAtom()(atom)
+					? this.#resolveAtom()(atom, mode as string)
 					: 0
 			})
 			return action
@@ -35,24 +35,28 @@ export class Resolver<B extends Bindings> {
 		return this.actions
 	}
 
-	#resolveCode(count: number, code: string, settings?: Partial<CodeSettings>) {
+	#resolveCode(path: string[], code: string, settings?: Partial<CodeSettings>) {
 		const state = this.#codeStates.guarantee(
-			count,
-			() => defaultCodeState(["code", code, settings]),
+			path.join("/"),
+			() => defaultCodeState(["code", code, settings], this.#now),
 		)
 		const value = this.#sampleMap.get(code) ?? 0
 		return lensAlgo(this.#now, state, value)
 	}
 
-	#resolveAtom = (context: {count: number} = {count: 0}) => (atom: Atom): number => {
+	#resolveAtom = (context: {path: string[]} = {path: []}) => (atom: Atom, zone: string | number): number => {
+		context.path.push(`${zone}`)
+		context.path.push(typeof atom === "string" ? atom : atom[0])
+
 		const resolveAtom = this.#resolveAtom(context)
-		if (typeof atom === "string") {
-			return this.#resolveCode(context.count++, atom)
-		}
+
+		if (typeof atom === "string")
+			return this.#resolveCode(context.path, atom)
+
 		else switch (atom[0]) {
 			case "code": {
 				const [, code, settings] = atom
-				return this.#resolveCode(context.count++, code, settings)
+				return this.#resolveCode(context.path, code, settings)
 			}
 			case "and": {
 				const [,...atoms] = atom
@@ -66,13 +70,13 @@ export class Resolver<B extends Bindings> {
 			}
 			case "not": {
 				const [, subject] = atom
-				const value = resolveAtom(subject)
+				const value = resolveAtom(subject, "subject")
 				return (value > 0) ? 0 : 1
 			}
 			case "cond": {
 				const [, subject, guard] = atom
-				return (resolveAtom(guard) > 0)
-					? resolveAtom(subject)
+				return (resolveAtom(guard, "guard") > 0)
+					? resolveAtom(subject, "subject")
 					: 0
 			}
 			case "mods": {
@@ -85,9 +89,9 @@ export class Resolver<B extends Bindings> {
 					maybe(modifiers.alt ?? false, "AltLeft", "AltRight"),
 					maybe(modifiers.meta ?? false, "MetaLeft", "MetaRight"),
 					maybe(modifiers.shift ?? false, "ShiftLeft", "ShiftRight"),
-				]])
+				]], "guard")
 				return (guard > 0)
-					? resolveAtom(subject)
+					? resolveAtom(subject, "subject")
 					: 0
 			}
 		}
