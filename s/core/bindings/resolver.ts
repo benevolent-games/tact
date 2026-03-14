@@ -20,7 +20,7 @@ export class Resolver<B extends Bindings> {
 			const action = new Action()
 			this.#update.subscribe(() => {
 				action.value = this.#modes.has(mode)
-					? this.#resolveAtom()(atom, mode as string)
+					? this.#resolveAtom([])(atom, mode as string)
 					: 0
 			})
 			return action
@@ -44,19 +44,22 @@ export class Resolver<B extends Bindings> {
 		return lensAlgo(this.#now, state, value)
 	}
 
-	#resolveAtom = (context: {path: string[]} = {path: []}) => (atom: Atom, zone: string | number): number => {
-		context.path.push(`${zone}`)
-		context.path.push(typeof atom === "string" ? atom : atom[0])
+	#resolveAtom = (path: string[]) => (atom: Atom, zone: string | number): number => {
+		const nextPath = [
+			...path,
+			String(zone),
+			typeof atom === "string" ? atom : atom[0],
+		]
 
-		const resolveAtom = this.#resolveAtom(context)
+		const resolveAtom = this.#resolveAtom(nextPath)
 
 		if (typeof atom === "string")
-			return this.#resolveCode(context.path, atom)
+			return this.#resolveCode(nextPath, atom)
 
 		else switch (atom[0]) {
 			case "code": {
 				const [, code, settings] = atom
-				return this.#resolveCode(context.path, code, settings)
+				return this.#resolveCode(nextPath, code, settings)
 			}
 			case "and": {
 				const [,...atoms] = atom
