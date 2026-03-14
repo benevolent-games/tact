@@ -38,7 +38,7 @@ export class Resolver<B extends Bindings> {
 	#resolveCode(count: number, code: string, settings?: Partial<CodeSettings>) {
 		const state = this.#codeStates.guarantee(
 			count,
-			() => defaultCodeState(["code", code, settings]),
+			() => defaultCodeState(["code", code, settings], this.#now),
 		)
 		const value = this.#sampleMap.get(code) ?? 0
 		return lensAlgo(this.#now, state, value)
