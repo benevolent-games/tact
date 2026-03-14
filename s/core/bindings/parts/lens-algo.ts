@@ -54,10 +54,11 @@ export const lensAlgo = (
 
 		const isFreshlyPressed = !isPressed(state.lastValue) && isPressed(value)
 		const isFreshlyReleased = isPressed(state.lastValue) && !isPressed(value)
-		const isHolding = (now - state.holdStart) >= holdTime
 
 		if (isFreshlyPressed)
 			state.holdStart = now
+
+		const isHolding = (now - state.holdStart) >= holdTime
 
 		state.lastValue = value
 
