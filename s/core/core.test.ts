@@ -24,25 +24,7 @@ export default Science.suite({
 		}
 	}),
 
-	"hold timing": test(async() => {
-		const {clock, device, resolve, actions} = testSetupAlpha()
-		const proceed = (options: {time: number, value: number}) => {
-			clock.time = options.time
-			device.setSample("KeyG", options.value)
-			resolve()
-		}
-
-		proceed({time: 0, value: 0})
-		expect(actions.basic.grenade.value).is(0)
-
-		proceed({time: 10, value: 1})
-		expect(actions.basic.grenade.value).is(0)
-
-		proceed({time: 210, value: 1})
-		expect(actions.basic.grenade.value).is(1)
-	}),
-
-	"hold timing onDown": test(async() => {
+	"hold timing and behavior": test(async() => {
 		const {clock, device, resolve, actions} = testSetupAlpha()
 		const proceed = (options: {time: number, value: number}) => {
 			clock.time = options.time
@@ -52,37 +34,46 @@ export default Science.suite({
 
 		let count = 0
 		actions.basic.grenade.onDown(() => { count++ })
+		const getValue = () => actions.basic.grenade.value
 
 		// start doing nothing
 		proceed({time: 0, value: 0})
+		expect(getValue()).is(0)
 		expect(count).is(0)
 
 		// start holding
 		proceed({time: 10, value: 1})
+		expect(getValue()).is(0)
 		expect(count).is(0)
 
 		// keep holding
 		proceed({time: 20, value: 1})
+		expect(getValue()).is(0)
 		expect(count).is(0)
 
 		// held long enough to trigger down
 		proceed({time: 210, value: 1})
+		expect(getValue()).is(1)
 		expect(count).is(1)
 
 		// release, shouldn't trigger new down
 		proceed({time: 220, value: 0})
+		expect(getValue()).is(0)
 		expect(count).is(1)
 
-		// ❌ start holding again
+		// start holding again
 		proceed({time: 230, value: 1})
+		expect(getValue()).is(0)
 		expect(count).is(1)
 
 		// keep holding again
 		proceed({time: 330, value: 1})
+		expect(getValue()).is(0)
 		expect(count).is(1)
 
 		// held long enough again to trigger down
 		proceed({time: 430, value: 1})
+		expect(getValue()).is(1)
 		expect(count).is(2)
 	}),
 
