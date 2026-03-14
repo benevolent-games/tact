@@ -1,16 +1,4 @@
 
-> [!CAUTION]
-> ### 🚨🚨 TACT IS UNDER DEVELOPMENT!! 🚨🚨
-> *everything is half-broken right now.. just gimmie a minute to finish coding this, will ya?*
-
-<br></br>
-
----
-
----
-
-<br></br>
-
 # 🎮 @benev/tact
 > *web game input library, from keypress to couch co-op*
 
