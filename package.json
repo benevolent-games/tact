@@ -16,16 +16,15 @@
 		"s"
 	],
 	"scripts": {
-		"build": "run-s _clean _tsc _ln _scute",
+		"build": "octo-s --npm-run _clean _tsc _ln _scute",
+		"dev": "octo 'scute -vw' 'tsc -w' 'node --watch x/tests.test.js' 'hottie x'",
 		"_clean": "rm -rf x",
 		"_tsc": "tsc",
 		"_scute": "scute -v",
-		"start": "octo 'scute -vw' 'tsc -w' 'node --watch x/tests.test.js' 'http-server x -c-1'",
 		"_ln": "run-s _ln-s _ln-assets",
 		"_ln-s": "ln -s \"$(realpath s)\" x/s",
 		"_ln-assets": "ln -s \"$(realpath assets)\" x/assets",
 		"test": "node x/tests.test.js",
-		"test-debug": "node inspect x/tests.test.js",
 		"count": "find s -path '*/_archive' -prune -o -name '*.ts' -exec wc -l {} +"
 	},
 	"peerDependencies": {
@@ -39,6 +38,7 @@
 		"@e280/stz": "^0.2.27"
 	},
 	"devDependencies": {
+		"@e280/hottie": "^0.1.0",
 		"@e280/octo": "^0.1.0",
 		"@e280/science": "^0.1.9",
 		"@e280/scute": "^0.3.1",
