@@ -10,6 +10,5 @@ export function circularClamp(vector: Xy, range: Vec2) {
 		0, 1,
 		true,
 	)
-	return v.normalize().multiplyBy(modifiedDistance)
+	return v.normalize().mulBy(modifiedDistance)
 }
-

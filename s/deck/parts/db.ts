@@ -1,6 +1,6 @@
 
 import {disposer, Hex} from "@e280/stz"
-import {signal, SignalFn} from "@e280/strata"
+import {signal, Signal} from "@e280/strata"
 import {StorageDriver, Store} from "@e280/kv"
 
 import {Bindings} from "../../core/bindings/types.js"
@@ -16,7 +16,7 @@ export class Db {
 
 	constructor(
 			private store: Store<CatalogData>,
-			public $catalog: SignalFn<Catalog>,
+			public $catalog: Signal<Catalog>,
 		) {
 
 		this.dispose.schedule(
@@ -63,4 +63,3 @@ export class Db {
 		})
 	}
 }
-

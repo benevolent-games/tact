@@ -5,9 +5,6 @@ import {DemoTheater} from "./ui/theater/view.js"
 
 const game = await Game.load()
 
-dom.register({
-	DemoTheater: class extends DemoTheater { game = game },
-})
+dom.render(dom("#demo-theater"), DemoTheater(game))
 
 console.log("🎮 tact")
-

@@ -1,5 +1,5 @@
 
-import {Disposable, ev, MapG} from "@e280/stz"
+import {Disposable, ev, GMap} from "@e280/stz"
 import {evergreen} from "./evergreen.js"
 
 /** stable reference to a gamepad, has a getter to get the latest gamepad snapshot */
@@ -13,7 +13,7 @@ export class Pad {
 
 /** track gamepad lifecycles as they connect or disconnect */
 export function gamepads(on: (pad: Pad) => () => void) {
-	const pads = new MapG<number, {pad: Pad, dispose: () => void}>()
+	const pads = new GMap<number, {pad: Pad, dispose: () => void}>()
 	return ev(window, {
 		gamepadconnected: ({gamepad}: GamepadEvent) => {
 			const get = () => navigator.getGamepads().at(gamepad.index)

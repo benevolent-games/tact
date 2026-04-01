@@ -1,20 +1,21 @@
 
-import {dom, view} from "@e280/sly"
+import {dom, shadow, useHost, useMount, useName, useSignal, useStyles} from "@e280/sly"
 import {styles} from "./styles.js"
 
-const NubLookpadView = view(use => () => {
-	use.name("nub-lookpad")
-	use.styles(styles)
+export const NubLookpad = shadow(() => {
+	useName("nub-lookpad")
+	useStyles(styles)
+	const host = useHost()
 
-	const $captured = use.signal<number | undefined>(undefined)
+	const $captured = useSignal<number | undefined>(undefined)
 
-	use.mount(() => dom.events(use.element, {
+	useMount(() => dom.events(host, {
 		pointerdown: (event: PointerEvent) => {
 			event.preventDefault()
 			if ($captured.value)
-				use.element.releasePointerCapture($captured.value)
+				host.releasePointerCapture($captured.value)
 
-			use.element.setPointerCapture(event.pointerId)
+			host.setPointerCapture(event.pointerId)
 			$captured.value = event.pointerId
 			// onPointerDrag(event)
 		},
@@ -29,17 +30,10 @@ const NubLookpadView = view(use => () => {
 		pointerup: (event: PointerEvent) => {
 			event.preventDefault()
 			if (event.pointerId === $captured.value) {
-				use.element.releasePointerCapture($captured.value)
+				host.releasePointerCapture($captured.value)
 				$captured.value = undefined
 				// onPointerDrag(event)
 			}
 		},
 	}))
 })
-
-export class NubLookpad extends (
-	NubLookpadView
-		.component()
-		.props(() => [])
-) {}
-

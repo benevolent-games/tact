@@ -11,7 +11,7 @@ export class State {
 		agent.label = label
 		agent.position
 			.set_(0.5, 0.5)
-			.multiply(this.arenaSize)
+			.mul(this.arenaSize)
 		this.agents.add(agent)
 		return agent
 	}
@@ -21,4 +21,3 @@ export class State {
 		return this
 	}
 }
-

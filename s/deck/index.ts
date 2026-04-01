@@ -7,8 +7,7 @@ export * from "./parts/local-storage-kv.js"
 export * from "./parts/merge-bindings.js"
 export * from "./parts/overlay-visibility.js"
 
-export * from "./components/deck-overlay/component.js"
-export * from "./components/deck-overlay/style.css.js"
+export * from "./views/overlay/view.js"
 
 export * from "./deck.js"
 

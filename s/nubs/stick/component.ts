@@ -2,22 +2,23 @@
 import {html} from "lit"
 import {coalesce, nap} from "@e280/stz"
 import {Scalar, Vec2} from "@benev/math"
-import {BaseElement, cssReset, dom, view} from "@e280/sly"
+import {cssReset, dom, shadow, useCss, useHost, useMount, useName, useOnce, useSignal} from "@e280/sly"
 
 import styleCss from "./style.css.js"
 import {circularClamp} from "../../utils/circular-clamp.js"
 import {StickDevice} from "../../core/devices/standard/stick.js"
 
-const NubStickView = view(use => ({$vector}: StickDevice) => {
-	use.name("nub-stick")
-	use.css(cssReset, styleCss)
+export const NubStick = shadow(({$vector}: StickDevice) => {
+	useName("nub-stick")
+	useCss(cssReset, styleCss)
+	const host = useHost()
 
-	const range = use.once(() => new Vec2(0.2, 0.8))
-	const $captured = use.signal<number | undefined>(undefined)
+	const range = useOnce(() => new Vec2(0.2, 0.8))
+	const $captured = useSignal<number | undefined>(undefined)
 
-	use.mount(() => {
+	useMount(() => {
 		function recalc(event: PointerEvent) {
-			const rect = use.element.getBoundingClientRect()
+			const rect = host.getBoundingClientRect()
 			const vector = $vector.get()
 			vector.x = Scalar.remap(event.clientX, rect.left, rect.right, -1, 1)
 			vector.y = Scalar.remap(event.clientY, rect.top, rect.bottom, -1, 1)
@@ -34,7 +35,7 @@ const NubStickView = view(use => ({$vector}: StickDevice) => {
 			// where our captured pointerup was clicking outside buttons
 			nap(0).then(() => {
 				if ($captured.value === undefined) return
-				use.element.releasePointerCapture($captured.value)
+				host.releasePointerCapture($captured.value)
 				$captured.value = undefined
 			})
 		}
@@ -50,11 +51,11 @@ const NubStickView = view(use => ({$vector}: StickDevice) => {
 				}],
 			}),
 
-			dom.events(use.element, {
+			dom.events(host, {
 				pointerdown: (event: PointerEvent) => {
 					if ($captured.value === undefined) {
 						$captured.value = event.pointerId
-						use.element.setPointerCapture($captured.value)
+						host.setPointerCapture($captured.value)
 						recalc(event)
 					}
 				},
@@ -104,12 +105,3 @@ const NubStickView = view(use => ({$vector}: StickDevice) => {
  		</div>
 	`
 })
-
-export class NubStick extends (
-	NubStickView
-		.component(class extends BaseElement {
-			readonly device = new StickDevice()
-		})
-		.props(el => [el.device])
-) {}
-

@@ -1,6 +1,6 @@
 
 import {html} from "lit"
-import {BaseElement, view} from "@e280/sly"
+import {shadow, useCss, useMount, useName, useOnce, useRendered, useShadow} from "@e280/sly"
 import {ev, MapG} from "@e280/stz"
 
 import stylesCss from "./styles.css.js"
@@ -11,16 +11,17 @@ import {touchTracking} from "./utils/touch-tracking.js"
 import {VpadDevice} from "../../core/devices/standard/vpad.js"
 import {preventDefaultTouchShenanigans} from "./utils/prevent-default-touch-shenanigans.js"
 
-const NubVpadView = view(use => (device: VpadDevice) => {
-	use.name("nub-vpad")
-	use.css(stylesCss)
+export const NubVpad = shadow((device: VpadDevice) => {
+	useName("nub-vpad")
+	useCss(stylesCss)
+	const shadowRoot = useShadow()
 
-	const buttons = use.once(() => new Set<HTMLButtonElement>())
-	const codes = use.once(() => new MapG<HTMLButtonElement, keyof GamepadInputs>())
+	const buttons = useOnce(() => new Set<HTMLButtonElement>())
+	const codes = useOnce(() => new MapG<HTMLButtonElement, keyof GamepadInputs>())
 
-	use.rendered.then(() => {
+	useRendered().then(() => {
 		const elements = Array.from(
-			use.shadow.querySelectorAll<HTMLButtonElement>("button[x-code]")
+			shadowRoot.querySelectorAll<HTMLButtonElement>("button[x-code]")
 		)
 		for (const button of elements) {
 			const code = button.getAttribute("x-code")
@@ -31,22 +32,22 @@ const NubVpadView = view(use => (device: VpadDevice) => {
 		}
 	})
 
-	use.mount(() => preventDefaultTouchShenanigans())
+	useMount(() => preventDefaultTouchShenanigans())
 
-	use.mount(() => touchTracking({
-		target: use.shadow,
+	useMount(() => touchTracking({
+		target: shadowRoot,
 		buttons,
-		touchdown: button => {
+		touchdown: (button: HTMLButtonElement) => {
 			const code = codes.require(button)
 			device.setSample(code, 1)
 		},
-		touchup: button => {
+		touchup: (button: HTMLButtonElement) => {
 			const code = codes.require(button)
 			device.setSample(code, 0)
 		},
 	}))
 
-	use.mount(() => ev(use.shadow, {
+	useMount(() => ev(shadowRoot, {
 		contextmenu: (e: Event) => e.preventDefault(),
 	}))
 
@@ -121,29 +122,20 @@ const NubVpadView = view(use => (device: VpadDevice) => {
 			<div class="left side">
 				${renderLeftShoulder()}
 				${renderDPad()}
-				${NubStick.view
-					.props(device.stickLeft)
-					.attr("class", "stick")
-					.render()}
+				${NubStick.with({
+					props: [device.stickLeft],
+					attrs: {class: "stick"},
+				})}
 			</div>
 
 			<div class="right side">
 				${renderRightShoulder()}
 				${renderButtonPad()}
-				${NubStick.view
-					.props(device.stickRight)
-					.attr("class", "stick")
-					.render()}
+				${NubStick.with({
+					props: [device.stickRight],
+					attrs: {class: "stick"},
+				})}
 			</div>
 		</div>
 	`
 })
-
-export class NubVpad extends (
-	NubVpadView
-		.component(class extends BaseElement {
-			readonly device = new VpadDevice()
-		})
-		.props(el => [el.device])
-) {}
-

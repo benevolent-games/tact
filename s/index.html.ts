@@ -37,7 +37,7 @@ export default ssg.page(import.meta.url, async orb => ({
 			</div>
 		</header>
 
-		<demo-theater></demo-theater>
+		<div id=demo-theater></div>
 
 		<section>
 			<h3>controls</h3>
@@ -49,4 +49,3 @@ export default ssg.page(import.meta.url, async orb => ({
 		</section>
 	`,
 }))
-

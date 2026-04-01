@@ -22,16 +22,16 @@ export class Renderer {
 
 	/** take a game-state position and resolve it into canvas coordinates */
 	resolve(position: Vec2) {
-		return position.clone()
+		return position.dup()
 
 			// 0-1 relative to arena scale
-			.divide(this.state.arenaSize)
+			.div(this.state.arenaSize)
 
 			// flip y axis
-			.morph(v => {v.y = 1 - v.y})
+			.morph((v: Vec2) => {v.y = 1 - v.y})
 
 			// stretch to the size of the canvas
-			.multiply_(this.canvas.width, this.canvas.height)
+			.mul_(this.canvas.width, this.canvas.height)
 	}
 
 	render() {
@@ -110,4 +110,3 @@ export class Renderer {
 		ctx.fillText(agent.label, x, y)
 	}
 }
-
