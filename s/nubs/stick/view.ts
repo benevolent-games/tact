@@ -84,24 +84,25 @@ export const NubStick = shadow(({$vector}: StickDevice) => {
 	}
 
 	return html`
- 		<div class=frame>
- 			<div class=inner style="${innerstyle}"></div>
- 		</div>
+		<div class=frame>
+			<div class=inner style="${innerstyle}"></div>
+		</div>
 
- 		<div class=frame>
- 			<div class=outer style="${outerstyle}"></div>
- 		</div>
+		<div class=frame>
+			<div class=outer style="${outerstyle}"></div>
+		</div>
 
- 		<div class=frame>
- 			<div class=stickbase></div>
- 		</div>
+		<div class=frame>
+			<div class=stickbase></div>
+		</div>
 
- 		<div class=frame style="${framestyle(0.5)}">
- 			<div class=stickunder></div>
- 		</div>
+		<div class=frame style="${framestyle(0.5)}">
+			<div class=stickunder></div>
+		</div>
 
- 		<div class=frame style="${framestyle(1.0)}">
- 			<div class=stick></div>
- 		</div>
+		<div class=frame style="${framestyle(1.0)}">
+			<div class=stick></div>
+		</div>
 	`
 })
+

@@ -1,11 +1,11 @@
 
 import {html} from "lit"
+import {ev, GMap} from "@e280/stz"
 import {shadow, useCss, useMount, useName, useOnce, useRendered, useShadow} from "@e280/sly"
-import {ev, MapG} from "@e280/stz"
 
 import stylesCss from "./styles.css.js"
 
-import {NubStick} from "../stick/component.js"
+import {NubStick} from "../stick/view.js"
 import {GamepadInputs} from "./utils/gamepad-inputs.js"
 import {touchTracking} from "./utils/touch-tracking.js"
 import {VpadDevice} from "../../core/devices/standard/vpad.js"
@@ -17,7 +17,7 @@ export const NubVpad = shadow((device: VpadDevice) => {
 	const shadowRoot = useShadow()
 
 	const buttons = useOnce(() => new Set<HTMLButtonElement>())
-	const codes = useOnce(() => new MapG<HTMLButtonElement, keyof GamepadInputs>())
+	const codes = useOnce(() => new GMap<HTMLButtonElement, keyof GamepadInputs>())
 
 	useRendered().then(() => {
 		const elements = Array.from(

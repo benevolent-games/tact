@@ -1,6 +1,5 @@
 
-export * from "./lookpad/component.js"
-export * from "./stick/component.js"
-export * from "./vpad/component.js"
-export * from "./components.js"
+export * from "./lookpad/view.js"
+export * from "./stick/view.js"
+export * from "./vpad/view.js"
 
