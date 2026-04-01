@@ -33,7 +33,7 @@ export const styles = css`
 		outline: 1px solid red;
 	}
 
-	[deck="overlay"] {
+	[view="deck-overlay"] {
 		position: absolute;
 		top: 10%;
 		left: 0;
@@ -55,4 +55,3 @@ export const styles = css`
 }
 
 `
-
