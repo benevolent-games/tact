@@ -23,7 +23,9 @@ it's good at user-customizable keybindings, multiple gamepad support, and mobile
 ## 🍋 tact deck
 > *full setup with ui, batteries included*
 
-the deck ties together all the important pieces of tact into a single user experience, complete with ui components.
+the deck ties together all the important pieces of tact into a single user experience, complete with ui views.
+
+tact's ui is built with [`@e280/sly` shadow views](https://github.com/e280/sly).
 
 ### 🛹 deck setup
 - **import stuff from tact**
@@ -77,13 +79,18 @@ the deck ties together all the important pieces of tact into a single user exper
     ```
 
 ### 🛹 deck ui: the overlay
-- **register the deck's web components to the dom**
+- **render the deck overlay with sly**
     ```ts
-    deck.registerComponents()
+    import {dom} from "@e280/sly"
+
+    dom.render(
+      dom("#game-ui"),
+      tact.DeckOverlay(deck),
+    )
     ```
 - **place the ui on top of your game canvas**
     ```html
-    <deck-overlay></deck-overlay>
+    <div id="game-ui"></div>
     ```
 
 
@@ -390,25 +397,33 @@ the hub embraces that analogy, helping you coordinate the plugging and unpluggin
 > *mobile ui like virtual thumbsticks and buttons*
 
 ### 📱 nubs setup
-- **register nub components to dom**
+- **render nub views with sly**
     ```ts
-    tact.registerNubs()
-    ```
-- **place nub components onto your html page**
-    ```html
-    <nub-stick></nub-stick>
+    import {dom} from "@e280/sly"
+
+    const stick = new tact.StickDevice()
+
+    dom.render(
+      dom("#controls"),
+      tact.NubStick(stick),
+    )
     ```
 
 ### 📱 nub stick
-- **place a nub-stick onto your page**
+- **place a mount point onto your page**
     ```html
-    <nub-stick></nub-stick>
+    <div id="controls"></div>
     ```
-- **get the stick device, plug it into your hub or whatever**
+- **make the stick device yourself, then plug it into your hub or whatever**
     ```ts
-    const nubStick = document.queryElement<tact.NubStick>("nub-stick")!
+    const stick = new tact.StickDevice()
 
-    deck.hub.plug(nubStick.device)
+    dom.render(
+      dom("#controls"),
+      tact.NubStick(stick),
+    )
+
+    deck.hub.plug(stick)
     ```
 
 
@@ -418,4 +433,3 @@ the hub embraces that analogy, helping you coordinate the plugging and unpluggin
 
 ## 🍋 tact is by https://benevolent.games/
 > *building the future of web games*
-
