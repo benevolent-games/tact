@@ -1,5 +1,6 @@
 
-name: 🚀 gh-pages deploy
+name: 🚀 github pages
+
 on:
   push:
     tags:
