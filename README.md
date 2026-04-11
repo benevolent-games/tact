@@ -329,7 +329,7 @@ a port represents a single playable port, and you poll it each frame to resolve 
 ### 🔌 interrogating actions
 - **poll the port every frame**
     ```ts
-    port.poll()
+    port.resolve()
     ```
 - **now you can inspect the `actions`**
     ```ts
