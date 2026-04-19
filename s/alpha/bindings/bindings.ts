@@ -13,16 +13,19 @@ export class Bindings<B extends BindingsData> {
 	}
 
 	get shape() {
-		return obMap(this.#data, bracket => obMap(bracket, () => true)) as Shape<B>
+		const shape = obMap(this.#data, bracket => obMap(bracket, () => 0)) as any
+		for (const [index, [mode, action]] of this.#codebook)
+			shape[mode][action] = index
+		return shape as Shape<B>
 	}
 
-	getBind(id: number) {
-		const [mode, action] = this.#codebook.require(id)
+	getBind(index: number) {
+		const [mode, action] = this.#codebook.require(index)
 		return {mode, action}
 	}
 
-	getAtom(id: number) {
-		const [mode, action] = this.#codebook.require(id)
+	getAtom(index: number) {
+		const [mode, action] = this.#codebook.require(index)
 		return this.#data[mode][action]
 	}
 }

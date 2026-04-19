@@ -3,10 +3,10 @@ import {GMap} from "@e280/stz"
 import {BindingsData} from "../types.js"
 import {sortByKey} from "./sort-by-key.js"
 
-export function makeCodebook<B extends BindingsData>(bindings: B) {
+export function makeCodebook<B extends BindingsData>(data: B) {
 	const codebook = new GMap<number, [mode: keyof B, action: keyof B[keyof B]]>()
 
-	const binds = Object.entries(bindings)
+	const binds = Object.entries(data)
 		.sort(sortByKey)
 		.flatMap(([mode, bracket]) =>
 			Object.entries(bracket)

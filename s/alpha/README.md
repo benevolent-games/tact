@@ -22,25 +22,25 @@ import {
 } from "@benev/tact"
 ```
 
-1. **setup your game's keybindings.**
+1. **setup your game's keybindings**
     ```ts
     const bindings = new Bindings({
-      running: {forward: "KeyW", jump: "Space"},
+      running: {forward: "KeyW", jump: ["and", "ShiftLeft", "Space"]},
       gunning: {shoot: ["or", "pointer.button.left", "gamepad.trigger.right"]},
     })
     ```
-1. **devices yield raw input samples, and are composable.**
+1. **composable devices yield raw input samples**
     ```ts
     const device = new Devices(
       new KeyboardDevice(),
       new PointerDevice(),
     )
     ```
-1. **controller produces activity, compact binary data ideal for networking.**
+1. **controller converts device samples to activity (compact binary data ideal for networking)**
     ```ts
     const controller = new Controller(bindings)
     ```
-1. **port ingests activity and updates actions, which are ergonomics for checking if buttons are pressed etc.**
+1. **port converts activity into actions (ergonomics for checking if buttons are pressed etc)**
     ```ts
     const port = new Port(bindings.shape)
     ```

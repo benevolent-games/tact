@@ -1,7 +1,7 @@
 
 export type BindingsData = {[mode: string]: Bracket}
 export type Bracket = {[action: string]: Atom}
-export type Shape<B extends BindingsData> = {[MK in keyof B]: {[AK in keyof B[MK]]: true}}
+export type Shape<B extends BindingsData> = {[MK in keyof B]: {[AK in keyof B[MK]]: number}}
 
 export type AsBindingsData<B extends BindingsData> = B
 export const asBindingsData = <B extends BindingsData>(b: B) => b
