@@ -15,6 +15,13 @@ it's good at user-customizable keybindings, multiple gamepad support, and mobile
 
 ## tact basics
 
+```ts
+import {
+  Bindings, Controller, Port,
+  Devices, KeyboardDevice, PointerDevice,
+} from "@benev/tact"
+```
+
 1. **setup your game's keybindings.**
     ```ts
     const bindings = new Bindings({
@@ -40,7 +47,8 @@ it's good at user-customizable keybindings, multiple gamepad support, and mobile
 1. **all together now!**
     ```ts
     onMyGameTick(() => {
-      const activity = controller.update([...device])
+      const samples = [...device]
+      const activity = controller.update(samples)
       const actions = port.update(activity)
 
       // now you can check your actions
@@ -48,8 +56,7 @@ it's good at user-customizable keybindings, multiple gamepad support, and mobile
       actions.running.forward.pressed // true
     })
     ```
-
-> [!TIP]  
-> imagine an old-timey game console, with four ports on the front for plugging controllers into. *each **controller** sends **activity** down the wire to a **port.***
-> now if you're thinking about networking: controllers make sense on the clientside, ports make sense on the serverside.
+1. **consider the following...**  
+    imagine an old-timey game console, with four ports on the front for plugging controllers into. *each **controller** sends **activity** down the wire to a **port.***  
+    now if you're thinking about networking: controllers make sense on the clientside, ports make sense on the serverside.
 
