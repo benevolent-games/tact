@@ -7,7 +7,7 @@ npm install @benev/tact
 ```
 
 tact is a toolkit for handling user inputs on the web.  
-it's good at user-customizable keybindings, multiple gamepad support, and mobile ui.  
+it's good at user-customizable keybindings, multiple gamepad support, networking, and mobile ui.  
 
 
 
