@@ -1,9 +1,9 @@
 
 import {suite, test, expect} from "@e280/science"
-import {Bindings} from "./bindings/bindings.js"
+import {Bindings} from "./bindings.js"
+import {Controller} from "./controller.js"
 import {encodeActivity} from "./activity/encode.js"
 import {decodeActivity} from "./activity/decode.js"
-import {Controller} from "./controller/controller.js"
 
 function setupBindings() {
 	return new Bindings({

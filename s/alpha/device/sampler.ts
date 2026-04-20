@@ -1,7 +1,7 @@
 
 import {sub} from "@e280/stz"
-import {SampleMap} from "./sample-map.js"
-import {Device, Sample} from "../types.js"
+import {Device, Sample} from "./types.js"
+import {SampleMap} from "../parts/sample-map.js"
 
 export class SamplerDevice implements Device {
 	on = sub<Sample>()

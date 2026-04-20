@@ -1,6 +1,6 @@
 
 import {ActivityTuple} from "./types.js"
-import {littleEndian, size} from "./parts/consts.js"
+import {littleEndian, size} from "./consts.js"
 
 export function encodeActivity(acts: ActivityTuple[]) {
 	const length = acts.length * size

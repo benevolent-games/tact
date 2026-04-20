@@ -1,21 +1,21 @@
 
 import {GMap} from "@e280/stz"
-import {Sample} from "../device/types.js"
-import {Bindings} from "../bindings/bindings.js"
-import {ActivityTuple} from "../activity/types.js"
-import {encodeActivity} from "../activity/encode.js"
-import {tmax, tmin} from "../../utils/quick-math.js"
-import {lensAlgo} from "../bindings/parts/lens-algo.js"
-import {SampleMap} from "../device/parts/sample-map.js"
-import {defaultCodeState} from "../bindings/parts/defaults.js"
-import {Atom, BindingsData, CodeSettings, CodeState} from "../bindings/types.js"
+import {Bindings} from "./bindings.js"
+import {Sample} from "./device/types.js"
+import {lensAlgo} from "./parts/lens-algo.js"
+import {SampleMap} from "./parts/sample-map.js"
+import {tmax, tmin} from "../utils/quick-math.js"
+import {ActivityTuple} from "./activity/types.js"
+import {encodeActivity} from "./activity/encode.js"
+import {defaultCodeState} from "./parts/defaults.js"
+import {Atom, BindingsData, CodeSettings, CodeState} from "./types.js"
 
 export class Controller<B extends BindingsData> {
 	#now = 0
+	#bindings
 	#sampleMap = new SampleMap()
 	#codeStates = new GMap<string, CodeState>()
 	#activityMap = new GMap<number, number>()
-	#bindings
 
 	constructor(bindings: Bindings<B>) {
 		this.#bindings = bindings

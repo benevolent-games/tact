@@ -1,7 +1,7 @@
 
 import {count} from "@e280/stz"
 import {ActivityTuple} from "./types.js"
-import {littleEndian, size} from "./parts/consts.js"
+import {littleEndian, size} from "./consts.js"
 
 export function* decodeActivity(bytes: Uint8Array) {
 	const n = bytes.byteLength / size

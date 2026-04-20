@@ -1,6 +1,6 @@
 
 import {disposer, ev} from "@e280/stz"
-import {SamplerDevice} from "../parts/sampler.js"
+import {SamplerDevice} from "./sampler.js"
 
 export class KeyboardDevice extends SamplerDevice {
 	dispose = disposer()
