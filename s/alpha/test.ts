@@ -1,5 +1,6 @@
 
 import {suite, test, expect} from "@e280/science"
+import {Port} from "./port.js"
 import {Bindings} from "./bindings.js"
 import {Controller} from "./controller.js"
 import {encodeActivity} from "./activity/encode.js"
@@ -19,7 +20,6 @@ export default suite({
 		}),
 
 		"binds by index": test(async() => {
-			console.log(setupBindings().need(0))
 			expect(setupBindings().need(0).action).is("shoot")
 			expect(setupBindings().need(1).action).deep("forward")
 			expect(setupBindings().need(2).action).deep("jump")
@@ -56,16 +56,16 @@ export default suite({
 		}),
 	}),
 
-	// port: suite({
-	// 	"activity to actions": test(async() => {
-	// 		const port = new Port(setupBindings().shape)
-	// 		expect(port.actions.running.forward.value).is(0)
-	// 		const actions = port.update(encodeActivity([[1, 1]]))
-	// 		expect(port.actions.running.forward.value).is(1)
-	// 		expect(actions.running.forward.value).is(1)
-	// 		expect(actions.running.forward.pressed).is(true)
-	// 		expect(actions.running.forward.changed).is(true)
-	// 	}),
-	// }),
+	port: suite({
+		"activity to actions": test(async() => {
+			const port = new Port(setupBindings().shape)
+			expect(port.actions.running.forward.value).is(0)
+			const actions = port.update(encodeActivity([[1, 1]]))
+			expect(port.actions.running.forward.value).is(1)
+			expect(actions.running.forward.value).is(1)
+			expect(actions.running.forward.pressed).is(true)
+			expect(actions.running.forward.changed).is(true)
+		}),
+	}),
 })
 
