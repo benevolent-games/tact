@@ -1,6 +1,6 @@
 
 import {count} from "@e280/stz"
-import {Act} from "./types.js"
+import {ActivityTuple} from "./types.js"
 import {littleEndian, size} from "./parts/consts.js"
 
 export function* decodeActivity(bytes: Uint8Array) {
@@ -13,7 +13,7 @@ export function* decodeActivity(bytes: Uint8Array) {
 		const offset = i * size
 		const index = view.getUint16(offset, littleEndian)
 		const value = view.getFloat32(offset + 2, littleEndian)
-		yield [index, value] as Act
+		yield [index, value] as ActivityTuple
 	}
 }
 

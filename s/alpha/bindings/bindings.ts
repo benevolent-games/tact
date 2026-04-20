@@ -1,32 +1,40 @@
 
-import {obMap} from "@e280/stz"
-import {BindingsData, Shape} from "./types.js"
-import {makeCodebook} from "./parts/codebook.js"
+import {GMap, obMap} from "@e280/stz"
+import {sortByKey} from "./parts/sort-by-key.js"
+import {Bind, BindingsData, Shape} from "./types.js"
 
 export class Bindings<B extends BindingsData> {
 	#data
-	#codebook
+	#binds = new GMap<number, Bind<B>>()
 
 	constructor(data: B) {
 		this.#data = data
-		this.#codebook = makeCodebook(data)
+
+		Object.entries(data)
+			.sort(sortByKey)
+			.flatMap(([mode, bracket]) =>
+				Object.entries(bracket)
+					.sort(sortByKey)
+					.map(([action, atom]) => ({mode, action, atom}))
+			)
+			.forEach((bind, id) => {
+				this.#binds.set(id, {...bind, id})
+			})
 	}
 
 	get shape() {
 		const shape = obMap(this.#data, bracket => obMap(bracket, () => 0)) as any
-		for (const [index, [mode, action]] of this.#codebook)
-			shape[mode][action] = index
+		for (const [id, {mode, action}] of this.#binds)
+			shape[mode][action] = id
 		return shape as Shape<B>
 	}
 
-	getBind(index: number) {
-		const [mode, action] = this.#codebook.require(index)
-		return {mode, action}
+	*list() {
+		yield* this.#binds.values()
 	}
 
-	getAtom(index: number) {
-		const [mode, action] = this.#codebook.require(index)
-		return this.#data[mode][action]
+	need(id: number) {
+		return this.#binds.need(id)
 	}
 }
 

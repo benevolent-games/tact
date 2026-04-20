@@ -6,6 +6,13 @@ export type Shape<B extends BindingsData> = {[MK in keyof B]: {[AK in keyof B[MK
 export type AsBindingsData<B extends BindingsData> = B
 export const asBindingsData = <B extends BindingsData>(b: B) => b
 
+export type Bind<B extends BindingsData> = {
+	id: number
+	mode: keyof B
+	action: keyof B[keyof B]
+	atom: Atom
+}
+
 export type Code = ["code", string, settings?: Partial<CodeSettings>]
 export type And = ["and", ...Atom[]]
 export type Or = ["or", ...Atom[]]

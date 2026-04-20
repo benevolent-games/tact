@@ -31,24 +31,23 @@ import {
     ```
 1. **composable devices yield raw input samples**
     ```ts
-    const device = new Devices(
+    const devices = new Devices(
       new KeyboardDevice(),
       new PointerDevice(),
     )
     ```
-1. **controller converts device samples to activity (compact binary data ideal for networking)**
+1. **controller will convert device samples to activity (compact binary data ideal for networking)**
     ```ts
     const controller = new Controller(bindings)
     ```
-1. **port converts activity into actions (ergonomics for checking if buttons are pressed etc)**
+1. **port will convert activity into actions (ergonomics for checking if buttons are pressed etc)**
     ```ts
     const port = new Port(bindings.shape)
     ```
 1. **all together now!**
     ```ts
     onMyGameTick(() => {
-      const samples = [...device]
-      const activity = controller.update(samples)
+      const activity = controller.update(devices.samples())
       const actions = port.update(activity)
 
       // now you can check your actions

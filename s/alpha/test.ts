@@ -3,6 +3,7 @@ import {suite, test, expect} from "@e280/science"
 import {Bindings} from "./bindings/bindings.js"
 import {encodeActivity} from "./activity/encode.js"
 import {decodeActivity} from "./activity/decode.js"
+import {Controller} from "./controller/controller.js"
 
 function setupBindings() {
 	return new Bindings({
@@ -18,41 +19,42 @@ export default suite({
 		}),
 
 		"binds by index": test(async() => {
-			expect(setupBindings().getBind(0)).deep({mode: "gunning", action: "shoot"})
-			expect(setupBindings().getBind(1)).deep({mode: "running", action: "forward"})
-			expect(setupBindings().getBind(2)).deep({mode: "running", action: "jump"})
+			console.log(setupBindings().need(0))
+			expect(setupBindings().need(0).action).is("shoot")
+			expect(setupBindings().need(1).action).deep("forward")
+			expect(setupBindings().need(2).action).deep("jump")
 		}),
 
 		"bind consistent order, mode": test(async() => {
 			for (const b of [
 				new Bindings({alpha: {x: "KeyX"}, bravo: {x: "KeyX"}}),
 				new Bindings({bravo: {x: "KeyX"}, alpha: {x: "KeyX"}}),
-			]) expect(b.getBind(0)).deep({mode: "alpha", action: "x"})
+			]) expect(b.need(0).mode).deep("alpha")
 		}),
 
 		"bind consistent order, action": test(async() => {
 			for (const b of [
 				new Bindings({x: {alpha: "KeyA", bravo: "KeyB"}}),
 				new Bindings({x: {bravo: "KeyB", alpha: "KeyA"}}),
-			]) expect(b.getBind(0)).deep({mode: "x", action: "alpha"})
+			]) expect(b.need(0).action).deep("alpha")
 		}),
 	}),
 
 	activity: suite({
 		"roundtrip": test(async() => {
 			const activity = encodeActivity([[0, 0], [1, 1]])
-			const acts = [...decodeActivity(activity)]
-			expect(acts).deep([[0, 0], [1, 1]])
+			const tuples = [...decodeActivity(activity)]
+			expect(tuples).deep([[0, 0], [1, 1]])
 		}),
 	}),
 
-	// controller: suite({
-	// 	"samples to activity": test(async() => {
-	// 		const controller = new Controller(setupBindings())
-	// 		const activity = controller.update(["KeyW", 1])
-	// 		expect([...decodeActivity(activity)]).deep([[1, 1]])
-	// 	}),
-	// }),
+	controller: suite({
+		"samples to activity": test(async() => {
+			const controller = new Controller(setupBindings())
+			const activity = controller.update([["KeyW", 1]])
+			expect([...decodeActivity(activity)]).deep([[1, 1]])
+		}),
+	}),
 
 	// port: suite({
 	// 	"activity to actions": test(async() => {

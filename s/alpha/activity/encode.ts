@@ -1,8 +1,8 @@
 
-import {Act} from "./types.js"
+import {ActivityTuple} from "./types.js"
 import {littleEndian, size} from "./parts/consts.js"
 
-export function encodeActivity(acts: Act[]) {
+export function encodeActivity(acts: ActivityTuple[]) {
 	const length = acts.length * size
 	const buffer = new ArrayBuffer(length)
 	const view = new DataView(buffer)
