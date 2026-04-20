@@ -1,6 +1,8 @@
 
 import {suite, test, expect} from "@e280/science"
 import {Bindings} from "./bindings/bindings.js"
+import {encodeActivity} from "./activity/encode.js"
+import {decodeActivity} from "./activity/decode.js"
 
 function setupBindings() {
 	return new Bindings({
@@ -36,14 +38,14 @@ export default suite({
 		}),
 	}),
 
-	// activity: suite({
-	// 	"roundtrip": test(async() => {
-	// 		const activity = encodeActivity([[0, 0], [1, 1]])
-	// 		const acts = decodeActivity(activity)
-	// 		expect(acts).deep([[0, 0], [1, 1]])
-	// 	}),
-	// }),
-	//
+	activity: suite({
+		"roundtrip": test(async() => {
+			const activity = encodeActivity([[0, 0], [1, 1]])
+			const acts = [...decodeActivity(activity)]
+			expect(acts).deep([[0, 0], [1, 1]])
+		}),
+	}),
+
 	// controller: suite({
 	// 	"samples to activity": test(async() => {
 	// 		const controller = new Controller(setupBindings())
@@ -51,7 +53,7 @@ export default suite({
 	// 		expect([...decodeActivity(activity)]).deep([[1, 1]])
 	// 	}),
 	// }),
-	//
+
 	// port: suite({
 	// 	"activity to actions": test(async() => {
 	// 		const port = new Port(setupBindings().shape)
