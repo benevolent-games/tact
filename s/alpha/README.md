@@ -47,7 +47,7 @@ import {
 1. **all together now!**
     ```ts
     onMyGameTick(() => {
-      const activity = controller.update(devices.samples())
+      const activity = controller.update(Date.now(), devices.samples())
       const actions = port.update(activity)
 
       // now you can check your actions

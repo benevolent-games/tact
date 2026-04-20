@@ -23,7 +23,8 @@ export class Controller<B extends BindingsData> {
 			this.#activityMap.set(bind.id, 0)
 	}
 
-	update(samples: Iterable<Sample>) {
+	update(now: number, samples: Iterable<Sample>) {
+		this.#now = now
 		const tuples: ActivityTuple[] = []
 
 		for (const sample of samples)

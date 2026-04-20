@@ -51,7 +51,7 @@ export default suite({
 	controller: suite({
 		"samples to activity": test(async() => {
 			const controller = new Controller(setupBindings())
-			const activity = controller.update([["KeyW", 1]])
+			const activity = controller.update(0, [["KeyW", 1]])
 			expect([...decodeActivity(activity)]).deep([[1, 1]])
 		}),
 	}),
