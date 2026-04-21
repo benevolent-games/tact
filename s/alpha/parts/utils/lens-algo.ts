@@ -2,7 +2,7 @@
 import {pipe} from "@e280/stz"
 import {Scalar} from "@benev/math"
 import {CodeState} from "../types.js"
-import {isPressed} from "./is-pressed.js"
+import {isDown} from "./is-down.js"
 import {defaultHoldTime} from "./defaults.js"
 
 export const lensAlgo = (
@@ -52,8 +52,8 @@ export const lensAlgo = (
 				: settings.timing[1]
 		) ?? defaultHoldTime
 
-		const isFreshlyPressed = !isPressed(state.lastValue) && isPressed(value)
-		const isFreshlyReleased = isPressed(state.lastValue) && !isPressed(value)
+		const isFreshlyPressed = !isDown(state.lastValue) && isDown(value)
+		const isFreshlyReleased = isDown(state.lastValue) && !isDown(value)
 
 		if (isFreshlyPressed)
 			state.holdStart = now
@@ -72,7 +72,7 @@ export const lensAlgo = (
 					: 0
 
 			case "hold":
-				return (isPressed(value) && isHolding)
+				return (isDown(value) && isHolding)
 					? value
 					: 0
 

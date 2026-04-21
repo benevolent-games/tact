@@ -63,7 +63,7 @@ export default suite({
 			const actions = port.update(encodeActivity([[1, 1]]))
 			expect(port.actions.running.forward.value).is(1)
 			expect(actions.running.forward.value).is(1)
-			expect(actions.running.forward.pressed).is(true)
+			expect(actions.running.forward.down).is(true)
 			expect(actions.running.forward.changed).is(true)
 		}),
 	}),

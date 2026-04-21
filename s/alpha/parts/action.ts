@@ -1,9 +1,10 @@
 
 import {sub} from "@e280/stz"
-import {isPressed} from "./utils/is-pressed.js"
+import {isDown} from "./utils/is-down.js"
 
 export class Action {
 	on = sub<[Action]>()
+	onUp = sub<[Action]>()
 	onDown = sub<[Action]>()
 
 	#value = 0
@@ -17,15 +18,17 @@ export class Action {
 		this.#previous = this.#value
 		this.#value = v
 
-		this.on.publish(this)
-		if (this.changedDown) this.onDown.publish(this)
+		if (this.changed) {
+			this.on.publish(this)
+			if (this.up) this.onUp.publish(this)
+			else this.onDown.publish(this)
+		}
 	}
 
 	get previous() { return this.#previous }
 	get changed() { return this.#value !== this.#previous }
-	get pressed() { return isPressed(this.#value) }
-	get up() { return !this.pressed }
-	get down() { return this.pressed }
+	get up() { return !isDown(this.#value) }
+	get down() { return isDown(this.#value) }
 	get changedUp() { return this.changed && this.up }
 	get changedDown() { return this.changed && this.down }
 }
