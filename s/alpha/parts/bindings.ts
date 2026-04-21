@@ -1,6 +1,6 @@
 
 import {GMap, obMap} from "@e280/stz"
-import {sortByKey} from "./parts/sort-by-key.js"
+import {sortByKey} from "./utils/sort-by-key.js"
 import {Bind, BindingsData, Shape} from "./types.js"
 
 export class Bindings<B extends BindingsData> {

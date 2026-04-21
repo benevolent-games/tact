@@ -2,12 +2,12 @@
 import {GMap} from "@e280/stz"
 import {Bindings} from "./bindings.js"
 import {Sample} from "./device/types.js"
-import {lensAlgo} from "./parts/lens-algo.js"
-import {SampleMap} from "./parts/sample-map.js"
-import {tmax, tmin} from "../utils/quick-math.js"
+import {lensAlgo} from "./utils/lens-algo.js"
+import {SampleMap} from "./utils/sample-map.js"
 import {ActivityTuple} from "./activity/types.js"
 import {encodeActivity} from "./activity/encode.js"
-import {defaultCodeState} from "./parts/defaults.js"
+import {tmax, tmin} from "../../utils/quick-math.js"
+import {defaultCodeState} from "./utils/defaults.js"
 import {Atom, BindingsData, CodeSettings, CodeState} from "./types.js"
 
 export class Controller<B extends BindingsData> {

@@ -1,14 +1,8 @@
 
 import {GMap, obMap} from "@e280/stz"
-import {Shape} from "./types.js"
 import {Action} from "./action.js"
+import {Actions, Shape} from "./types.js"
 import {decodeActivity} from "./activity/decode.js"
-
-export type Actions<S extends Shape<any>> = {
-	[M in keyof S]: {
-		[A in keyof S[M]]: Action
-	}
-}
 
 export class Port<S extends Shape<any>> {
 	actions

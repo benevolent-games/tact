@@ -1,10 +1,10 @@
 
 import {suite, test, expect} from "@e280/science"
-import {Port} from "./port.js"
-import {Bindings} from "./bindings.js"
-import {Controller} from "./controller.js"
-import {encodeActivity} from "./activity/encode.js"
-import {decodeActivity} from "./activity/decode.js"
+import {Port} from "./parts/port.js"
+import {Bindings} from "./parts/bindings.js"
+import {Controller} from "./parts/controller.js"
+import {encodeActivity} from "./parts/activity/encode.js"
+import {decodeActivity} from "./parts/activity/decode.js"
 
 function setupBindings() {
 	return new Bindings({

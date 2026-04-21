@@ -1,6 +1,6 @@
 
 import {sub} from "@e280/stz"
-import {isPressed} from "./parts/is-pressed.js"
+import {isPressed} from "./utils/is-pressed.js"
 
 export class Action {
 	on = sub<[Action]>()

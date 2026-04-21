@@ -1,6 +1,6 @@
 
 import {Device} from "./types.js"
-import {SampleMap} from "../parts/sample-map.js"
+import {SampleMap} from "../utils/sample-map.js"
 
 export class Devices implements Device {
 	set = new Set<Device>()

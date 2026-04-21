@@ -1,12 +1,12 @@
 
-export * from "./device/devices.js"
-export * from "./device/keyboard.js"
-export * from "./device/sampler.js"
-export * from "./device/types.js"
+export * from "./parts/device/devices.js"
+export * from "./parts/device/keyboard.js"
+export * from "./parts/device/sampler.js"
+export * from "./parts/device/types.js"
 
-export * from "./action.js"
-export * from "./bindings.js"
-export * from "./controller.js"
-export * from "./types.js"
-export * from "./port.js"
+export * from "./parts/action.js"
+export * from "./parts/bindings.js"
+export * from "./parts/controller.js"
+export * from "./parts/port.js"
+export * from "./parts/types.js"
 
