@@ -6,9 +6,10 @@ import {lensAlgo} from "./utils/lens-algo.js"
 import {SampleMap} from "./utils/sample-map.js"
 import {ActivityTuple} from "./activity/types.js"
 import {encodeActivity} from "./activity/encode.js"
-import {tmax, tmin} from "../../utils/quick-math.js"
 import {defaultCodeState} from "./utils/defaults.js"
 import {Atom, BindingsData, CodeSettings, CodeState} from "./types.js"
+import { tmin } from "./utils/tmin.js"
+import { tmax } from "./utils/tmax.js"
 
 export class Controller<B extends BindingsData> {
 	#now = 0

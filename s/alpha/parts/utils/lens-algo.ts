@@ -1,8 +1,8 @@
 
 import {pipe} from "@e280/stz"
 import {Scalar} from "@benev/math"
-import {CodeState} from "../types.js"
 import {isDown} from "./is-down.js"
+import {CodeState} from "../types.js"
 import {defaultHoldTime} from "./defaults.js"
 
 export const lensAlgo = (

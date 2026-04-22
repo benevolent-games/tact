@@ -36,26 +36,23 @@ import {
       new PointerDevice(),
     )
     ```
-1. **controller will convert device samples to activity (compact binary data ideal for networking)**
+1. **resolver converts device samples into activity (compact binary format ideal for networking)**
     ```ts
-    const controller = new Controller(bindings)
+    const resolveActivity = makeResolver(bindings)
     ```
-1. **port will convert activity into actions (ergonomics for checking if buttons are pressed etc)**
+1. **compiler converts activity into actions (ergonomics for checking if buttons are pressed etc)**
     ```ts
-    const port = new Port(bindings.shape)
+    const compileActions = makeCompiler(bindings.shape)
     ```
 1. **all together now!**
     ```ts
     onMyGameTick(() => {
-      const activity = controller.update(Date.now(), devices.samples())
-      const actions = port.update(activity)
+      const activity = resolveActivity(Date.now(), device.samples())
+      const actions = compileActions(activity)
 
       // now you can check your actions
       actions.running.forward.value // 1.0
       actions.running.forward.pressed // true
     })
     ```
-1. **consider the following...**  
-    imagine an old-timey game console, with four ports on the front for plugging controllers into. *each **controller** sends **activity** down the wire to a **port.***  
-    now if you're thinking about networking: controllers make sense on the clientside, ports make sense on the serverside.
 
