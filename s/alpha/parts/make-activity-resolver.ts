@@ -11,7 +11,7 @@ import {encodeActivity} from "./activity/encode.js"
 import {defaultCodeState} from "./utils/defaults.js"
 import {Atom, CodeSettings, CodeState} from "./types.js"
 
-export function makeResolver(bindings: Bindings<any>) {
+export function makeActivityResolver(bindings: Bindings<any>) {
 	const sampleMap = new SampleMap()
 	const codeStates = new GMap<string, CodeState>()
 	const activityMap = new GMap<number, number>()

@@ -4,7 +4,7 @@ import {Action} from "./action.js"
 import {Actions, Shape} from "./types.js"
 import {decodeActivity} from "./activity/decode.js"
 
-export function makeCompiler<S extends Shape<any>>(shape: S) {
+export function makeActionsResolver<S extends Shape<any>>(shape: S) {
 	const map = new GMap<number, Action>()
 
 	const actions = obMap(shape, bracket => obMap(bracket, id => {

@@ -13,6 +13,11 @@ export class SamplerDevice implements Device {
 		return this
 	}
 
+	zero() {
+		for (const code of this.sampleMap.keys())
+			this.setSample(code, 0)
+	}
+
 	*samples() {
 		for (const sample of this.sampleMap)
 			yield sample as Sample

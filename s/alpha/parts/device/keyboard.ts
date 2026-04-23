@@ -24,7 +24,7 @@ export class KeyboardDevice extends SamplerDevice {
 
 	#windowListeners = {
 		blur: () => {
-			this.sampleMap.zero()
+			this.zero()
 		},
 	}
 }

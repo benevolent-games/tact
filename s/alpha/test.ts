@@ -1,10 +1,10 @@
 
 import {suite, test, expect} from "@e280/science"
 import {Bindings} from "./parts/bindings.js"
-import {makeResolver} from "./parts/resolver.js"
 import {encodeActivity} from "./parts/activity/encode.js"
 import {decodeActivity} from "./parts/activity/decode.js"
-import { makeCompiler } from "./parts/compiler.js"
+import {makeActionsResolver} from "./parts/make-actions-resolver.js"
+import {makeActivityResolver} from "./parts/make-activity-resolver.js"
 
 function exampleBindings() {
 	return new Bindings({
@@ -50,7 +50,7 @@ export default suite({
 
 	resolver: suite({
 		"resolve samples to activity": test(async() => {
-			const resolveActivity = makeResolver(exampleBindings())
+			const resolveActivity = makeActivityResolver(exampleBindings())
 			const activity = resolveActivity(0, [["KeyW", 1]])
 			expect([...decodeActivity(activity)]).deep([[1, 1]])
 		}),
@@ -58,8 +58,8 @@ export default suite({
 
 	compiler: suite({
 		"compile activity to actions": test(async() => {
-			const compileActions = makeCompiler(exampleBindings().shape)
-			const actions = compileActions(encodeActivity([[1, 1]]))
+			const resolveActions = makeActionsResolver(exampleBindings().shape)
+			const actions = resolveActions(encodeActivity([[1, 1]]))
 			expect(actions.running.forward.value).is(1)
 			expect(actions.running.forward.down).is(true)
 			expect(actions.running.forward.changed).is(true)
