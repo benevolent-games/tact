@@ -1,12 +1,12 @@
 
 import {suite, test, expect} from "@e280/science"
-import {Port} from "./parts/port.js"
 import {Bindings} from "./parts/bindings.js"
-import {Controller} from "./parts/controller.js"
+import {makeResolver} from "./parts/resolver.js"
 import {encodeActivity} from "./parts/activity/encode.js"
 import {decodeActivity} from "./parts/activity/decode.js"
+import { makeCompiler } from "./parts/compiler.js"
 
-function setupBindings() {
+function exampleBindings() {
 	return new Bindings({
 		running: {forward: "KeyW", jump: ["and", "ShiftLeft", "Space"]},
 		gunning: {shoot: ["or", "pointer.button.left", "gamepad.trigger.right"]},
@@ -16,13 +16,13 @@ function setupBindings() {
 export default suite({
 	bindings: suite({
 		"shape": test(async() => {
-			expect(setupBindings().shape.running.forward).ok()
+			expect(exampleBindings().shape.running.forward).ok()
 		}),
 
 		"binds by index": test(async() => {
-			expect(setupBindings().need(0).action).is("shoot")
-			expect(setupBindings().need(1).action).deep("forward")
-			expect(setupBindings().need(2).action).deep("jump")
+			expect(exampleBindings().need(0).action).is("shoot")
+			expect(exampleBindings().need(1).action).deep("forward")
+			expect(exampleBindings().need(2).action).deep("jump")
 		}),
 
 		"bind consistent order, mode": test(async() => {
@@ -48,20 +48,18 @@ export default suite({
 		}),
 	}),
 
-	controller: suite({
-		"samples to activity": test(async() => {
-			const controller = new Controller(setupBindings())
-			const activity = controller.update(0, [["KeyW", 1]])
+	resolver: suite({
+		"resolve samples to activity": test(async() => {
+			const resolveActivity = makeResolver(exampleBindings())
+			const activity = resolveActivity(0, [["KeyW", 1]])
 			expect([...decodeActivity(activity)]).deep([[1, 1]])
 		}),
 	}),
 
-	port: suite({
-		"activity to actions": test(async() => {
-			const port = new Port(setupBindings().shape)
-			expect(port.actions.running.forward.value).is(0)
-			const actions = port.update(encodeActivity([[1, 1]]))
-			expect(port.actions.running.forward.value).is(1)
+	compiler: suite({
+		"compile activity to actions": test(async() => {
+			const compileActions = makeCompiler(exampleBindings().shape)
+			const actions = compileActions(encodeActivity([[1, 1]]))
 			expect(actions.running.forward.value).is(1)
 			expect(actions.running.forward.down).is(true)
 			expect(actions.running.forward.changed).is(true)

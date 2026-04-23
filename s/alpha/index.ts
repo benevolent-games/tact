@@ -6,7 +6,7 @@ export * from "./parts/device/types.js"
 
 export * from "./parts/action.js"
 export * from "./parts/bindings.js"
-export * from "./parts/controller.js"
-export * from "./parts/port.js"
+export * from "./parts/resolver.js"
+export * from "./parts/compiler.js"
 export * from "./parts/types.js"
 

@@ -1,5 +1,7 @@
 
 import {GMap} from "@e280/stz"
+import {tmax} from "./utils/tmax.js"
+import {tmin} from "./utils/tmin.js"
 import {Bindings} from "./bindings.js"
 import {Sample} from "./device/types.js"
 import {lensAlgo} from "./utils/lens-algo.js"
@@ -7,67 +9,41 @@ import {SampleMap} from "./utils/sample-map.js"
 import {ActivityTuple} from "./activity/types.js"
 import {encodeActivity} from "./activity/encode.js"
 import {defaultCodeState} from "./utils/defaults.js"
-import {Atom, BindingsData, CodeSettings, CodeState} from "./types.js"
-import { tmin } from "./utils/tmin.js"
-import { tmax } from "./utils/tmax.js"
+import {Atom, CodeSettings, CodeState} from "./types.js"
 
-export class Controller<B extends BindingsData> {
-	#now = 0
-	#bindings
-	#sampleMap = new SampleMap()
-	#codeStates = new GMap<string, CodeState>()
-	#activityMap = new GMap<number, number>()
+export function makeResolver(bindings: Bindings<any>) {
+	const sampleMap = new SampleMap()
+	const codeStates = new GMap<string, CodeState>()
+	const activityMap = new GMap<number, number>()
 
-	constructor(bindings: Bindings<B>) {
-		this.#bindings = bindings
-		for (const bind of bindings.list())
-			this.#activityMap.set(bind.id, 0)
-	}
+	for (const bind of bindings.list())
+		activityMap.set(bind.id, 0)
 
-	update(now: number, samples: Iterable<Sample>) {
-		this.#now = now
-		const tuples: ActivityTuple[] = []
-
-		for (const sample of samples)
-			this.#sampleMap.merge(sample)
-
-		for (const bind of this.#bindings.list()) {
-			const value = this.#resolveAtom([])(bind.atom, bind.mode as string)
-			const previous = this.#activityMap.get(bind.id)
-			if (value !== previous) {
-				this.#activityMap.set(bind.id, value)
-				tuples.push([bind.id, value])
-			}
-		}
-
-		return encodeActivity(tuples)
-	}
-
-	#resolveCode(path: string[], code: string, settings?: Partial<CodeSettings>) {
-		const state = this.#codeStates.guarantee(
+	const resolveCode = (now: number, path: string[], code: string, settings?: Partial<CodeSettings>) => {
+		const state = codeStates.guarantee(
 			path.join("/"),
-			() => defaultCodeState(["code", code, settings], this.#now),
+			() => defaultCodeState(["code", code, settings], now),
 		)
-		const value = this.#sampleMap.get(code) ?? 0
-		return lensAlgo(this.#now, state, value)
+		const value = sampleMap.get(code) ?? 0
+		return lensAlgo(now, state, value)
 	}
 
-	#resolveAtom = (path: string[]) => (atom: Atom, zone: string | number): number => {
+	const resolveAtomForPath = (now: number, path: string[]) => (atom: Atom, zone: string | number): number => {
 		const nextPath = [
 			...path,
 			String(zone),
 			typeof atom === "string" ? atom : atom[0],
 		]
 
-		const resolveAtom = this.#resolveAtom(nextPath)
+		const resolveAtom = resolveAtomForPath(now, nextPath)
 
 		if (typeof atom === "string")
-			return this.#resolveCode(nextPath, atom)
+			return resolveCode(now, nextPath, atom)
 
 		else switch (atom[0]) {
 			case "code": {
 				const [, code, settings] = atom
-				return this.#resolveCode(nextPath, code, settings)
+				return resolveCode(now, nextPath, code, settings)
 			}
 			case "and": {
 				const [,...atoms] = atom
@@ -106,6 +82,24 @@ export class Controller<B extends BindingsData> {
 					: 0
 			}
 		}
+	}
+
+	return (now: number, samples: Iterable<Sample>) => {
+		const tuples: ActivityTuple[] = []
+
+		for (const sample of samples)
+			sampleMap.merge(sample)
+
+		for (const bind of bindings.list()) {
+			const value = resolveAtomForPath(now, [])(bind.atom, bind.mode as string)
+			const previous = activityMap.get(bind.id)
+			if (value !== previous) {
+				activityMap.set(bind.id, value)
+				tuples.push([bind.id, value])
+			}
+		}
+
+		return encodeActivity(tuples)
 	}
 }
 
