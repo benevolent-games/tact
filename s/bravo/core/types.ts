@@ -1,6 +1,7 @@
 
 import {GMap} from "@e280/stz"
 import {Atom} from "./atom/types.js"
+import {Action} from "./parts/action.js"
 
 /** json-friendly description of how samples are interpreted */
 export type Bindings = {[mode: string]: {[action: string]: Atom}}
@@ -26,14 +27,15 @@ export type Device = {samples(): Iterable<Sample>}
 export type Sample = [code: string, value: number]
 
 /** efficiently express resolved values */
-export type Stamp = [id: number, value: number]
+export type Intent = [id: number, value: number]
 
-export const asBindings = <B extends Bindings>(b: B) => b
+/** ergonomic access to user inputs (your app logic should read from this) */
+export type Actions<S extends BindingsShape<any>> = {
+	[M in keyof S]: {
+		[A in keyof S[M]]: Action
+	}
+}
+
 export type AsBindings<B extends Bindings> = B
-
-// export type Actions<S extends Shape<any>> = {
-// 	[M in keyof S]: {
-// 		[A in keyof S[M]]: Action
-// 	}
-// }
+export const asBindings = <B extends Bindings>(b: B) => b
 

@@ -6,15 +6,15 @@ import {lensAlgo} from "../atom/lens-algo.js"
 import {SampleMap} from "../parts/sample-map.js"
 import {defaultCodeState} from "../atom/defaults.js"
 import {Atom, CodeSettings, CodeState} from "../atom/types.js"
-import {Bindings, BindingsTable, Sample, Stamp} from "../types.js"
+import {Bindings, BindingsTable, Sample, Intent} from "../types.js"
 
-export function makeResolveStamps<B extends Bindings = Bindings>(table: BindingsTable<B>) {
+export function makeIntentsResolver<B extends Bindings = Bindings>(table: BindingsTable<B>) {
 	const sampleMap = new SampleMap()
 	const codeStates = new GMap<string, CodeState>()
-	const activityMap = new GMap<number, number>()
+	const intentMap = new GMap<number, number>()
 
 	for (const bind of table.values())
-		activityMap.set(bind.id, 0)
+		intentMap.set(bind.id, 0)
 
 	const resolveCode = (now: number, path: string[], code: string, settings?: Partial<CodeSettings>) => {
 		const state = codeStates.guarantee(
@@ -83,21 +83,21 @@ export function makeResolveStamps<B extends Bindings = Bindings>(table: Bindings
 
 	return (now: number, samples: Iterable<Sample>) => {
 		sampleMap.zero()
-		const stamps: Stamp[] = []
+		const intents: Intent[] = []
 
 		for (const sample of samples)
 			sampleMap.merge(sample)
 
 		for (const bind of table.values()) {
 			const value = resolveAtomForPath(now, [])(bind.atom, bind.mode as string)
-			const previous = activityMap.get(bind.id)
+			const previous = intentMap.get(bind.id)
 			if (value !== previous) {
-				activityMap.set(bind.id, value)
-				stamps.push([bind.id, value])
+				intentMap.set(bind.id, value)
+				intents.push([bind.id, value])
 			}
 		}
 
-		return stamps
+		return intents
 	}
 }
 
