@@ -1,5 +1,5 @@
 
-import {Activity} from "./types.js"
+import {Activity} from "../types.js"
 import {mergeActivity} from "./merge.js"
 import {littleEndian, size} from "./consts.js"
 

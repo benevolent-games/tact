@@ -1,7 +1,6 @@
 
 import {Bindings} from "../bindings.js"
-import {BindingsData} from "../types.js"
-import {Device} from "../device/types.js"
+import {BindingsData, Device} from "../types.js"
 import {makeActivityResolver} from "../make-activity-resolver.js"
 
 export class Controller<B extends BindingsData> {

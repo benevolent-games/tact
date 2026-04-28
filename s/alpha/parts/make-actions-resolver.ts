@@ -1,8 +1,7 @@
 
 import {GMap, obMap} from "@e280/stz"
 import {Action} from "./action.js"
-import {Actions, Shape} from "./types.js"
-import {Activity} from "./activity/types.js"
+import {Actions, Activity, Shape} from "./types.js"
 
 export function makeActionsResolver<S extends Shape<any>>(shape: S) {
 	const map = new GMap<number, Action>()

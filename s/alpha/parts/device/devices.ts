@@ -1,5 +1,5 @@
 
-import {Device} from "./types.js"
+import {Device} from "../types.js"
 import {SampleMap} from "../utils/sample-map.js"
 
 export class Devices implements Device {

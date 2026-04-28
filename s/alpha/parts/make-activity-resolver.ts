@@ -3,12 +3,10 @@ import {GMap} from "@e280/stz"
 import {tmax} from "./utils/tmax.js"
 import {tmin} from "./utils/tmin.js"
 import {Bindings} from "./bindings.js"
-import {Sample} from "./device/types.js"
 import {lensAlgo} from "./utils/lens-algo.js"
 import {SampleMap} from "./utils/sample-map.js"
-import {Activity} from "./activity/types.js"
 import {defaultCodeState} from "./utils/defaults.js"
-import {Atom, CodeSettings, CodeState} from "./types.js"
+import {Activity, Atom, CodeSettings, CodeState, Sample} from "./types.js"
 
 export function makeActivityResolver(bindings: Bindings<any>) {
 	const sampleMap = new SampleMap()

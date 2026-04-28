@@ -1,7 +1,7 @@
 
 import {Vec2} from "@benev/math"
 import {derived, signal} from "@e280/strata"
-import {Device, Sample} from "./types.js"
+import {Device, Sample} from "../types.js"
 import {splitVector} from "../utils/split-axis.js"
 
 export class StickDevice implements Device {

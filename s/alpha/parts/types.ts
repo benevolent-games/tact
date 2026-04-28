@@ -2,6 +2,13 @@
 import {Action} from "./action.js"
 import {Bindings} from "./bindings.js"
 
+export type Device = {
+	samples(): Iterable<Sample>
+}
+
+export type Sample = [code: string, value: number]
+export type Activity = [index: number, value: number]
+
 export type Actions<S extends Shape<any>> = {
 	[M in keyof S]: {
 		[A in keyof S[M]]: Action
