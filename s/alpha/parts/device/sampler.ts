@@ -19,8 +19,7 @@ export class SamplerDevice implements Device {
 	}
 
 	*samples() {
-		for (const sample of this.sampleMap)
-			yield sample as Sample
+		yield* this.sampleMap
 	}
 }
 

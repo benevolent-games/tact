@@ -18,7 +18,7 @@ export class Devices implements Device {
 			for (const sample of device.samples())
 				this.#sampleMap.merge(sample)
 
-		yield* this.#sampleMap.entries()
+		yield* this.#sampleMap
 	}
 }
 

@@ -1,6 +1,6 @@
 
 import {Vec2} from "@benev/math"
-import {Pad} from "./parts/gamepads.js"
+import {Pad} from "./parts/pad.js"
 import {SamplerDevice} from "./sampler.js"
 import {splitVector} from "../utils/split-axis.js"
 import {circularClamp} from "../utils/circular-clamp.js"
@@ -36,10 +36,10 @@ export class GamepadDevice extends SamplerDevice {
 		return this.pad.gamepad
 	}
 
-	samples() {
+	*samples() {
 		this.#pollButtons(this.pad.gamepad)
 		this.#pollSticks(this.pad.gamepad)
-		return super.samples()
+		yield* super.samples()
 	}
 
 	#pollButtons(gamepad: Gamepad) {
