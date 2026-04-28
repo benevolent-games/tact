@@ -1,5 +1,6 @@
 
 import {Action} from "./action.js"
+import {Bindings} from "./bindings.js"
 
 export type Actions<S extends Shape<any>> = {
 	[M in keyof S]: {
@@ -11,8 +12,13 @@ export type BindingsData = {[mode: string]: Bracket}
 export type Shape<B extends BindingsData> = {[MK in keyof B]: {[AK in keyof B[MK]]: number}}
 export type Bracket = {[action: string]: Atom}
 
-export type AsBindingsData<B extends BindingsData> = B
 export const asBindingsData = <B extends BindingsData>(b: B) => b
+export type AsBindingsData<B extends BindingsData> = B
+export type BindingsDataFrom<B extends Bindings<any>> = (
+	B extends Bindings<infer Data>
+		? Data
+		: never
+)
 
 export type Bind<B extends BindingsData> = {
 	id: number

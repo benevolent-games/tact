@@ -22,6 +22,10 @@ export class Bindings<B extends BindingsData> {
 			})
 	}
 
+	clone() {
+		return new Bindings(this.#data)
+	}
+
 	get shape() {
 		const shape = obMap(this.#data, bracket => obMap(bracket, () => 0)) as any
 		for (const [id, {mode, action}] of this.#binds)

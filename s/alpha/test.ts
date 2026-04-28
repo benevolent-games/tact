@@ -52,14 +52,14 @@ export default suite({
 		"resolve samples to activity": test(async() => {
 			const resolveActivity = makeActivityResolver(exampleBindings())
 			const activity = resolveActivity(0, [["KeyW", 1]])
-			expect([...decodeActivity(activity)]).deep([[1, 1]])
+			expect(activity).deep([[1, 1]])
 		}),
 	}),
 
 	compiler: suite({
 		"compile activity to actions": test(async() => {
 			const resolveActions = makeActionsResolver(exampleBindings().shape)
-			const actions = resolveActions(encodeActivity([[1, 1]]))
+			const actions = resolveActions([[1, 1]])
 			expect(actions.running.forward.value).is(1)
 			expect(actions.running.forward.down).is(true)
 			expect(actions.running.forward.changed).is(true)

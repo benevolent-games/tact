@@ -7,7 +7,6 @@ import {Sample} from "./device/types.js"
 import {lensAlgo} from "./utils/lens-algo.js"
 import {SampleMap} from "./utils/sample-map.js"
 import {ActivityTuple} from "./activity/types.js"
-import {encodeActivity} from "./activity/encode.js"
 import {defaultCodeState} from "./utils/defaults.js"
 import {Atom, CodeSettings, CodeState} from "./types.js"
 
@@ -85,6 +84,7 @@ export function makeActivityResolver(bindings: Bindings<any>) {
 	}
 
 	return (now: number, samples: Iterable<Sample>) => {
+		sampleMap.zero()
 		const tuples: ActivityTuple[] = []
 
 		for (const sample of samples)
@@ -99,7 +99,7 @@ export function makeActivityResolver(bindings: Bindings<any>) {
 			}
 		}
 
-		return encodeActivity(tuples)
+		return tuples
 	}
 }
 

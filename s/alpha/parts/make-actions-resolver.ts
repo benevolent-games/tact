@@ -2,7 +2,7 @@
 import {GMap, obMap} from "@e280/stz"
 import {Action} from "./action.js"
 import {Actions, Shape} from "./types.js"
-import {decodeActivity} from "./activity/decode.js"
+import {ActivityTuple} from "./activity/types.js"
 
 export function makeActionsResolver<S extends Shape<any>>(shape: S) {
 	const map = new GMap<number, Action>()
@@ -13,8 +13,8 @@ export function makeActionsResolver<S extends Shape<any>>(shape: S) {
 		return action
 	})) as Actions<S>
 
-	return (activity: Uint8Array) => {
-		for (const [id, value] of decodeActivity(activity)) {
+	return (tuples: ActivityTuple[]) => {
+		for (const [id, value] of tuples) {
 			const action = map.need(id)
 			action.value = value
 		}
