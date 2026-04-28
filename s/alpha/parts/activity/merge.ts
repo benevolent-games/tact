@@ -1,7 +1,7 @@
 
-import {ActivityTuple} from "./types.js"
+import {Activity} from "./types.js"
 
-export function mergeTuples(tuples: ActivityTuple[]): ActivityTuple[] {
+export function mergeActivity(tuples: Activity[]): Activity[] {
 	const map = new Map<number, number>()
 
 	for (const [id, value] of tuples) {

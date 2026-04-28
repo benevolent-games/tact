@@ -1,15 +1,16 @@
 
-import {mergeTuples} from "./merge.js"
-import {ActivityTuple} from "./types.js"
+import {Activity} from "./types.js"
+import {mergeActivity} from "./merge.js"
 import {littleEndian, size} from "./consts.js"
 
-export function encodeActivity(tuples: ActivityTuple[]) {
-	const tuples2 = mergeTuples(tuples)
-	const length = tuples2.length * size
+export function encodeActivity(activity: Activity[]) {
+	activity = mergeActivity(activity)
+	const length = activity.length * size
 	const buffer = new ArrayBuffer(length)
 	const view = new DataView(buffer)
 
-	for (const [i, [index, value]] of tuples2.entries()) {
+	for (let i = 0; i < activity.length; i++) {
+		const [index, value] = activity[i]
 		const offset = i * size
 		view.setUint16(offset, index, littleEndian)
 		view.setFloat32(offset + 2, value, littleEndian)

@@ -6,7 +6,7 @@ import {Bindings} from "./bindings.js"
 import {Sample} from "./device/types.js"
 import {lensAlgo} from "./utils/lens-algo.js"
 import {SampleMap} from "./utils/sample-map.js"
-import {ActivityTuple} from "./activity/types.js"
+import {Activity} from "./activity/types.js"
 import {defaultCodeState} from "./utils/defaults.js"
 import {Atom, CodeSettings, CodeState} from "./types.js"
 
@@ -85,7 +85,7 @@ export function makeActivityResolver(bindings: Bindings<any>) {
 
 	return (now: number, samples: Iterable<Sample>) => {
 		sampleMap.zero()
-		const tuples: ActivityTuple[] = []
+		const activity: Activity[] = []
 
 		for (const sample of samples)
 			sampleMap.merge(sample)
@@ -95,11 +95,11 @@ export function makeActivityResolver(bindings: Bindings<any>) {
 			const previous = activityMap.get(bind.id)
 			if (value !== previous) {
 				activityMap.set(bind.id, value)
-				tuples.push([bind.id, value])
+				activity.push([bind.id, value])
 			}
 		}
 
-		return tuples
+		return activity
 	}
 }
 

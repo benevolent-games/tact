@@ -1,3 +1,3 @@
 
-export type ActivityTuple = [index: number, value: number]
+export type Activity = [index: number, value: number]
 
