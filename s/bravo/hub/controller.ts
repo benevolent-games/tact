@@ -1,7 +1,6 @@
 
-import {makeTable} from "../core/make/table.js"
 import {Bindings, Device} from "../core/types.js"
-import {makeIntentsResolver} from "../core/make/intents-resolver.js"
+import {makeIntentsResolver} from "../core/resolvers/intents.js"
 
 export class Controller<B extends Bindings> {
 	#resolveIntents
@@ -12,7 +11,7 @@ export class Controller<B extends Bindings> {
 			public device: Device,
 		) {
 		this.#bindings = bindings
-		this.#resolveIntents = makeIntentsResolver(makeTable(bindings))
+		this.#resolveIntents = makeIntentsResolver(bindings)
 	}
 
 	get bindings() {
@@ -21,7 +20,7 @@ export class Controller<B extends Bindings> {
 
 	set bindings(bindings: B) {
 		this.#bindings = bindings
-		this.#resolveIntents = makeIntentsResolver(makeTable(bindings))
+		this.#resolveIntents = makeIntentsResolver(bindings)
 	}
 
 	resolveIntents(now: number) {

@@ -30,9 +30,9 @@ export type Sample = [code: string, value: number]
 export type Intent = [id: number, value: number]
 
 /** ergonomic access to user inputs (your app logic should read from this) */
-export type Actions<S extends BindingsShape<any>> = {
-	[M in keyof S]: {
-		[A in keyof S[M]]: Action
+export type Actions<B extends Bindings> = {
+	[M in keyof B]: {
+		[A in keyof B[M]]: Action
 	}
 }
 

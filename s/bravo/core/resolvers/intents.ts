@@ -3,12 +3,14 @@ import {GMap} from "@e280/stz"
 import {tmax} from "../../utils/tmax.js"
 import {tmin} from "../../utils/tmin.js"
 import {lensAlgo} from "../atom/lens-algo.js"
+import {bindingsTable} from "../parts/table.js"
 import {SampleMap} from "../parts/sample-map.js"
 import {defaultCodeState} from "../atom/defaults.js"
+import {Bindings, Sample, Intent} from "../types.js"
 import {Atom, CodeSettings, CodeState} from "../atom/types.js"
-import {Bindings, BindingsTable, Sample, Intent} from "../types.js"
 
-export function makeIntentsResolver<B extends Bindings = Bindings>(table: BindingsTable<B>) {
+export function makeIntentsResolver<B extends Bindings>(bindings: B) {
+	const table = bindingsTable(bindings)
 	const sampleMap = new SampleMap()
 	const codeStates = new GMap<string, CodeState>()
 	const intentMap = new GMap<number, number>()

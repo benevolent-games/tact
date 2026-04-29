@@ -3,7 +3,7 @@ import {GMap} from "@e280/stz"
 import {Bindings, BindingsRow} from "../types.js"
 import {sortByKey} from "../../utils/sort-by-key.js"
 
-export function makeTable<B extends Bindings>(data: B) {
+export function bindingsTable<B extends Bindings>(data: B) {
 	data = structuredClone(data)
 	const table = new GMap<number, BindingsRow<B>>()
 
