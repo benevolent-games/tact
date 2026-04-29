@@ -2,17 +2,18 @@
 import {html} from "lit"
 import {shadowElement, useCss} from "@e280/sly"
 
-import styleCss from "./style.css.js"
 import {Hub} from "../../hub/hub.js"
+import styleCss from "./style.css.js"
 import {Port} from "../../hub/port.js"
 import {asBindings} from "../../core/types.js"
 import {Devices} from "../../device/devices.js"
 import {Controller} from "../../hub/controller.js"
+import {setupDirector} from "../../ui/director.js"
+import {DeckView} from "../../ui/views/deck/view.js"
 import {PointerDevice} from "../../device/pointer.js"
 import {GamepadDevice} from "../../device/gamepad.js"
 import {KeyboardDevice} from "../../device/keyboard.js"
-import {ControlsView} from "../../ui/views/controls/view.js"
-import {setupConfigurator} from "../../ui/setup-configurator.js"
+import {onGamepadController} from "../../hub/on-gamepad-controller.js"
 
 const bindings = asBindings({
 	spectator: {
@@ -35,18 +36,21 @@ const primaryController = new Controller(bindings, new Devices(
 const port = new Port([primaryController])
 const hub = new Hub(port)
 
-const {configurator} = await setupConfigurator({
+const {director} = await setupDirector({
 	stockProfiles: [
-		{id: "93f54a1ee99cecfec4aad62502dfce7e", label: "standard", bindings},
+		{id: "standard", label: "standard", bindings},
 	],
 })
 
-configurator.registerInput("279cf5b7c4a5e240181699dca3a33250", primaryController.setBindings)
+director.registerController("primary", primaryController)
 
-hub.autoGamepads(bindings, controller => {
-	const {device, setBindings} = controller
+onGamepadController(bindings, controller => {
 	port.add(controller)
-	return configurator.registerInput(device.gamepad.id, setBindings)
+	const unregister = director.registerController(controller.device.gamepad.id, controller)
+	return () => {
+		unregister()
+		hub.forget(controller)
+	}
 })
 
 export class DemoApp extends shadowElement(() => {
@@ -56,7 +60,9 @@ export class DemoApp extends shadowElement(() => {
 
 	return html`
 		<div class=plate>
-			${ControlsView(hub, configurator)}
+			${DeckView(hub, director)}
+
+			<hr/>
 
 			<ul>
 				${allControllers.map(controller => {

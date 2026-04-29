@@ -1,18 +1,35 @@
 
 import {deep, GMap} from "@e280/stz"
-import {Cubby, Prism, Vault, Versioned} from "@e280/strata"
+import {Cubby, LocalStore, Prism, Vault, Versioned} from "@e280/strata"
 import {mappy} from "./utils/mappy.js"
-import {Bindings} from "../core/types.js"
 import {mappify} from "./utils/mappify.js"
+import {Controller} from "../hub/controller.js"
 import {GamepadSettings, Preferences, Profile} from "./types.js"
 
-export class Configurator {
+export async function setupDirector({stockProfiles}: {
+		stockProfiles: Profile[]
+	}) {
+	const store = new LocalStore("tactConfigurator")
+	const director = new Director({
+		store,
+		stockProfiles,
+		preferences: {
+			customProfiles: [],
+			controllerSettings: [],
+		},
+	})
+	const dispose = store.onStorageEvent(() => director.load())
+	await director.load()
+	return {director, dispose}
+}
+
+export class Director {
 	readonly stockProfiles
 
 	#vault
 	#prism
 	#lens
-	#inputs = new GMap<string, (bindings: Bindings) => void>()
+	#controllers = new GMap<string, Controller<any>>()
 
 	constructor(options: {
 			stockProfiles: Profile[]
@@ -37,16 +54,16 @@ export class Configurator {
 		return this.#lens.state
 	}
 
-	registerInput<B extends Bindings>(id: string, setBindings: (bindings: B) => void) {
-		this.#inputs.set(id, setBindings as any)
+	registerController(id: string, controller: Controller<any>) {
+		this.#controllers.set(id, controller)
 		const profile = this.#getProfileForInput(id) ?? this.mainProfile
-		setBindings(profile.bindings as any)
-		return () => { this.#inputs.delete(id) }
+		controller.bindings = profile.bindings
+		return () => { this.#controllers.delete(id) }
 	}
 
 	async load() {
 		await this.#vault.load()
-		this.#updateAllInputs()
+		this.#updateAllControllers()
 	}
 
 	async upsertProfile(profile: Profile) {
@@ -58,38 +75,40 @@ export class Configurator {
 	async deleteProfile(id: string) {
 		await this.#mutate(s => {
 			s.customProfiles = mappy(s.customProfiles, map => map.delete(id))
-			s.inputSettings = s.inputSettings.filter(x => x.profileId !== id)
+			s.controllerSettings = s.controllerSettings.filter(x => x.profileId !== id)
 		})
 	}
 
 	async upsertInputSettings(settings: GamepadSettings) {
 		await this.#mutate(s => {
-			s.inputSettings = mappy(s.inputSettings, map => map.set(settings.id, settings))
+			s.controllerSettings = mappy(s.controllerSettings, map => map.set(settings.id, settings))
 		})
 	}
 
 	async deleteInputSettings(id: string) {
 		await this.#mutate(s => {
-			s.inputSettings = mappy(s.inputSettings, map => map.delete(id))
+			s.controllerSettings = mappy(s.controllerSettings, map => map.delete(id))
 		})
 	}
 
 	async #mutate(fn: (s: typeof this.state) => void) {
 		await this.#lens.mutate(s => fn(s))
-		this.#updateAllInputs()
+		this.#updateAllControllers()
 		await this.#vault.save()
 	}
 
-	#updateAllInputs() {
-		for (const id of this.#inputs.keys()) {
+	#updateAllControllers() {
+		for (const id of this.#controllers.keys()) {
 			const profile = this.#getProfileForInput(id) ?? this.mainProfile
-			this.#inputs.get(id)?.(profile.bindings)
+			const controller = this.#controllers.get(id)
+			if (controller)
+				controller.bindings = profile.bindings
 		}
 	}
 
 	#getProfileForInput(id: string) {
 		const profiles = mappify([...this.stockProfiles, ...this.state.customProfiles])
-		const inputSettings = mappify(this.state.inputSettings)
+		const inputSettings = mappify(this.state.controllerSettings)
 		const input = inputSettings.get(id)
 		if (!input) return undefined
 		return profiles.get(input.profileId)

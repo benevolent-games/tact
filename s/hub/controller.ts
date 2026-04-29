@@ -2,6 +2,7 @@
 import {Bindings, Device} from "../core/types.js"
 import {makeIntentsResolver} from "../core/resolvers/intents.js"
 
+/** associate a device with particular bindings */
 export class Controller<B extends Bindings, D extends Device = Device> {
 	#resolveIntents
 	#bindings: B
@@ -21,10 +22,6 @@ export class Controller<B extends Bindings, D extends Device = Device> {
 	set bindings(bindings: B) {
 		this.#bindings = bindings
 		this.#resolveIntents = makeIntentsResolver(bindings)
-	}
-
-	setBindings = (bindings: B) => {
-		this.bindings = bindings
 	}
 
 	resolveIntents(now: number) {

@@ -14,6 +14,6 @@ export type GamepadSettings = {
 
 export type Preferences = {
 	customProfiles: Profile[]
-	inputSettings: {id: string, profileId: string}[]
+	controllerSettings: {id: string, profileId: string}[]
 }
 

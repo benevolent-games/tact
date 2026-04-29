@@ -3,32 +3,32 @@ import {RSet} from "@e280/strata"
 import {Port} from "./port.js"
 import {Bindings} from "../core/types.js"
 import {Controller} from "./controller.js"
-import {onPad} from "../device/parts/pad.js"
-import {GamepadDevice} from "../device/gamepad.js"
 
+/** has a bunch of ports and their connected controllers */
 export class Hub<B extends Bindings> {
+
+	/** each port represents a player slot (eg, P1, P2, etc) */
 	ports = new RSet<Port<B>>()
+
+	/** special port for all unassigned controllers (we still might wanna listen to these, eg, "press any button to join") */
 	unassigned = new Port<B>()
 
+	/** we can initialize with some playable ports */
 	constructor(...ports: Port<B>[]) {
 		this.ports.adds(...ports)
 	}
 
-	remove(controller: Controller<B>) {
-		for (const port of [this.unassigned, ...this.ports])
+	/** move a controller to the special unassigned port */
+	unassign(controller: Controller<B>) {
+		this.unassigned.add(controller)
+		for (const port of this.ports)
 			port.delete(controller)
 	}
 
-	autoGamepads(bindings: B, fn: (controller: Controller<B, GamepadDevice>) => () => void = () => () => {}) {
-		return onPad(pad => {
-			const device = new GamepadDevice(pad)
-			const controller = new Controller(bindings, device)
-			const dispose = fn(controller)
-			return () => {
-				this.remove(controller)
-				dispose()
-			}
-		})
+	/** this controller no longer exists (not even unassigned) */
+	forget(controller: Controller<B>) {
+		for (const port of [this.unassigned, ...this.ports])
+			port.delete(controller)
 	}
 }
 
