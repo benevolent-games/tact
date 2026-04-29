@@ -7,7 +7,7 @@ export function mergeIntents(intents: Intent[]): Intent[] {
 
 	for (const [id, value] of intents) {
 		const previous = map.get(id) ?? 0
-		map.set(id, previous + value)
+		map.set(id, Math.max(previous, value))
 	}
 
 	return [...map.entries()]
