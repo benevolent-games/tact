@@ -3,6 +3,7 @@ import {Intent} from "../types.js"
 import {littleEndian, size} from "./consts.js"
 import {dataViewFrom} from "../../utils/data-view.js"
 
+/** decode intents from compact binary format */
 export function decodeIntents(bytes: Uint8Array) {
 	const n = bytes.byteLength / size
 	if (!Number.isInteger(n)) throw new Error("invalid bytes length")

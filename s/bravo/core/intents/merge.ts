@@ -1,6 +1,7 @@
 
 import {Intent} from "../types.js"
 
+/** merge multiple sources of intents together */
 export function mergeIntents(intents: Intent[]): Intent[] {
 	const map = new Map<number, number>()
 
