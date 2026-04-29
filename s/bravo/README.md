@@ -83,5 +83,5 @@ import {
 
     const bindings = normalizeBindings(appBindings, susBindings)
     ```
-    so say you've loaded bindings from localstorage or something, this will clone appBindings and then "cherry-pick" any compatible susBindings -- you'll wanna do this if you're loading susBindings from localStorage or something, so when you change your bindings things don't break.
+    this clones your app bindings and cherry-picks any compatible user bindings. useful when loading from localStorage, so changes to your schema don’t break things.
 
