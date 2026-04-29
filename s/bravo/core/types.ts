@@ -1,5 +1,5 @@
 
-import {GMap} from "@e280/stz"
+import {deep, GMap} from "@e280/stz"
 import {Atom} from "./atom/types.js"
 import {Action} from "./parts/action.js"
 
@@ -37,5 +37,5 @@ export type Actions<S extends BindingsShape<any>> = {
 }
 
 export type AsBindings<B extends Bindings> = B
-export const asBindings = <B extends Bindings>(b: B) => b
+export const asBindings = <B extends Bindings>(b: B): B => deep.freeze(deep.clone(b))
 
