@@ -10,7 +10,7 @@ export class Deck<B extends Bindings> {
 	ports = new RSet<Port<B>>()
 	unassigned = new Port<B>()
 
-	constructor(public bindings: B, ...ports: Port<B>[]) {
+	constructor(...ports: Port<B>[]) {
 		this.ports.adds(...ports)
 	}
 
@@ -19,12 +19,15 @@ export class Deck<B extends Bindings> {
 			port.delete(controller)
 	}
 
-	autoGamepads(fn: (controller: Controller<B>) => void = () => {}) {
+	autoGamepads(bindings: B, fn: (controller: Controller<B, GamepadDevice>) => () => void = () => () => {}) {
 		return onPad(pad => {
 			const device = new GamepadDevice(pad)
-			const controller = new Controller(this.bindings, device)
-			fn(controller)
-			return () => this.remove(controller)
+			const controller = new Controller(bindings, device)
+			const dispose = fn(controller)
+			return () => {
+				this.remove(controller)
+				dispose()
+			}
 		})
 	}
 }

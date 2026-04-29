@@ -1,5 +1,5 @@
 
-import {deep, GMap} from "@e280/stz"
+import {GMap} from "@e280/stz"
 import {Atom} from "./atom/types.js"
 import {Action} from "./parts/action.js"
 

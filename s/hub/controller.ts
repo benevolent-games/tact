@@ -2,13 +2,13 @@
 import {Bindings, Device} from "../core/types.js"
 import {makeIntentsResolver} from "../core/resolvers/intents.js"
 
-export class Controller<B extends Bindings> {
+export class Controller<B extends Bindings, D extends Device = Device> {
 	#resolveIntents
 	#bindings: B
 
 	constructor(
 			bindings: B,
-			public device: Device,
+			public device: D,
 		) {
 		this.#bindings = bindings
 		this.#resolveIntents = makeIntentsResolver(bindings)
@@ -21,6 +21,10 @@ export class Controller<B extends Bindings> {
 	set bindings(bindings: B) {
 		this.#bindings = bindings
 		this.#resolveIntents = makeIntentsResolver(bindings)
+	}
+
+	setBindings = (bindings: B) => {
+		this.bindings = bindings
 	}
 
 	resolveIntents(now: number) {

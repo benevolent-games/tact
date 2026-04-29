@@ -1,7 +1,6 @@
 
 import {html} from "lit"
-import {cycle, nap} from "@e280/stz"
-import {shadowElement, useCss, useMount, useOnce} from "@e280/sly"
+import {shadowElement, useCss} from "@e280/sly"
 
 import styleCss from "./style.css.js"
 import {Deck} from "../../hub/deck.js"
@@ -12,6 +11,8 @@ import {Controller} from "../../hub/controller.js"
 import {PointerDevice} from "../../device/pointer.js"
 import {GamepadDevice} from "../../device/gamepad.js"
 import {KeyboardDevice} from "../../device/keyboard.js"
+import {ControlsView} from "../../ui/views/controls/view.js"
+import {setupConfigurator} from "../../ui/setup-configurator.js"
 
 const bindings = asBindings({
 	spectator: {
@@ -26,33 +27,37 @@ const bindings = asBindings({
 	},
 })
 
+const primaryController = new Controller(bindings, new Devices(
+	new KeyboardDevice(),
+	new PointerDevice(),
+))
+
+const port = new Port([primaryController])
+const deck = new Deck(port)
+
+const {configurator} = await setupConfigurator({
+	stockProfiles: [
+		{id: "93f54a1ee99cecfec4aad62502dfce7e", label: "standard", bindings},
+	],
+})
+
+configurator.registerInput("279cf5b7c4a5e240181699dca3a33250", primaryController.setBindings)
+
+deck.autoGamepads(bindings, controller => {
+	const {device, setBindings} = controller
+	port.add(controller)
+	return configurator.registerInput(device.gamepad.id, setBindings)
+})
+
 export class DemoApp extends shadowElement(() => {
 	useCss(styleCss)
-
-	const deck = useOnce(() => new Deck(bindings, new Port([
-		new Controller(bindings, new Devices(
-			new KeyboardDevice(),
-			new PointerDevice(),
-		))
-	])))
-
-	useMount(() => deck.autoGamepads(controller => {
-		const [port] = deck.ports
-		port.add(controller)
-	}))
-
-	useMount(() => cycle(async() => {
-		await nap(1000 / 20)
-		const [port] = deck.ports
-		const activity = port.resolveIntents(Date.now())
-		console.log(activity)
-	}))
 
 	const allControllers = [deck.unassigned, ...deck.ports].flatMap(port => port.array())
 
 	return html`
 		<div class=plate>
-			controllers
+			${ControlsView(deck, configurator)}
+
 			<ul>
 				${allControllers.map(controller => {
 					const {device} = controller
