@@ -6,7 +6,7 @@ import {Controller} from "./controller.js"
 import {onPad} from "../device/parts/pad.js"
 import {GamepadDevice} from "../device/gamepad.js"
 
-export class Deck<B extends Bindings> {
+export class Hub<B extends Bindings> {
 	ports = new RSet<Port<B>>()
 	unassigned = new Port<B>()
 

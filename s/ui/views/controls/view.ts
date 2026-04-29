@@ -1,11 +1,11 @@
 
 import {html} from "lit"
 import {shadow} from "@e280/sly"
-import {Deck} from "../../../hub/deck.js"
+import {Hub} from "../../../hub/hub.js"
 import {Configurator} from "../../configurator.js"
 
 export const ControlsView = shadow((
-		deck: Deck<any>,
+		deck: Hub<any>,
 		configurator: Configurator,
 	) => {
 

@@ -3,7 +3,7 @@ import {html} from "lit"
 import {shadowElement, useCss} from "@e280/sly"
 
 import styleCss from "./style.css.js"
-import {Deck} from "../../hub/deck.js"
+import {Hub} from "../../hub/hub.js"
 import {Port} from "../../hub/port.js"
 import {asBindings} from "../../core/types.js"
 import {Devices} from "../../device/devices.js"
@@ -33,7 +33,7 @@ const primaryController = new Controller(bindings, new Devices(
 ))
 
 const port = new Port([primaryController])
-const deck = new Deck(port)
+const hub = new Hub(port)
 
 const {configurator} = await setupConfigurator({
 	stockProfiles: [
@@ -43,7 +43,7 @@ const {configurator} = await setupConfigurator({
 
 configurator.registerInput("279cf5b7c4a5e240181699dca3a33250", primaryController.setBindings)
 
-deck.autoGamepads(bindings, controller => {
+hub.autoGamepads(bindings, controller => {
 	const {device, setBindings} = controller
 	port.add(controller)
 	return configurator.registerInput(device.gamepad.id, setBindings)
@@ -52,11 +52,11 @@ deck.autoGamepads(bindings, controller => {
 export class DemoApp extends shadowElement(() => {
 	useCss(styleCss)
 
-	const allControllers = [deck.unassigned, ...deck.ports].flatMap(port => port.array())
+	const allControllers = [hub.unassigned, ...hub.ports].flatMap(port => port.array())
 
 	return html`
 		<div class=plate>
-			${ControlsView(deck, configurator)}
+			${ControlsView(hub, configurator)}
 
 			<ul>
 				${allControllers.map(controller => {
