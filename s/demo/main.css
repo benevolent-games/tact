@@ -1,13 +1,13 @@
 
-@layer vars, core, basics, page;
+@layer vars, core, page;
 
 @layer vars {
 	:root {
 		color-scheme: dark;
+
 		--link: cyan;
-		--prime: #ccc;
+		--text: #ccc;
 		--bg: #181818;
-		--bg2: #111111;
 	}
 }
 
@@ -42,19 +42,17 @@
 	}
 }
 
-@layer basics {
+@layer page {
 	html { height: 100%; }
 	body { min-height: 100%; }
 
 	html, body {
 		font-family: sans-serif;
-		font-size: 12px;
-		color: var(--prime);
+		font-size: 16px;
+		color: var(--text);
 		background: var(--bg);
 	}
-}
 
-@layer page {
 	body {
 		display: flex;
 		flex-direction: column;

@@ -35,17 +35,17 @@ export default template(import.meta.url, async orb => html`
 					<strong>@benev/tact</strong>
 					<small>v${orb.packageVersion()}</small>
 				</h1>
-				<div class=deets>
-					<p><em>"from keypress to couch co-op"</em></p>
+				<div>
+					<blockquote>"from keypress to couch co-op"</blockquote>
 					<p>
 						tact is a user input toolkit for the web. it's good at customizable keybindings, and multiple gamepad support.
-						see <a href="https://github.com/benevolent-games/tact">github</a>,
-						see <a href="https://benevolent.games/">benevolent.games</a>.
+						<a href="https://github.com/benevolent-games/tact">github</a>.
+						<a href="https://benevolent.games/">benevolent.games</a>.
 					</p>
 				</div>
 			</header>
 
-			<div id=demo-theater></div>
+			<demo-app></demo-app>
 
 			<section>
 				<h3>controls</h3>

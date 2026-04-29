@@ -1,10 +1,7 @@
 
 import {dom} from "@e280/sly"
-import {Game} from "./game/game.js"
-import {DemoTheater} from "./ui/theater/view.js"
+import {DemoApp} from "./demo-app/element.js"
 
-const game = await Game.load()
+dom.register({DemoApp})
+console.log("🎮")
 
-dom.render(dom("#demo-theater"), DemoTheater(game))
-
-console.log("🎮 tact")
