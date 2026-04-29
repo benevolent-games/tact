@@ -15,7 +15,7 @@ export function decodeIntents(bytes: Uint8Array) {
 		const offset = i * size
 		const index = data.getUint16(offset, littleEndian)
 		const value = data.getFloat32(offset + 2, littleEndian)
-		intents.push([index, value])
+		intents[i] = [index, value]
 	}
 
 	return intents

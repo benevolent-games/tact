@@ -37,5 +37,5 @@ export type Actions<B extends Bindings> = {
 }
 
 export type AsBindings<B extends Bindings> = B
-export const asBindings = <B extends Bindings>(b: B): B => deep.freeze(deep.clone(b))
+export const asBindings = <B extends Bindings>(b: B) => b
 

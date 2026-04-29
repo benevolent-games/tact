@@ -1,7 +1,7 @@
 
 import {GMap, obMap} from "@e280/stz"
 import {Action} from "../parts/action.js"
-import {bindingsShape} from "../parts/shape.js"
+import {bindingsShape} from "../bindings/shape.js"
 import {Actions, Bindings, Intent} from "../types.js"
 
 export function makeActionsResolver<B extends Bindings>(bindings: B) {

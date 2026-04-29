@@ -1,0 +1,133 @@
+
+import {Scalar} from "@benev/math"
+import {suite, test, expect} from "@e280/science"
+import {asBindings, Intent} from "./core/types.js"
+import {bindingsShape} from "./core/bindings/shape.js"
+import {bindingsTable} from "./core/bindings/table.js"
+import {encodeIntents} from "./core/intent/encode.js"
+import {decodeIntents} from "./core/intent/decode.js"
+import {makeIntentsResolver} from "./core/resolvers/intents.js"
+import {makeActionsResolver} from "./core/resolvers/actions.js"
+import { normalizeBindings } from "./core/bindings/normalize.js"
+
+export const exampleBindings = asBindings({
+	running: {forward: "KeyW", jump: ["and", "ShiftLeft", "Space"]},
+	gunning: {shoot: ["or", "pointer.button.left", "gamepad.trigger.right"]},
+})
+
+export default suite({
+	bindings: suite({
+		"shape": test(async() => {
+			expect(bindingsShape(exampleBindings).running.forward).ok()
+		}),
+
+		"table actions": test(async() => {
+			expect(bindingsTable(exampleBindings).need(0).action).is("shoot")
+			expect(bindingsTable(exampleBindings).need(1).action).deep("forward")
+			expect(bindingsTable(exampleBindings).need(2).action).deep("jump")
+		}),
+
+		"table consistent ordering, mode": test(async() => {
+			for (const b of [
+				bindingsTable({alpha: {x: "KeyX"}, bravo: {x: "KeyX"}}),
+				bindingsTable({bravo: {x: "KeyX"}, alpha: {x: "KeyX"}}),
+			]) expect(b.need(0).mode).deep("alpha")
+		}),
+
+		"table consistent ordering, action": test(async() => {
+			for (const b of [
+				bindingsTable({x: {alpha: "KeyA", bravo: "KeyB"}}),
+				bindingsTable({x: {bravo: "KeyB", alpha: "KeyA"}}),
+			]) expect(b.need(0).action).deep("alpha")
+		}),
+
+		normalize: {
+			"adopts atom": test(async() => {
+				const standard = {a: {b: "KeyQ"}}
+				expect(normalizeBindings(standard, {a: {b: "KeyW"}}).a.b).is("KeyW")
+			}),
+
+			"excludes excess action": test(async() => {
+				const standard = {a: {b: "KeyQ"}}
+				expect("c" in normalizeBindings(standard, {a: {b: "KeyQ", c: "KeyW"}}).a).is(false)
+			}),
+
+			"excludes excess bracket": test(async() => {
+				const standard = {a: {b: "KeyQ"}}
+				expect("c" in normalizeBindings(standard, {a: {b: "KeyQ"}, c: {d: "KeyW"}})).is(false)
+			}),
+
+			"falls back on standard atom": test(async() => {
+				const standard = {a: {b: "KeyQ"}}
+				expect(normalizeBindings(standard, {a: {}}).a.b).is("KeyQ")
+			}),
+
+			"falls back on standard bracket": test(async() => {
+				const standard = {a: {b: "KeyQ"}}
+				expect(normalizeBindings(standard, {}).a.b).is("KeyQ")
+			}),
+
+			"complex fallback": test(async() => {
+				const standard = {a: {b: "KeyQ"}, c: {d: "KeyW"}}
+				expect(normalizeBindings(standard, {c: {d: "KeyE"}}).a.b).is("KeyQ")
+				expect(normalizeBindings(standard, {c: {d: "KeyE"}}).c.d).is("KeyE")
+			}),
+		},
+	}),
+
+	intents: suite({
+		"encoded roundtrip": test(async() => {
+			const intentsA: Intent[] = [[0, 0], [1, 1]]
+			const bytes = encodeIntents(intentsA)
+			const intentsB = decodeIntents(bytes)
+			expect(intentsB).deep(intentsA)
+		}),
+
+		"encoded six bytes": test(async() => {
+			const bytesA = encodeIntents([[0, 0]])
+			const bytesB = encodeIntents([[25, 0.7853981633974483]])
+			expect(bytesA.length).is(6)
+			expect(bytesB.length).is(6)
+		}),
+
+		"encoded float precision is acceptable": test(async() => {
+			const target = Math.PI / 4
+			const bytes = encodeIntents([[25, target]])
+			const [[,suspect]] = decodeIntents(bytes)
+			expect(Scalar.isNear(suspect, target, 1 / 1_000_000)).is(true)
+		}),
+
+		"encoded billion": test(async() => {
+			const target = 1_000_000_000
+			const bytes = encodeIntents([[25, target]])
+			const [[,suspect]] = decodeIntents(bytes)
+			expect(suspect).is(target)
+		}),
+
+		"encoded negative billion": test(async() => {
+			const target = -1_000_000_000
+			const bytes = encodeIntents([[25, target]])
+			const [[,suspect]] = decodeIntents(bytes)
+			expect(suspect).is(target)
+		}),
+	}),
+
+	intentsResolver: suite({
+		"resolve samples to intents": test(async() => {
+			const resolveIntents = makeIntentsResolver(exampleBindings)
+			const intents = resolveIntents(0, [["KeyW", 1]])
+			expect(intents).deep([[1, 1]])
+		}),
+	}),
+
+	actionsResolver: suite({
+		"resolve intents to actions": test(async() => {
+			const resolveActions = makeActionsResolver(exampleBindings)
+			const actions = resolveActions([[1, 1]])
+			expect(actions.running.forward.value).is(1)
+			expect(actions.running.forward.down).is(true)
+			expect(actions.running.forward.changed).is(true)
+		}),
+	}),
+})
+
