@@ -1,21 +1,22 @@
 
 import {Scalar} from "@benev/math"
-import {suite, test, expect} from "@e280/science"
+import {science, suite, test, expect} from "@e280/science"
+
 import {asBindings, Intent} from "./core/types.js"
-import {bindingsShape} from "./core/bindings/shape.js"
-import {bindingsTable} from "./core/bindings/table.js"
 import {encodeIntents} from "./core/intent/encode.js"
 import {decodeIntents} from "./core/intent/decode.js"
+import {bindingsShape} from "./core/bindings/shape.js"
+import {bindingsTable} from "./core/bindings/table.js"
+import {normalizeBindings} from "./core/bindings/normalize.js"
 import {makeIntentsResolver} from "./core/resolvers/intents.js"
 import {makeActionsResolver} from "./core/resolvers/actions.js"
-import { normalizeBindings } from "./core/bindings/normalize.js"
 
 export const exampleBindings = asBindings({
 	running: {forward: "KeyW", jump: ["and", "ShiftLeft", "Space"]},
 	gunning: {shoot: ["or", "pointer.button.left", "gamepad.trigger.right"]},
 })
 
-export default suite({
+await science.run({
 	bindings: suite({
 		"shape": test(async() => {
 			expect(bindingsShape(exampleBindings).running.forward).ok()
