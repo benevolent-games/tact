@@ -9,7 +9,7 @@ export type Profile = {
 }
 
 export type DeckState = {
-	customProfiles: [Id, Profile][]
-	devicesToProfiles: [Id, Id | null][]
+	customProfiles: [profileId: Id, profile: Profile][]
+	profileAssignments: [controllerId: Id, profileId: Id][]
 }
 
