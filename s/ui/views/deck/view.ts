@@ -1,23 +1,17 @@
 
 import {html} from "lit"
 import {shadow} from "@e280/sly"
-import {Hub} from "../../../hub/hub.js"
-import {Director} from "../../director.js"
+import {Deck} from "../../deck/deck.js"
 
-export const DeckView = shadow((
-		hub: Hub<any>,
-		director: Director,
-	) => {
-
-	director.state
-	hub.ports
-
+export const DeckView = shadow((deck: Deck) => {
 	return html`
-		ports
-		${director.stockProfiles.map(profile => html`
-			<p>${profile.id}: ${profile.label}</p>
-		`)}
-		${director.state.controllerSettings}
+		<div class=deck>
+			${deck.portwise.array().map(([port, devices]) => html`
+				<div class=port>
+					<span>port ${port}</span>
+				</div>
+			`)}
+		</div>
 	`
 })
 

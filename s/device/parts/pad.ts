@@ -4,10 +4,7 @@ import {evergreen} from "../../utils/evergreen.js"
 
 /** stable reference to a gamepad, has a getter to get the latest gamepad snapshot */
 export class Pad {
-	constructor(
-		public index: number,
-		private get: () => Gamepad,
-	) {}
+	constructor(private get: () => Gamepad) {}
 
 	get gamepad() {
 		return this.get()
@@ -27,7 +24,7 @@ export function onPad(fn: (pad: Pad) => () => void) {
 		for (const gamepad of navigator.getGamepads()) {
 			if (gamepad?.connected && !known.has(gamepad.index)) {
 				const get = () => navigator.getGamepads()[gamepad.index]
-				const pad = new Pad(gamepad.index, evergreen(gamepad, get))
+				const pad = new Pad(evergreen(gamepad, get))
 				const dispose = fn(pad)
 				known.set(gamepad.index, {pad, dispose})
 			}
@@ -36,7 +33,7 @@ export function onPad(fn: (pad: Pad) => () => void) {
 
 	function deleteOld() {
 		for (const [index, {pad, dispose}] of known) {
-			const gamepad = navigator.getGamepads()[pad.index]
+			const gamepad = navigator.getGamepads()[pad.gamepad.index]
 			if (!gamepad?.connected) {
 				dispose()
 				known.delete(index)

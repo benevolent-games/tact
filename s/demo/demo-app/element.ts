@@ -1,19 +1,18 @@
 
 import {html} from "lit"
+import {LocalStore} from "@e280/strata"
 import {shadowElement, useCss} from "@e280/sly"
 
-import {Hub} from "../../hub/hub.js"
 import styleCss from "./style.css.js"
-import {Port} from "../../hub/port.js"
+import {Deck} from "../../ui/deck/deck.js"
 import {asBindings} from "../../core/types.js"
 import {Devices} from "../../device/devices.js"
-import {Controller} from "../../hub/controller.js"
-import {setupDirector} from "../../ui/director.js"
+import {onPad} from "../../device/parts/pad.js"
+import {DeckState} from "../../ui/deck/types.js"
 import {DeckView} from "../../ui/views/deck/view.js"
 import {PointerDevice} from "../../device/pointer.js"
 import {GamepadDevice} from "../../device/gamepad.js"
 import {KeyboardDevice} from "../../device/keyboard.js"
-import {onGamepadController} from "../../hub/on-gamepad-controller.js"
 
 const bindings = asBindings({
 	spectator: {
@@ -28,62 +27,46 @@ const bindings = asBindings({
 	},
 })
 
-const primaryController = new Controller(bindings, new Devices(
-	new KeyboardDevice(),
-	new PointerDevice(),
-))
+const store = new LocalStore<DeckState>("tactDeck")
 
-const port = new Port([primaryController])
-const hub = new Hub(port)
-
-const {director} = await setupDirector({
-	stockProfiles: [
-		{id: "standard", label: "standard", bindings},
-	],
+const deck = new Deck({
+	store,
+	profiles: {
+		standard: {label: "standard", bindings},
+		micro: {label: "micro", bindings},
+	},
 })
 
-director.registerController("primary", primaryController)
+const port = deck.addPort()
 
-onGamepadController(bindings, controller => {
-	port.add(controller)
-	const unregister = director.registerController(controller.device.gamepad.id, controller)
-	return () => {
-		unregister()
-		hub.forget(controller)
-	}
+deck.setDevice({
+	id: "primary",
+	port,
+	profileId: "standard",
+	device: new Devices(
+		new KeyboardDevice(),
+		new PointerDevice(),
+	),
+})
+
+onPad(pad => {
+	const {id} = pad.gamepad
+	const device = new GamepadDevice(pad)
+	deck.setDevice({
+		id,
+		device,
+		port: null,
+		profileId: "standard",
+	})
+	return () => deck.deleteDevice(id)
 })
 
 export class DemoApp extends shadowElement(() => {
 	useCss(styleCss)
 
-	const allControllers = [hub.unassigned, ...hub.ports].flatMap(port => port.array())
-
 	return html`
 		<div class=plate>
-			${DeckView(hub, director)}
-
-			<hr/>
-
-			<ul>
-				${allControllers.map(controller => {
-					const {device} = controller
-					if (device instanceof GamepadDevice) {
-						const gamepad = device.pad.gamepad
-						return html`
-							<li>
-								<span>${gamepad.id}</span>
-								<span>${gamepad.index}</span>
-								<span>${gamepad.mapping}</span>
-							</li>
-						`
-					}
-					return html`
-						<li>
-							unknown device
-						</li>
-					`
-				})}
-			</ul>
+			${DeckView(deck)}
 		</div>
 	`
 }) {}
