@@ -49,8 +49,9 @@ deck.connectController("primary", controller, {port, profileId: "standard"})
 
 onPad(pad => {
 	const {id} = pad.gamepad
+	console.log(id)
 	const controller = new Controller(bindings, new GamepadDevice(pad))
-	deck.connectController(id, controller, {port: null, profileId: "standard"})
+	deck.connectController(id, controller, {port, profileId: "standard"})
 	return () => deck.disconnectController(id)
 })
 

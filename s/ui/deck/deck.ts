@@ -1,11 +1,12 @@
 
 import {GMap, is} from "@e280/stz"
-import {Cubby, lazy, Prism, RMap, RSet} from "@e280/strata"
+import {Cubby, derived, Prism, RMap, RSet} from "@e280/strata"
 
 import {Controller} from "./controller.js"
 import {remap} from "../../utils/remap.js"
 import {DeckState, Id, Profile} from "./types.js"
 import {freezeClone} from "../../utils/freeze-clone.js"
+import {mergeIntents} from "../../core/intent/merge.js"
 
 export class Deck {
 	ports = new RSet<Id>()
@@ -16,6 +17,10 @@ export class Deck {
 	#prism
 	#lens
 	#nextPortId
+
+	#getCustomProfiles
+	#getProfileAssignments
+	#portwise
 
 	constructor(private options: {
 			store: Cubby<DeckState>
@@ -33,6 +38,23 @@ export class Deck {
 		})
 
 		this.#lens = this.#prism.lens(s => s)
+
+		this.#getCustomProfiles = derived(() => new GMap(freezeClone(this.#lens.state.customProfiles)))
+		this.#getProfileAssignments = derived(() => new GMap(freezeClone(this.#lens.state.profileAssignments)))
+		this.#portwise = derived(() => {
+			const map = new GMap<Id, GMap<Id, {controller: Controller, profile: Profile}>>()
+			for (const port of this.ports) {
+				const results = map.guarantee(port, () => new GMap())
+				for (const [controllerId, controller] of this.controllers) {
+					const controllerPort = this.portAssignments.get(controllerId) ?? null
+					if (controllerPort === port) {
+						const profile = this.getProfile(this.profileAssignments.get(controllerId) ?? null)
+						results.set(controllerId, {controller, profile})
+					}
+				}
+			}
+			return map
+		})
 	}
 
 	async load() {
@@ -44,29 +66,26 @@ export class Deck {
 		)
 	}
 
-	#getCustomProfiles = lazy(() => new GMap(freezeClone(this.#lens.state.customProfiles)))
-	#getProfileAssignments = lazy(() => new GMap(freezeClone(this.#lens.state.profileAssignments)))
-	#portwise = lazy(() => {
-		const map = new GMap<Id, GMap<Id, {controller: Controller, profile: Profile}>>()
-
-		for (const port of this.ports) {
-			const results = map.guarantee(port, () => new GMap())
-
-			for (const [controllerId, controller] of this.controllers) {
-				const controllerPort = this.portAssignments.get(controllerId) ?? null
-				if (controllerPort === port) {
-					const profile = this.getProfile(this.profileAssignments.get(controllerId) ?? null)
-					results.set(controllerId, {controller, profile})
-				}
-			}
-		}
-
-		return map
-	})
 
 	get customProfiles() { return this.#getCustomProfiles() }
 	get profileAssignments() { return this.#getProfileAssignments() }
 	get portwise() { return this.#portwise() }
+
+	get unassignedControllers() {
+		return this.controllers.array()
+			.filter(([id]) => {
+				if (!this.portAssignments.has(id)) return true
+				return this.portAssignments.need(id) === null
+			})
+			.map(([,controller]) => controller)
+	}
+
+	resolveIntents(port: Id, now: number) {
+		const controllers = [...this.portwise.need(port).values()].map(c => c.controller)
+		return mergeIntents(
+			controllers.flatMap(controller => controller.resolveIntents(now))
+		)
+	}
 
 	createPort() {
 		const id = (this.#nextPortId++).toString(16)
