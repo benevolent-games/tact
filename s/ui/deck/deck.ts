@@ -33,15 +33,22 @@ export class Deck {
 		return id
 	}
 
-	async connectController(id: Id, controller: Controller, port: Id | undefined) {
+	async connectController(id: Id, controller: Controller) {
 		this.controllers.set(id, controller)
-		this.portAssignments.set(id, port)
 		this.#applyControllerProfile(id)
 	}
 
 	async disconnectController(id: Id) {
 		this.controllers.delete(id)
 		this.portAssignments.delete(id)
+	}
+
+	async plug(controllerId: string, port: string) {
+		this.portAssignments.set(controllerId, port)
+	}
+
+	async unplug(controllerId: string) {
+		this.portAssignments.delete(controllerId)
 	}
 
 	async assignControllerProfile(controllerId: Id, profileId: Id) {
