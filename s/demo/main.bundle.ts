@@ -36,7 +36,7 @@ const deck = new Deck({
 	},
 })
 
-deck.load()
+await deck.load()
 store.onStorageEvent(() => deck.load())
 
 const port = deck.createPort()
@@ -45,11 +45,10 @@ const controller = new Controller(bindings, new Devices(
 	new PointerDevice(),
 ))
 
-deck.connectController("primary", controller, {port, profileId: "standard"})
+await deck.connectController("primary", controller, {port, profileId: "standard"})
 
 onPad(pad => {
 	const {id} = pad.gamepad
-	console.log(id)
 	const controller = new Controller(bindings, new GamepadDevice(pad))
 	deck.connectController(id, controller, {port, profileId: "standard"})
 	return () => deck.disconnectController(id)
