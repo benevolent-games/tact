@@ -1,13 +1,14 @@
 
 import {html} from "lit"
 import {shadow} from "@e280/sly"
+import {Id} from "../../deck/types.js"
 import {Deck} from "../../deck/deck.js"
-import {Id, Profile} from "../../deck/types.js"
+import {Controller} from "../../deck/controller.js"
 
 export const DeskView = shadow((deck: Deck) => {
-
-	function ControllerSettings(controllerId: Id, profile: Profile) {
-		const selectedProfileId = deck.profileAssignments.need(controllerId)
+	function ControllerView(controllerId: Id, _controller: Controller) {
+		const selectedProfileId = deck.profiles.normalizeId(deck.settings.profileAssignments.get(controllerId))
+		const selectedProfile = deck.profiles.get(selectedProfileId)
 
 		async function onChange(event: Event) {
 			const element = event.currentTarget as HTMLSelectElement
@@ -18,12 +19,12 @@ export const DeskView = shadow((deck: Deck) => {
 		return html`
 			<div class=controller>
 				<span>${controllerId}</span>
-				<span>${profile.label}</span>
+				<span>${selectedProfile.label}</span>
 				<label>
 					<span>bindings</span>
-					<select .value="${selectedProfileId}" @change="${onChange}">
-						${deck.profiles.array().map(([profileId, profile]) => html`
-							<option value="${profileId}">${profile.label}</option>
+					<select @change=${onChange}>
+						${deck.profiles.all.map(([profileId, profile]) => html`
+							<option .value=${profileId} .selected=${profileId === selectedProfileId}>${profile.label}</option>
 						`)}
 					</select>
 				</label>
@@ -33,17 +34,19 @@ export const DeskView = shadow((deck: Deck) => {
 
 	return html`
 		<div class=deck>
-			${deck.portwise.array().map(([,controllers], portIndex) => html`
-				<div class=port>
-					<strong>P${portIndex + 1}</strong>
-					<div class=controllerlist>
-						${controllers.array().map(
-							([controllerId, {controller, profile}]) =>
-								ControllerSettings(controllerId, profile)
-						)}
+			${deck.ports.array().map((portId, portIndex) => {
+				const controllers = deck.controllers.array()
+					.filter(([controllerId]) => deck.portAssignments.get(controllerId) === portId)
+
+				return html`
+					<div class=port>
+						<strong>P${portIndex + 1}</strong>
+						<div class=controllerlist>
+							${controllers.map(([controllerId, controller]) => ControllerView(controllerId, controller))}
+						</div>
 					</div>
-				</div>
-			`)}
+				`
+			})}
 		</div>
 	`
 })

@@ -2,7 +2,6 @@
 import {dom} from "@e280/sly"
 import {LocalStore} from "@e280/strata"
 
-import {Deck} from "../ui/deck/deck.js"
 import {asBindings} from "../core/types.js"
 import {Devices} from "../device/devices.js"
 import {onPad} from "../device/parts/pad.js"
@@ -12,6 +11,7 @@ import {GamepadDevice} from "../device/gamepad.js"
 import {setupDemoApp} from "./demo-app/element.js"
 import {Controller} from "../ui/deck/controller.js"
 import {KeyboardDevice} from "../device/keyboard.js"
+import { Deck } from "../ui/deck/deck.js"
 
 const bindings = asBindings({
 	spectator: {
@@ -30,7 +30,7 @@ const store = new LocalStore<DeckState>("tactDeck")
 
 const deck = new Deck({
 	store,
-	profiles: {
+	stockProfiles: {
 		standard: {label: "standard", bindings},
 		micro: {label: "micro", bindings},
 	},
@@ -45,12 +45,12 @@ const controller = new Controller(bindings, new Devices(
 	new PointerDevice(),
 ))
 
-await deck.connectController("primary", controller, {port, profileId: "standard"})
+await deck.connectController("primary", controller, port)
 
 onPad(pad => {
 	const {id} = pad.gamepad
 	const controller = new Controller(bindings, new GamepadDevice(pad))
-	deck.connectController(id, controller, {port, profileId: "standard"})
+	deck.connectController(id, controller, port)
 	return () => deck.disconnectController(id)
 })
 

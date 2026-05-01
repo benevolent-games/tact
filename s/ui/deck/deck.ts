@@ -1,90 +1,30 @@
 
-import {GMap, is} from "@e280/stz"
-import {Cubby, derived, Prism, RMap, RSet} from "@e280/strata"
-
+import {Cubby, RMap, RSet} from "@e280/strata"
 import {Controller} from "./controller.js"
-import {remap} from "../../utils/remap.js"
+import {Profiles} from "./parts/profiles.js"
+import {Settings} from "./parts/settings.js"
 import {DeckState, Id, Profile} from "./types.js"
-import {freezeClone} from "../../utils/freeze-clone.js"
-import {mergeIntents} from "../../core/intent/merge.js"
 
 export class Deck {
+	profiles
+	settings
 	ports = new RSet<Id>()
-	profiles = new RMap<Id, Profile>()
 	controllers = new RMap<Id, Controller>()
-	portAssignments = new RMap<Id, Id | null>()
+	portAssignments = new RMap<Id, Id | undefined>()
+	#nextPortId = 1
 
-	#prism
-	#lens
-	#nextPortId
-
-	#getCustomProfiles
-	#getProfileAssignments
-	#portwise
-
-	constructor(private options: {
+	constructor(options: {
 			store: Cubby<DeckState>
-			profiles: Record<Id, Profile>
+			stockProfiles: Record<Id, Profile>
 		}) {
-
-		this.#nextPortId = 0
-
-		for (const [id, profile] of Object.entries(options.profiles))
-			this.profiles.set(id, profile)
-
-		this.#prism = new Prism<DeckState>({
-			customProfiles: [],
-			profileAssignments: [],
-		})
-
-		this.#lens = this.#prism.lens(s => s)
-
-		this.#getCustomProfiles = derived(() => new GMap(freezeClone(this.#lens.state.customProfiles)))
-		this.#getProfileAssignments = derived(() => new GMap(freezeClone(this.#lens.state.profileAssignments)))
-		this.#portwise = derived(() => {
-			const map = new GMap<Id, GMap<Id, {controller: Controller, profile: Profile}>>()
-			for (const port of this.ports) {
-				const results = map.guarantee(port, () => new GMap())
-				for (const [controllerId, controller] of this.controllers) {
-					const controllerPort = this.portAssignments.get(controllerId) ?? null
-					if (controllerPort === port) {
-						const profile = this.getProfile(this.profileAssignments.get(controllerId) ?? null)
-						results.set(controllerId, {controller, profile})
-					}
-				}
-			}
-			return map
-		})
+		this.settings = new Settings(options.store)
+		this.profiles = new Profiles(options.stockProfiles, this.settings.customProfiles)
 	}
 
 	async load() {
-		await this.#prism.set(
-			await this.options.store.get() ?? {
-				customProfiles: [],
-				profileAssignments: [],
-			}
-		)
-	}
-
-
-	get customProfiles() { return this.#getCustomProfiles() }
-	get profileAssignments() { return this.#getProfileAssignments() }
-	get portwise() { return this.#portwise() }
-
-	get unassignedControllers() {
-		return this.controllers.array()
-			.filter(([id]) => {
-				if (!this.portAssignments.has(id)) return true
-				return this.portAssignments.need(id) === null
-			})
-			.map(([,controller]) => controller)
-	}
-
-	resolveIntents(port: Id, now: number) {
-		const controllers = [...this.portwise.need(port).values()].map(c => c.controller)
-		return mergeIntents(
-			controllers.flatMap(controller => controller.resolveIntents(now))
-		)
+		await this.settings.load()
+		for (const id of this.controllers.keys())
+			this.#applyControllerProfile(id)
 	}
 
 	createPort() {
@@ -93,17 +33,10 @@ export class Deck {
 		return id
 	}
 
-	getProfile(id: string | null) {
-		return is.happy(id)
-			? this.profiles.get(id) ?? this.customProfiles.get(id) ?? [...this.profiles.values()][0]
-			: [...this.profiles.values()][0]
-	}
-
-	async connectController(id: Id, controller: Controller, options: {port: Id | null, profileId: Id}) {
-		const {port, profileId} = options
+	async connectController(id: Id, controller: Controller, port: Id | undefined) {
 		this.controllers.set(id, controller)
 		this.portAssignments.set(id, port)
-		await this.assignControllerProfile(id, profileId)
+		this.#applyControllerProfile(id)
 	}
 
 	async disconnectController(id: Id) {
@@ -111,37 +44,30 @@ export class Deck {
 		this.portAssignments.delete(id)
 	}
 
-	async setCustomProfile(profileId: Id, profile: Profile) {
-		await this.#mut(state => {
-			state.customProfiles = remap(state.customProfiles, map => map.set(profileId, profile))
-		})
-		for (const [cid, pid] of this.profileAssignments)
-			if (pid === profileId)
-				await this.assignControllerProfile(cid, pid)
-	}
-
-	async deleteCustomProfile(id: Id) {
-		await this.#mut(state => {
-			state.customProfiles = remap(state.customProfiles, map => map.delete(id))
-		})
-	}
-
 	async assignControllerProfile(controllerId: Id, profileId: Id) {
-		const profile = this.getProfile(profileId)
+		this.settings.profileAssignments.set(controllerId, profileId)
+		this.#applyControllerProfile(controllerId)
+		await this.settings.save()
+	}
+
+	getAllControllersOnPort(id: Id) {
+		return [...this.portAssignments]
+			.filter(([,portId]) => portId === id)
+			.map(([controllerId]) => controllerId)
+	}
+
+	queryController(id: Id) {
+		const controller = this.controllers.need(id)
+		const port = this.portAssignments.get(id)
+		const profileId = this.settings.profileAssignments.get(id)
+		const profile = this.profiles.get(profileId)
+		return {id, controller, port, profileId, profile}
+	}
+
+	#applyControllerProfile(controllerId: Id) {
 		const controller = this.controllers.need(controllerId)
-		controller.bindings = profile.bindings
-		await this.#mut(state => {
-			state.profileAssignments = remap(state.profileAssignments, map => map.set(controllerId, profileId))
-		})
-	}
-
-	async #save() {
-		await this.options.store.set(this.#prism.get())
-	}
-
-	async #mut(fn: (state: DeckState) => void) {
-		await this.#lens.mutate(fn)
-		await this.#save()
+		const profileId = this.settings.profileAssignments.get(controllerId)
+		controller.bindings = this.profiles.get(profileId).bindings
 	}
 }
 
