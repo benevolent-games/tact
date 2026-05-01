@@ -4,6 +4,7 @@ import {LocalStore} from "@e280/strata"
 
 import {Deck} from "../ui/deck/deck.js"
 import {asBindings} from "../core/types.js"
+import {doAsync} from "../utils/do-async.js"
 import {Devices} from "../device/devices.js"
 import {onPad} from "../device/parts/pad.js"
 import {DeckState} from "../ui/deck/types.js"
@@ -39,7 +40,7 @@ const deck = new Deck({
 await deck.load()
 store.onStorageEvent(() => deck.load())
 
-const port = deck.createPort()
+const port = await deck.createPort()
 const controller = new Controller(bindings, new Devices(
 	new KeyboardDevice(),
 	new PointerDevice(),
@@ -51,8 +52,10 @@ await deck.plug("primary", port)
 onPad(pad => {
 	const id = `(${pad.gamepad.index}) ${pad.gamepad.id}`
 	const controller = new Controller(bindings, new GamepadDevice(pad))
-	deck.connectController(id, controller)
-		.then(() => deck.plug(id, port))
+	doAsync(async() => {
+		await deck.connectController(id, controller)
+		await deck.plug(id, port)
+	})
 	return () => deck.disconnectController(id)
 })
 

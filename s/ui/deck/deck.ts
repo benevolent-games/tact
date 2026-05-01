@@ -1,16 +1,17 @@
 
-import {Cubby, RMap, RSet} from "@e280/strata"
+import {Cubby} from "@e280/strata"
 import {Controller} from "./controller.js"
 import {Profiles} from "./parts/profiles.js"
 import {Settings} from "./parts/settings.js"
 import {DeckState, Id, Profile} from "./types.js"
+import {ReactiveMap, ReactiveSet} from "../../utils/reactive.js"
 
 export class Deck {
 	profiles
 	settings
-	ports = new RSet<Id>()
-	controllers = new RMap<Id, Controller>()
-	portAssignments = new RMap<Id, Id | undefined>()
+	ports = new ReactiveSet<Id>()
+	controllers = new ReactiveMap<Id, Controller>()
+	portAssignments = new ReactiveMap<Id, Id | undefined>()
 	#nextPortId = 1
 
 	constructor(options: {
@@ -27,32 +28,32 @@ export class Deck {
 			this.#applyControllerProfile(id)
 	}
 
-	createPort() {
+	async createPort() {
 		const id = (this.#nextPortId++).toString(16)
-		this.ports.add(id)
+		await this.ports.add(id)
 		return id
 	}
 
 	async connectController(id: Id, controller: Controller) {
-		this.controllers.set(id, controller)
+		await this.controllers.set(id, controller)
 		this.#applyControllerProfile(id)
 	}
 
 	async disconnectController(id: Id) {
-		this.controllers.delete(id)
-		this.portAssignments.delete(id)
+		await this.controllers.delete(id)
+		await this.portAssignments.delete(id)
 	}
 
 	async plug(controllerId: string, port: string) {
-		this.portAssignments.set(controllerId, port)
+		await this.portAssignments.set(controllerId, port)
 	}
 
 	async unplug(controllerId: string) {
-		this.portAssignments.delete(controllerId)
+		await this.portAssignments.delete(controllerId)
 	}
 
 	async assignControllerProfile(controllerId: Id, profileId: Id) {
-		this.settings.profileAssignments.set(controllerId, profileId)
+		await this.settings.profileAssignments.set(controllerId, profileId)
 		this.#applyControllerProfile(controllerId)
 		await this.settings.save()
 	}
