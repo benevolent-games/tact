@@ -15,10 +15,12 @@ export class KeyboardDevice extends SamplerDevice {
 		keydown: (event: KeyboardEvent) => {
 			if (event.repeat) return null
 			this.setSample(event.code, 1)
+			this.setSample("keyboard.any", 1)
 		},
 		keyup: (event: KeyboardEvent) => {
 			if (event.repeat) return null
 			this.setSample(event.code, 0)
+			this.setSample("keyboard.any", 0)
 		},
 	}
 
