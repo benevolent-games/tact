@@ -9,7 +9,7 @@
 	"sideEffects": false,
 	"exports": {
 		".": "./x/index.js",
-		"./core": "./x/core/index.js"
+		"./ui": "./x/index-ui.js"
 	},
 	"files": [
 		"x",

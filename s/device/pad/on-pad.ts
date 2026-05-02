@@ -1,15 +1,7 @@
 
 import {ev} from "@e280/stz"
+import {Pad} from "./pad.js"
 import {evergreen} from "../../utils/evergreen.js"
-
-/** stable reference to a gamepad, has a getter to get the latest gamepad snapshot */
-export class Pad {
-	constructor(private get: () => Gamepad) {}
-
-	get gamepad() {
-		return this.get()
-	}
-}
 
 /** listen for gamepads coming and going */
 export function onPad(fn: (pad: Pad) => () => void) {

@@ -1,11 +1,12 @@
 
 import {html} from "lit"
+import {cycle, nap} from "@e280/stz"
 import {RMap, RSet} from "@e280/strata"
 import {shadowElement, useCss, useMount, useOnce} from "@e280/sly"
+
 import styleCss from "./style.css.js"
-import {onPad} from "../../device/parts/pad.js"
+import {onPad} from "../../device/pad/on-pad.js"
 import {GamepadDevice} from "../../device/gamepad.js"
-import {cycle, nap} from "@e280/stz"
 
 export const GamepadApp = shadowElement(() => {
 	useCss(styleCss)

@@ -1,6 +1,6 @@
 
 import {Scalar} from "@benev/math"
-import {Pad} from "./parts/pad.js"
+import {Pad} from "./pad/pad.js"
 import {SamplerDevice} from "./sampler.js"
 import {splitAxis} from "../utils/split-axis.js"
 
