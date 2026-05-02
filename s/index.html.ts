@@ -38,7 +38,9 @@ export default template(import.meta.url, async orb => html`
 				<div>
 					<blockquote>"from keypress to couch co-op"</blockquote>
 					<p>
-						tact is a user input toolkit for the web. it's good at customizable keybindings, and multiple gamepad support.
+						<a href="./gamepad/">gamepad visualizer</a>.
+					</p>
+					<p>
 						<a href="https://github.com/benevolent-games/tact">github</a>.
 						<a href="https://benevolent.games/">benevolent.games</a>.
 					</p>
@@ -46,15 +48,6 @@ export default template(import.meta.url, async orb => html`
 			</header>
 
 			<demo-app></demo-app>
-
-			<section>
-				<h3>controls</h3>
-				<ul>
-					<li><strong>keyboard</strong> wasd, left-bracket, right-bracket, backslash.</li>
-					<li><strong>gamepad</strong> thumbsticks, hold beta/gamma and press bumpers or dpad left/right.</li>
-					<li><strong>virtual</strong> use your mouse to press the little buttons.</li>
-				</ul>
-			</section>
 		</body>
 	</html>
 `)

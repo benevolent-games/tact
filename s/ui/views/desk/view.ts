@@ -1,11 +1,17 @@
 
 import {html} from "lit"
-import {shadow} from "@e280/sly"
+import {Content, shadow} from "@e280/sly"
 import {Id} from "../../deck/types.js"
 import {Deck} from "../../deck/deck.js"
 import {Controller} from "../../deck/controller.js"
 
-export const DeskView = shadow((deck: Deck) => {
+export type DeskOptions = {
+	labels?: Map<any, Content>
+}
+
+export const DeskView = shadow((deck: Deck, options: DeskOptions = {}) => {
+	const {labels = new Map()} = options
+
 	function PortView(portId: Id, portIndex: number) {
 		return html`
 			<div class=port>
@@ -19,7 +25,7 @@ export const DeskView = shadow((deck: Deck) => {
 		`
 	}
 
-	function ControllerView(controllerId: Id, _controller: Controller) {
+	function ControllerView(controllerId: Id, controller: Controller) {
 		const selectedProfileId = deck.profiles.normalizeId(
 			deck.settings.profileAssignments.get(controllerId)
 		)
@@ -32,7 +38,7 @@ export const DeskView = shadow((deck: Deck) => {
 
 		return html`
 			<div class=controller>
-				<span>${controllerId}</span>
+				<span>${labels.get(controller) ?? controllerId}</span>
 				<select @change=${onChange}>
 					${deck.profiles.all.map(([profileId, profile]) => html`
 						<option
