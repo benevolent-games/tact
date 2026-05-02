@@ -1,32 +1,12 @@
 
-import {Vec2} from "@benev/math"
+import {Scalar} from "@benev/math"
 import {Pad} from "./parts/pad.js"
 import {SamplerDevice} from "./sampler.js"
-import {splitVector} from "../utils/split-axis.js"
-import {circularClamp} from "../utils/circular-clamp.js"
-
-const gamepadButtonCodes = [
-	"gamepad.a",
-	"gamepad.b",
-	"gamepad.x",
-	"gamepad.y",
-	"gamepad.bumper.left",
-	"gamepad.bumper.right",
-	"gamepad.trigger.left",
-	"gamepad.trigger.right",
-	"gamepad.alpha",
-	"gamepad.beta",
-	"gamepad.stick.left.click",
-	"gamepad.stick.right.click",
-	"gamepad.up",
-	"gamepad.down",
-	"gamepad.left",
-	"gamepad.right",
-	"gamepad.gamma",
-]
+import {splitAxis} from "../utils/split-axis.js"
 
 export class GamepadDevice extends SamplerDevice {
-	range = new Vec2(0.2, 0.9)
+	min = 0.2
+	max = 0.9
 
 	constructor(public pad: Pad) {
 		super()
@@ -44,40 +24,27 @@ export class GamepadDevice extends SamplerDevice {
 
 	#pollButtons(gamepad: Gamepad) {
 		let anyButtonValue = 0
-
-		const recordAny = (value: number) => {
+		for (const [index, button] of gamepad.buttons.entries()) {
+			const i = index + 1
+			const value = button.value
 			anyButtonValue = Math.max(anyButtonValue, value)
+			this.setSample(`gamepad.button.${i}`, this.#correction(value))
 		}
+		this.setSample("gamepad.button.any", this.#correction(anyButtonValue))
+	}
 
-		for (const [index, code] of gamepadButtonCodes.entries()) {
-			const value = gamepad.buttons.at(index)?.value ?? 0
-			recordAny(value)
-			this.setSample(code, value)
-		}
-
-		this.setSample("gamepad.any", anyButtonValue)
+	#correction(x: number, min = this.min, max = this.max) {
+		return Scalar.remap(x, min, max, 0, 1, true)
 	}
 
 	#pollSticks(gamepad: Gamepad) {
-		const [leftX = 0, leftY = 0, rightX = 0, rightY = 0] = gamepad.axes
-
-		const stickLeft = splitVector(
-			circularClamp(new Vec2(leftX, leftY), this.range)
-		)
-
-		const stickRight = splitVector(
-			circularClamp(new Vec2(rightX, rightY), this.range)
-		)
-
-		this.setSample("gamepad.stick.left.up", stickLeft.up)
-		this.setSample("gamepad.stick.left.down", stickLeft.down)
-		this.setSample("gamepad.stick.left.left", stickLeft.left)
-		this.setSample("gamepad.stick.left.right", stickLeft.right)
-
-		this.setSample("gamepad.stick.right.up", stickRight.up)
-		this.setSample("gamepad.stick.right.down", stickRight.down)
-		this.setSample("gamepad.stick.right.left", stickRight.left)
-		this.setSample("gamepad.stick.right.right", stickRight.right)
+		for (const [index, axis] of gamepad.axes.entries()) {
+			const i = index + 1
+			this.setSample(`gamepad.axis.${i}`, this.#correction(axis, -this.max, this.max))
+			const [neg, pos] = splitAxis(axis)
+			this.setSample(`gamepad.axis.${i}.neg`, this.#correction(neg))
+			this.setSample(`gamepad.axis.${i}.pos`, this.#correction(pos))
+		}
 	}
 }
 
