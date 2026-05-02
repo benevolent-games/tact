@@ -36,6 +36,6 @@ export type Actions<B extends Bindings> = {
 	}
 }
 
-export type AsBindings<B extends Bindings> = B
-export const asBindings = <B extends Bindings>(b: B) => b
+export type AsBindings<B extends Bindings> = {[MK in keyof B]: {[AK in keyof B[MK]]: Atom}}
+export const asBindings = <B extends Bindings>(b: B) => (b as AsBindings<B>)
 
