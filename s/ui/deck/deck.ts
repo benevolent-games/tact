@@ -72,6 +72,13 @@ export class Deck {
 		return {id, controller, port, profileId, profile}
 	}
 
+	resolvePort(port: Id, now: number) {
+		return this
+			.getAllControllersOnPort(port)
+			.map(id => this.controllers.need(id))
+			.flatMap(controller => controller.resolveIntents(now))
+	}
+
 	#applyControllerProfile(controllerId: Id) {
 		const controller = this.controllers.need(controllerId)
 		const profileId = this.settings.profileAssignments.get(controllerId)
