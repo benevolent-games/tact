@@ -1,12 +1,12 @@
 
+import {RMap} from "@e280/strata"
 import {Id, Profile} from "../types.js"
-import {ReactiveMap} from "../../../utils/reactive.js"
 
 export class Profiles {
 	stock
 
-	constructor(stock: Record<Id, Profile>, public custom: ReactiveMap<Id, Profile>) {
-		this.stock = ReactiveMap.fromObject(stock)
+	constructor(stock: Record<Id, Profile>, public custom: RMap<Id, Profile>) {
+		this.stock = new RMap<Id, Profile>().absorbObject(stock)
 		if (this.stock.size === 0) throw new Error("must be at least one stock profile")
 	}
 

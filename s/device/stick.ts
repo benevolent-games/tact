@@ -6,13 +6,13 @@ import {splitVector} from "../utils/split-axis.js"
 
 export class StickDevice implements Device {
 	$vector = signal(Vec2.zero())
-	$breakdown = derived(() => splitVector(this.$vector.get()))
+	$breakdown = derived(() => splitVector(this.$vector()))
 
 	constructor(public channel = "stick") {}
 
 	samples() {
 		const {channel} = this
-		const {up, down, left, right} = this.$breakdown.get()
+		const {up, down, left, right} = this.$breakdown()
 		return [
 			[`${channel}.up`, up],
 			[`${channel}.down`, down],

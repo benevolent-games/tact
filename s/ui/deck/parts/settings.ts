@@ -1,14 +1,13 @@
 
-import {Cubby} from "@e280/strata"
+import {Cubby, RMap} from "@e280/strata"
 import {DeckState, Id, Profile} from "../types.js"
-import {ReactiveMap} from "../../../utils/reactive.js"
 import {shiftLimit} from "../../../utils/shift-limit.js"
 
 const limit = 256
 
 export class Settings {
-	profileAssignments = new ReactiveMap<Id, Id>()
-	customProfiles = new ReactiveMap<Id, Profile>()
+	profileAssignments = new RMap<Id, Id>()
+	customProfiles = new RMap<Id, Profile>()
 
 	constructor(private store: Cubby<DeckState>) {}
 
@@ -21,10 +20,10 @@ export class Settings {
 
 	async load() {
 		const state = await this.store.get()
-		await this.customProfiles.clear()
-		await this.profileAssignments.clear()
-		await this.customProfiles.setEntries(state?.customProfiles ?? [])
-		await this.profileAssignments.setEntries(state?.profileAssignments ?? [])
+		this.customProfiles.clear()
+		this.profileAssignments.clear()
+		this.customProfiles.setEntries(state?.customProfiles ?? [])
+		this.profileAssignments.setEntries(state?.profileAssignments ?? [])
 	}
 }
 

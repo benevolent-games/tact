@@ -1,17 +1,16 @@
 
-import {Cubby} from "@e280/strata"
+import {Cubby, RMap, RSet} from "@e280/strata"
 import {Controller} from "./controller.js"
 import {Profiles} from "./parts/profiles.js"
 import {Settings} from "./parts/settings.js"
 import {DeckState, Id, Profile} from "./types.js"
-import {ReactiveMap, ReactiveSet} from "../../utils/reactive.js"
 
 export class Deck {
 	profiles
 	settings
-	ports = new ReactiveSet<Id>()
-	controllers = new ReactiveMap<Id, Controller>()
-	portAssignments = new ReactiveMap<Id, Id | undefined>()
+	ports = new RSet<Id>()
+	controllers = new RMap<Id, Controller>()
+	portAssignments = new RMap<Id, Id | undefined>()
 	#nextPortId = 1
 
 	constructor(options: {
@@ -28,32 +27,32 @@ export class Deck {
 			this.#applyControllerProfile(id)
 	}
 
-	async createPort() {
+	createPort() {
 		const id = (this.#nextPortId++).toString(16)
-		await this.ports.add(id)
+		this.ports.add(id)
 		return id
 	}
 
-	async connectController(id: Id, controller: Controller) {
-		await this.controllers.set(id, controller)
+	connectController(id: Id, controller: Controller) {
+		this.controllers.set(id, controller)
 		this.#applyControllerProfile(id)
 	}
 
-	async disconnectController(id: Id) {
-		await this.controllers.delete(id)
-		await this.portAssignments.delete(id)
+	disconnectController(id: Id) {
+		this.controllers.delete(id)
+		this.portAssignments.delete(id)
 	}
 
-	async plug(controllerId: string, port: string) {
-		await this.portAssignments.set(controllerId, port)
+	plug(controllerId: string, port: string) {
+		this.portAssignments.set(controllerId, port)
 	}
 
-	async unplug(controllerId: string) {
-		await this.portAssignments.delete(controllerId)
+	unplug(controllerId: string) {
+		this.portAssignments.delete(controllerId)
 	}
 
 	async assignControllerProfile(controllerId: Id, profileId: Id) {
-		await this.settings.profileAssignments.set(controllerId, profileId)
+		this.settings.profileAssignments.set(controllerId, profileId)
 		this.#applyControllerProfile(controllerId)
 		await this.settings.save()
 	}
