@@ -1,12 +1,12 @@
 
 import {RMap} from "@e280/strata"
-import {Id, Profile} from "../types.js"
+import {Profile, ProfileKey} from "../types.js"
 
 export class Profiles {
 	stock
 
-	constructor(stock: Record<Id, Profile>, public custom: RMap<Id, Profile>) {
-		this.stock = new RMap<Id, Profile>().absorbObject(stock)
+	constructor(stock: Record<ProfileKey, Profile>, public custom: RMap<ProfileKey, Profile>) {
+		this.stock = new RMap<ProfileKey, Profile>().absorbObject(stock)
 		if (this.stock.size === 0) throw new Error("must be at least one stock profile")
 	}
 
@@ -14,9 +14,9 @@ export class Profiles {
 		return [...this.stock, ...this.custom]
 	}
 
-	normalizeId(id?: Id) {
-		return id && (this.stock.has(id) || this.custom.has(id))
-			? id
+	normalizeKey(key?: ProfileKey) {
+		return key && (this.stock.has(key) || this.custom.has(key))
+			? key
 			: this.defaultId
 	}
 
@@ -24,8 +24,8 @@ export class Profiles {
 		return [...this.stock.keys()][0]
 	}
 
-	get(id?: Id) {
-		const norm = this.normalizeId(id)
+	get(key?: ProfileKey) {
+		const norm = this.normalizeKey(key)
 		return this.stock.get(norm) ?? this.custom.need(norm)
 	}
 }

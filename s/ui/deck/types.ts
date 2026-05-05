@@ -1,7 +1,8 @@
 
 import {Bindings} from "../../core/types.js"
 
-export type Id = string
+export type ProfileKey = string
+export type ControllerHandle = string
 
 export type Profile = {
 	label: string
@@ -9,7 +10,7 @@ export type Profile = {
 }
 
 export type DeckState = {
-	customProfiles: [profileId: Id, profile: Profile][]
-	profileAssignments: [controllerId: Id, profileId: Id][]
+	customProfiles: [key: ProfileKey, profile: Profile][]
+	profileAssignments: [handle: ControllerHandle, key: ProfileKey][]
 }
 

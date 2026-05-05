@@ -26,7 +26,7 @@ export const DeskView = shadow((deck: Deck, options: DeskOptions = {}) => {
 	}
 
 	function ControllerView(controllerId: Id, controller: Controller) {
-		const selectedProfileId = deck.profiles.normalizeId(
+		const selectedProfileId = deck.profiles.normalizeKey(
 			deck.settings.profileAssignments.get(controllerId)
 		)
 

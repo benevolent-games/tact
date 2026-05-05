@@ -9,6 +9,7 @@ export class Controller<B extends Bindings = Bindings, D extends Device = Device
 	#resolveIntents
 
 	constructor(
+			readonly handle: string,
 			bindings: B,
 			public device: D,
 		) {

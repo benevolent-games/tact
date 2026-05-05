@@ -1,13 +1,13 @@
 
 import {Cubby, RMap} from "@e280/strata"
-import {DeckState, Id, Profile} from "../types.js"
 import {shiftLimit} from "../../../utils/shift-limit.js"
+import {ControllerHandle, DeckState, Profile, ProfileKey} from "../types.js"
 
 const limit = 256
 
 export class Settings {
-	profileAssignments = new RMap<Id, Id>()
-	customProfiles = new RMap<Id, Profile>()
+	profileAssignments = new RMap<ControllerHandle, ProfileKey>()
+	customProfiles = new RMap<ProfileKey, Profile>()
 
 	constructor(private store: Cubby<DeckState>) {}
 
