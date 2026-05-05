@@ -30,6 +30,10 @@ export class Deck {
 
 	#save = debounce(100, () => this.settings.save())
 
+	get ports() {
+		return this.#runtime.ports.array()
+	}
+
 	createPort() {
 		const port = new Port(this.#runtime)
 		this.#runtime.ports.add(port)

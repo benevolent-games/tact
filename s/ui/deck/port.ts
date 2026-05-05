@@ -5,18 +5,18 @@ import {Controller} from "./controller.js"
 
 export class Port {
 	#runtime
-	#pluggedControllers
+	#controllers
 
 	constructor(runtime: Runtime) {
 		this.#runtime = runtime
-		this.#pluggedControllers = derived(
+		this.#controllers = derived(
 			() => this.#runtime.controllers.array()
 				.filter(controller => this.#runtime.portAssignments.get(controller) === this)
 		)
 	}
 
-	get pluggedControllers() {
-		return this.#pluggedControllers()
+	get controllers() {
+		return this.#controllers()
 	}
 
 	plug(controller: Controller) {
@@ -28,7 +28,7 @@ export class Port {
 	}
 
 	resolveIntents(now: number) {
-		return this.pluggedControllers
+		return this.controllers
 			.flatMap(controller => controller.resolveIntents(now))
 	}
 }

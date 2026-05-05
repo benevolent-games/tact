@@ -45,27 +45,23 @@ const deck = new Deck({
 await deck.load()
 store.onStorageEvent(() => deck.load())
 
-const port = await deck.createPort()
-const controller = new Controller(bindings, new Devices(
+const port = deck.createPort()
+const controller = deck.createController("primary", bindings, new Devices(
 	new KeyboardDevice(),
 	new PointerDevice(),
 ))
 
-await deck.connectController("primary", controller)
-await deck.plug("primary", port)
+port.plug(controller)
 
 const labels = new Map<any, Content>()
 	.set(controller, "⌨️🖱keyboard+mouse")
 
 onPad(pad => {
-	const id = `(${pad.gamepad.index}) ${pad.gamepad.id}`
-	const controller = new Controller(bindings, new GamepadDevice(pad))
-	labels.set(controller, `🎮${pad.gamepad.id}`)
-	doAsync(async() => {
-		await deck.connectController(id, controller)
-		await deck.plug(id, port)
-	})
-	return () => deck.disconnectController(id)
+	const handle = `(${pad.gamepad.index + 1}) ${pad.gamepad.id}`
+	const controller = deck.createController(handle, bindings, new GamepadDevice(pad))
+	labels.set(controller, `🎮${handle}`)
+	port.plug(controller)
+	return () => deck.deleteController(controller)
 })
 
 dom.register({DemoApp: setupDemoApp(deck, {labels})})
