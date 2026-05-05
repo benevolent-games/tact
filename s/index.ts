@@ -26,5 +26,6 @@ export * from "./ui/deck/parts/profiles.js"
 export * from "./ui/deck/parts/settings.js"
 export * from "./ui/deck/controller.js"
 export * from "./ui/deck/deck.js"
+export * from "./ui/deck/port.js"
 export * from "./ui/deck/types.js"
 
