@@ -7,11 +7,11 @@ import {DeckState} from "../deck/types.js"
 import {asBindings} from "../core/types.js"
 import {Devices} from "../device/devices.js"
 import {onPad} from "../device/pad/on-pad.js"
+import {Controller} from "../deck/controller.js"
 import {PointerDevice} from "../device/pointer.js"
 import {GamepadDevice} from "../device/gamepad.js"
 import {setupDemoApp} from "./demo-app/element.js"
 import {KeyboardDevice} from "../device/keyboard.js"
-import { Controller } from "../deck/controller.js"
 
 const bindings = asBindings({
 	play: {
@@ -28,7 +28,7 @@ const store = new LocalStore<DeckState>("tactDeck")
 const deck = new Deck({
 	store,
 	stockProfiles: {
-		standard: {label: "📜standard", bindings: bindings},
+		standard: {label: "📜standard", bindings},
 		micro: {label: "🦠micro", bindings: asBindings<typeof bindings>({
 			play: {
 				action: ["or", "Space", "pointer.button.left", "gamepad.button.1"],
