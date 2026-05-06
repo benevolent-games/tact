@@ -11,6 +11,7 @@ import {PointerDevice} from "../device/pointer.js"
 import {GamepadDevice} from "../device/gamepad.js"
 import {setupDemoApp} from "./demo-app/element.js"
 import {KeyboardDevice} from "../device/keyboard.js"
+import { Controller } from "../deck/controller.js"
 
 const bindings = asBindings({
 	play: {
@@ -44,23 +45,27 @@ await deck.load()
 store.onStorageEvent(() => deck.load())
 
 const port = deck.createPort()
-const controller = deck.createController("primary", bindings, new Devices(
+const controller = deck.createController("primary", "standard", new Devices(
 	new KeyboardDevice(),
 	new PointerDevice(),
 ))
 
 port.plug(controller)
 
-const labels = new Map<any, Content>()
+const labels = new Map<Controller, Content>()
 	.set(controller, "⌨️🖱keyboard+mouse")
 
 onPad(pad => {
 	const handle = `(${pad.gamepad.index + 1}) ${pad.gamepad.id}`
-	const controller = deck.createController(handle, bindings, new GamepadDevice(pad))
+	const controller = deck.createController(handle, "standard", new GamepadDevice(pad))
 	labels.set(controller, `🎮${handle}`)
 	port.plug(controller)
 	return () => deck.deleteController(controller)
 })
 
-dom.register({DemoApp: setupDemoApp(deck, {labels})})
+dom.register({
+	DemoApp: setupDemoApp(deck, {
+		getControllerLabel: labels.get.bind(labels),
+	}),
+})
 

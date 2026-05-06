@@ -2,21 +2,21 @@
 import {debounce} from "@e280/stz"
 import {Cubby} from "@e280/strata"
 import {Port} from "./port.js"
+import {Device} from "../core/types.js"
 import {Runtime} from "./parts/runtime.js"
 import {Controller} from "./controller.js"
 import {Profiles} from "./parts/profiles.js"
 import {Settings} from "./parts/settings.js"
-import {Bindings, Device} from "../core/types.js"
 import {DeckState, Profile, ProfileKey} from "./types.js"
 
-export class Deck {
+export class Deck<StockProfileKey extends ProfileKey = ProfileKey> {
 	profiles
 	settings
 	#runtime = new Runtime()
 
 	constructor(options: {
 			store: Cubby<DeckState>
-			stockProfiles: Record<ProfileKey, Profile>
+			stockProfiles: Record<StockProfileKey, Profile>
 		}) {
 		this.settings = new Settings(options.store)
 		this.profiles = new Profiles(options.stockProfiles, this.settings.customProfiles)
@@ -44,12 +44,13 @@ export class Deck {
 		this.#runtime.ports.delete(port)
 	}
 
-	createController<B extends Bindings = Bindings, D extends Device = Device>(
+	createController<D extends Device = Device>(
 			handle: string,
-			bindings: B,
+			profileKey: StockProfileKey,
 			device: D,
 		) {
-		const controller = new Controller(handle, bindings, device)
+		const profile = this.profiles.need(profileKey)
+		const controller = new Controller(handle, profile.bindings, device)
 		this.#runtime.controllers.add(controller)
 		return controller
 	}
@@ -59,7 +60,7 @@ export class Deck {
 		this.#runtime.portAssignments.delete(controller)
 	}
 
-	async assignControllerProfile(controller: Controller, profileKey: ProfileKey) {
+	async assignControllerProfile(controller: Controller, profileKey: StockProfileKey | ProfileKey) {
 		this.settings.profileAssignments.set(controller.handle, profileKey)
 		this.#applyControllerProfile(controller)
 		await this.#save()

@@ -25,8 +25,11 @@ export class Profiles {
 	}
 
 	get(key?: ProfileKey) {
-		const norm = this.normalizeKey(key)
-		return this.stock.get(norm) ?? this.custom.need(norm)
+		return this.need(this.normalizeKey(key))
+	}
+
+	need(key: ProfileKey) {
+		return this.stock.get(key) ?? this.custom.need(key)
 	}
 }
 

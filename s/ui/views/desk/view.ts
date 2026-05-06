@@ -7,12 +7,10 @@ import {Port} from "../../../deck/port.js"
 import {Controller} from "../../../deck/controller.js"
 
 export type DeskOptions = {
-	labels?: Map<any, Content>
+	getControllerLabel?: (controller: Controller) => Content | undefined
 }
 
 export const DeskView = shadow((deck: Deck, options: DeskOptions = {}) => {
-	const {labels = new Map()} = options
-
 	function PortView(port: Port, portIndex: number) {
 		return html`
 			<div class=port>
@@ -35,7 +33,7 @@ export const DeskView = shadow((deck: Deck, options: DeskOptions = {}) => {
 
 		return html`
 			<div class=controller>
-				<span>${labels.get(controller) ?? controller.handle}</span>
+				<span>${options.getControllerLabel?.(controller) ?? controller.handle}</span>
 				<select @change=${onChange}>
 					${deck.profiles.all.map(([profileId, profile]) => html`
 						<option
