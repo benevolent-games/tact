@@ -2,16 +2,14 @@
 import {Content, dom} from "@e280/sly"
 import {LocalStore} from "@e280/strata"
 
-import {Deck} from "../ui/deck/deck.js"
+import {Deck} from "../deck/deck.js"
+import {DeckState} from "../deck/types.js"
 import {asBindings} from "../core/types.js"
-import {doAsync} from "../utils/do-async.js"
 import {Devices} from "../device/devices.js"
-import {DeckState} from "../ui/deck/types.js"
 import {onPad} from "../device/pad/on-pad.js"
 import {PointerDevice} from "../device/pointer.js"
 import {GamepadDevice} from "../device/gamepad.js"
 import {setupDemoApp} from "./demo-app/element.js"
-import {Controller} from "../ui/deck/controller.js"
 import {KeyboardDevice} from "../device/keyboard.js"
 
 const bindings = asBindings({

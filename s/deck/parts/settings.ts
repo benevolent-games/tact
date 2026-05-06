@@ -1,6 +1,6 @@
 
 import {Cubby, RMap} from "@e280/strata"
-import {shiftLimit} from "../../../utils/shift-limit.js"
+import {shiftLimit} from "../../utils/shift-limit.js"
 import {ControllerHandle, DeckState, Profile, ProfileKey} from "../types.js"
 
 const limit = 256

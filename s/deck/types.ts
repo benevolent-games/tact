@@ -1,5 +1,5 @@
 
-import {Bindings} from "../../core/types.js"
+import {Bindings} from "../core/types.js"
 
 export type ProfileKey = string
 export type ControllerHandle = string

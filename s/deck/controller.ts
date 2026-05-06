@@ -1,7 +1,7 @@
 
 import {deep} from "@e280/stz"
-import {Bindings, Device} from "../../core/types.js"
-import {makeIntentsResolver} from "../../core/resolvers/intents.js"
+import {Bindings, Device} from "../core/types.js"
+import {makeIntentsResolver} from "../core/resolvers/intents.js"
 
 /** associate a device with particular bindings */
 export class Controller<B extends Bindings = Bindings, D extends Device = Device> {

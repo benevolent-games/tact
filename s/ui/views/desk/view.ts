@@ -2,9 +2,9 @@
 import {html} from "lit"
 import {Content, shadow} from "@e280/sly"
 
-import {Deck} from "../../deck/deck.js"
-import {Port} from "../../deck/port.js"
-import {Controller} from "../../deck/controller.js"
+import {Deck} from "../../../deck/deck.js"
+import {Port} from "../../../deck/port.js"
+import {Controller} from "../../../deck/controller.js"
 
 export type DeskOptions = {
 	labels?: Map<any, Content>

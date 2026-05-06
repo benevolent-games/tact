@@ -6,7 +6,7 @@ import {Runtime} from "./parts/runtime.js"
 import {Controller} from "./controller.js"
 import {Profiles} from "./parts/profiles.js"
 import {Settings} from "./parts/settings.js"
-import {Bindings, Device} from "../../core/types.js"
+import {Bindings, Device} from "../core/types.js"
 import {DeckState, Profile, ProfileKey} from "./types.js"
 
 export class Deck {
