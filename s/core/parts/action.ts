@@ -10,6 +10,8 @@ export class Action {
 	#value = 0
 	#previous = 0
 
+	changed = false
+
 	get value() {
 		return this.#value
 	}
@@ -26,7 +28,6 @@ export class Action {
 	}
 
 	get previous() { return this.#previous }
-	get changed() { return this.#value !== this.#previous }
 	get up() { return !isDown(this.#value) }
 	get down() { return isDown(this.#value) }
 	get changedUp() { return this.changed && this.up }

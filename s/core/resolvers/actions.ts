@@ -15,10 +15,15 @@ export function makeActionsResolver<B extends Bindings>(bindings: B) {
 	})) as Actions<B>
 
 	return (intents: Intent[]) => {
+		for (const action of map.values())
+			action.changed = false
+
 		for (const [id, value] of intents) {
 			const action = map.need(id)
+			action.changed = action.value !== value
 			action.value = value
 		}
+
 		return actions
 	}
 }

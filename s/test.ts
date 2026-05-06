@@ -162,6 +162,32 @@ await science.run({
 			expect(actions.running.forward.changedDown).is(false)
 			expect(actions.running.forward.changedUp).is(true)
 		}),
+
+		"changed expires with empty intents": test(async() => {
+			const resolveActions = makeActionsResolver(exampleBindings)
+			const actions = resolveActions([])
+
+			resolveActions([[1, 0]])
+			expect(actions.running.forward.value).is(0)
+			expect(actions.running.forward.down).is(false)
+			expect(actions.running.forward.changed).is(false)
+			expect(actions.running.forward.changedDown).is(false)
+			expect(actions.running.forward.changedUp).is(false)
+
+			resolveActions([[1, 1]])
+			expect(actions.running.forward.value).is(1)
+			expect(actions.running.forward.down).is(true)
+			expect(actions.running.forward.changed).is(true)
+			expect(actions.running.forward.changedDown).is(true)
+			expect(actions.running.forward.changedUp).is(false)
+
+			resolveActions([])
+			expect(actions.running.forward.value).is(1)
+			expect(actions.running.forward.down).is(true)
+			expect(actions.running.forward.changed).is(false)
+			expect(actions.running.forward.changedDown).is(false)
+			expect(actions.running.forward.changedUp).is(false)
+		}),
 	}),
 })
 
