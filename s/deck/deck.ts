@@ -46,10 +46,11 @@ export class Deck<StockProfileKey extends ProfileKey = ProfileKey> {
 
 	createController<D extends Device = Device>(
 			handle: string,
-			profileKey: StockProfileKey,
+			stockProfileKey: StockProfileKey,
 			device: D,
 		) {
-		const profile = this.profiles.need(profileKey)
+		const profileKey = this.settings.profileAssignments.guarantee(handle, () => stockProfileKey)
+		const profile = this.profiles.get(profileKey)
 		const controller = new Controller(handle, profile.bindings, device)
 		this.#runtime.controllers.add(controller)
 		return controller
