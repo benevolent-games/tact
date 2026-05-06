@@ -3,19 +3,25 @@ import {Intent} from "../types.js"
 
 /** merge/accumulate intents together */
 export class IntentBucket {
-	#map = new Map<number, number>()
+	#state = new Map<number, number>()
+	#changes = new Map<number, number>()
 
 	accumulate(intents: Intent[]) {
 		for (const [id, value] of intents) {
-			const previous = this.#map.get(id) ?? 0
-			this.#map.set(id, Math.max(previous, value))
+			const previous = this.#state.get(id)
+
+			if (previous !== value) {
+				this.#state.set(id, value)
+				this.#changes.set(id, value)
+			}
 		}
+
 		return this
 	}
 
 	take() {
-		const intents = [...this.#map.entries()]
-		this.#map.clear()
+		const intents = [...this.#changes.entries()]
+		this.#changes.clear()
 		return intents
 	}
 }
