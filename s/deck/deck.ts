@@ -34,6 +34,15 @@ export class Deck<StockProfileKey extends ProfileKey = ProfileKey> {
 		return this.#runtime.ports.array()
 	}
 
+	get controllers() {
+		return this.#runtime.controllers.array()
+	}
+
+	get unassignedControllers() {
+		return this.#runtime.controllers.array()
+			.filter(controller => !this.#runtime.portAssignments.get(controller))
+	}
+
 	createPort() {
 		const port = new Port(this.#runtime)
 		this.#runtime.ports.add(port)
@@ -41,6 +50,8 @@ export class Deck<StockProfileKey extends ProfileKey = ProfileKey> {
 	}
 
 	deletePort(port: Port) {
+		for (const controller of port.controllers)
+			port.unplug(controller)
 		this.#runtime.ports.delete(port)
 	}
 
