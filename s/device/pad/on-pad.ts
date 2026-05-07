@@ -36,8 +36,14 @@ export function onPad(fn: (pad: Pad) => () => void) {
 	refresh()
 
 	const unlisten = ev(window, {
-		gamepadconnected: refresh,
-		gamepaddisconnected: refresh,
+		gamepadconnected: () => {
+			console.log("gamepadconnected")
+			refresh()
+		},
+		gamepaddisconnected: () => {
+			console.log("gamepaddisconnected")
+			refresh()
+		},
 	})
 
 	return () => {
