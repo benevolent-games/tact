@@ -1,18 +1,19 @@
 
 import {html} from "lit"
-import {Content, shadow, useCss} from "@e280/sly"
+import {Scalar} from "@benev/math"
+import {Content, shadow, useCss, useName} from "@e280/sly"
 
 import styleCss from "./style.css.js"
 import {Deck} from "../../../deck/deck.js"
 import {Port} from "../../../deck/port.js"
 import {Controller} from "../../../deck/controller.js"
-import { Scalar } from "@benev/math"
 
 export type DeskOptions = {
 	getControllerLabel?: (controller: Controller) => Content | undefined
 }
 
 export const DeskView = shadow((deck: Deck, options: DeskOptions = {}) => {
+	useName("desk")
 	useCss(styleCss)
 
 	function shimmy(controller: Controller, offset: number) {
