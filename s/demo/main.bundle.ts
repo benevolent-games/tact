@@ -57,14 +57,10 @@ const labels = new Map<Controller, Content>()
 
 onPad(pad => {
 	const handle = `(${pad.gamepad.index + 1}) ${pad.gamepad.id}`
-	console.log("connected", handle)
 	const controller = deck.createController(handle, "standard", new GamepadDevice(pad))
 	labels.set(controller, `🎮${handle}`)
 	port.plug(controller)
-	return () => {
-		deck.deleteController(controller)
-		console.log("disconnected", handle)
-	}
+	return () => deck.deleteController(controller)
 })
 
 dom.register({
